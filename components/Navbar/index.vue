@@ -63,13 +63,43 @@ const localePath = useLocalePath()
 
 const menuItems = [
   {
+    label: 'Developer',
+    url: '/documentation',
+    to: '/documentation'
+  },
+  {
     label: 'Profile',
+    to: '/documentation',
+    target: '_blank',
   }, {
     label: 'Billing',
+    to: '/documentation',
+    target: '_blank',
   }, {
     label: 'Settings',
-    slot: 'profile' as const
-  }
+    slot: 'profile' as const,
+    to: '/documentation',
+    target: '_blank',
+  },
+  // {
+  //   label: '白皮书',
+  //   to: 'https://luckyx.gitbook.io/white-paper/',
+  //   target: '_blank',
+  // }, {
+  //   label: '帮助中心',
+  //   to: 'https://luckyx.gitbook.io/help-center/',
+  //   target: '_blank',
+  // },
+  // {
+  //   label: '服务条款',
+  //   to: 'https://luckyx.gitbook.io/terms-of-service/',
+  //   target: '_blank',
+  // },
+  // {
+  //   label: '隐私条款',
+  //   to: 'https://luckyx.gitbook.io/privacy-policy/',
+  //   target: '_blank',
+  // }
 ] satisfies DropdownMenuItem[]
 
 const langItems = [

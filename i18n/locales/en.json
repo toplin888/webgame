@@ -1,6 +1,4 @@
 {
-  "welcome": "Welcome",
-  "hello": "Hello",
   "nav": {
     "openDapp": "Open Dapp"
   },
@@ -36,10 +34,10 @@
     "plan6Btn": "Tokenomics",
     "plan7Title": "Your Questions Answered",
     "accordionTitle1": "What is the difference between us and web2 platforms?",
-    "accordionTitle2": "What is the difference between us and web2 platforms?",
-    "accordionTitle3": "What is the difference between us and web2 platforms?",
-    "accordionTitle4": "What is the difference between us and web2 platforms?",
-    "accordionTitle5": "What is the difference between us and web2 platforms?",
+    "accordionTitle2": "What is our vision?",
+    "accordionTitle3": "What are our advantages?",
+    "accordionTitle4": "How to become a dark horse in the industry?",
+    "accordionTitle5": "Compared with traditional web3 game platforms, what are our advantages?",
     "accordionDesc1": "We are committed to building a Web3 gaming platform that does not require investment, where everyone can earn money and assets can grow...",
     "accordionDesc2": "We are committed to building a Web3 gaming platform that does not require investment, where everyone can earn money and assets can grow...",
     "accordionDesc3": "We are committed to building a Web3 gaming platform that does not require investment, where everyone can earn money and assets can grow...",
@@ -75,6 +73,25 @@
     "joinCardBtn2": "Play",
     "joinCardBtn3": "留言",
     "joinCardBtn4": "提交项目"
+  },
+  "plan": {
+    "plan1Title": "Become a platform node, and operate thousands of web3 games",
+    "plan1Desc": "如果你手上有大量资金和流量，但没有强大的技术搭建和运营能力，那么请申请LUCKYX节点，即可得到平台所有游戏运营权，赚取高额收益",
+    "cardTitle1": "Profit sharing up to 100%",
+    "cardDesc1": "Based on your needs, the profit share of the games you operate can be up to 100%",
+    "cardTitle2": "Rich game resources",
+    "cardDesc2": "Become a LUCKYX node and you can operate all the games listed on the platform",
+    "cardTitle3": "Industry-leading team ",
+    "cardDesc3": "Security, the technical team will protect your assets 24 hours a day",
+    "differenceTitle": "The difference between nodes and agents",
+    "luckyTitle": "How to become a luckyx node",
+    "mapTitle": "Major customers choose to become LUCKYX nodes",
+    "mapBoxTitle1": "Nodes are spread all over the place",
+    "mapBoxTitle2": "Country covers the world",
+    "mapBoxTitle3": "Node accumulated income (USDT)",
+  },
+  "documentation": {
+    "developTitle": "Development roadmap"
   },
   "navigation": {
     "home": "Home",

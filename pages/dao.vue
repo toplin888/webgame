@@ -1,6 +1,6 @@
 <template>
   <main>
-    <DaoPlan1 />
+    <DaoPlan1 :title="$t('dao.plan1Title')" :desc="$t('dao.plan1Desc')" />
     <DaoBanner />
     <DaoVision />
     <DaoJoin />

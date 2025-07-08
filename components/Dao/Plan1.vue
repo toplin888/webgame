@@ -17,17 +17,19 @@
             <div class="content max-w-[1125px] ">
                 <div
                     class="relative bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-purple-500 font-bold text-[56px]">
-                    {{ $t('dao.plan1Title') }}
+                    {{ title }}
                 </div>
-                <div class="desc mt-[26px]">{{ $t('dao.plan1Desc') }}</div>
+                <div class="desc mt-[26px]">{{ desc }}</div>
             </div>
         </section>
     </div>
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount, defineProps } from 'vue'
 
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+const props = defineProps<{ title: string; desc: string }>()
+
 // 可调整格子数量（行 × 列）和大小
 const rows = 12
 const cols = 24

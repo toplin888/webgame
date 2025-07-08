@@ -17,8 +17,16 @@
                             <div class="p-[44px_44px_35px_44px] h-[237px]">
                                 <div class="text-16px mt-[14px]">{{ $t('dao.joinCardText1') }}</div>
                                 <div class="flex gap-[12px] mt-[18px]">
-                                    <img src="~/assets/images/vision/xIcon.svg" alt="Vision 1" class="w-[36px]">
-                                    <img src="~/assets/images/vision/twIcon.svg" alt="Vision 1" class="w-[36px]">
+                                    <NuxtLink to="https://discord.gg/VEbmQxX4A4" target="_blank" data-text="Discord"
+                                        active-class="active">
+                                        <img src="~/assets/images/vision/xIcon.svg" alt="Vision 1" class="w-[36px]">
+                                    </NuxtLink>
+                                    <NuxtLink to="https://x.com/luckyx_game" target="_blank" data-text="Discord"
+                                        active-class="active">
+                                        <img src="~/assets/images/vision/twIcon.svg" alt="Twitter 1" class="w-[36px]">
+                                    </NuxtLink>
+
+
                                 </div>
                             </div>
                             <div

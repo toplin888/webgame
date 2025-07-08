@@ -21,8 +21,8 @@
                         <div class="mb-5">
                             <UIcon :name="`i-custom-feature${index + 1}`" class="w-[28px] h-[28px]" />
                         </div>
-                        <div class="text-[24px] font-bold mb-[10px]">{{ $t('home.chainTitle1') }}</div>
-                        <div class="text-[16px]">{{ $t('home.chainDesc1') }}</div>
+                        <div class="text-[24px] font-bold mb-[10px]">{{ $t(`home.chainTitle${index + 1}`) }}</div>
+                        <div class="text-[16px]">{{ $t(`home.chainDesc${index + 1}`) }}</div>
                     </div>
 
                 </div>

@@ -23,3 +23,6 @@ logs
 .env.*
 !.env.example
 .yaml
+pnpm-lock.yaml
+pnpm-workspace.yaml
+.gitignore

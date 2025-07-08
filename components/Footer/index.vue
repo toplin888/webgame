@@ -9,14 +9,29 @@
             </div>
             <div class="flex flex-col gap-[16px]">
                 <div class="text-[16px] text-[#ADADAD]">Help/Support</div>
-                <div class="text-[14px] text-[#FAFAFA] font-medium">Game validato</div>
-                <div class="text-[14px] text-[#FAFAFA] font-medium">Help Center</div>
-                <div class="text-[14px] text-[#FAFAFA] font-medium">Terms of Service</div>
-                <div class="text-[14px] text-[#FAFAFA] font-medium">privacy policy</div>
+                <NuxtLink to="https://luckyx.gitbook.io/help-center/" target="_blank" data-text="Discord"
+                    active-class="active">
+                    <div class="text-[14px] text-[#FAFAFA] font-medium">Game validato</div>
+                </NuxtLink>
+                <NuxtLink to="https://luckyx.gitbook.io/help-center/" target="_blank" data-text="Discord"
+                    active-class="active">
+                    <div class="text-[14px] text-[#FAFAFA] font-medium">Help Center</div>
+                </NuxtLink>
+                <NuxtLink to="https://luckyx.gitbook.io/terms-of-service/" target="_blank" data-text="Discord"
+                    active-class="active">
+                    <div class="text-[14px] text-[#FAFAFA] font-medium">Terms of Service</div>
+                </NuxtLink>
+                <NuxtLink to="https://luckyx.gitbook.io/privacy-policy/" target="_blank" data-text="Discord"
+                    active-class="active">
+                    <div class="text-[14px] text-[#FAFAFA] font-medium">privacy policy</div>
+                </NuxtLink>
             </div>
             <div class="flex flex-col gap-[16px]">
                 <div class="text-[#ADADAD] text-[14px] font-medium">RESOURCES</div>
-                <div class="text-[14px] text-[#FAFAFA] font-medium">white paper</div>
+                <NuxtLink to="https://luckyx.gitbook.io/white-paper/" target="_blank" data-text="Discord"
+                    active-class="active">
+                    <div class="text-[14px] text-[#FAFAFA] font-medium">white paper</div>
+                </NuxtLink>
                 <div class="text-[14px] text-[#FAFAFA] font-medium">
                     business plan
                 </div>
@@ -56,12 +71,31 @@ interface JoinItem {
 }
 
 const joinItems: JoinItem[] = [
-    { id: 1, type: 'twitter', logoPath: icon1, label: t('footer.twitter'), value: 'https://twitter.com' },
-    { id: 2, type: 'discord', logoPath: icon2, label: t('footer.discord'), value: 'https://discord.com' },
+    { id: 1, type: 'twitter', logoPath: icon1, label: t('footer.twitter'), value: 'https://x.com/luckyx_game' },
+    { id: 2, type: 'discord', logoPath: icon2, label: t('footer.discord'), value: 'https://discord.gg/VEbmQxX4A4' },
     { id: 3, type: 'youtube', logoPath: icon3, label: t('footer.youtube'), value: 'https://youtube.com' },
     { id: 4, type: 'linkedin', logoPath: icon4, label: t('footer.linkedin'), value: 'https://linkedin.com' },
     { id: 5, type: 'instagram', logoPath: icon5, label: t('footer.instagram'), value: 'https://instagram.com' }
 ]
+// {
+//   label: '白皮书',
+//   to: 'https://luckyx.gitbook.io/white-paper/',
+//   target: '_blank',
+// }, {
+//   label: '帮助中心',
+//   to: 'https://luckyx.gitbook.io/help-center/',
+//   target: '_blank',
+// },
+// {
+//   label: '服务条款',
+//   to: 'https://luckyx.gitbook.io/terms-of-service/',
+//   target: '_blank',
+// },
+// {
+//   label: '隐私条款',
+//   to: 'https://luckyx.gitbook.io/privacy-policy/',
+//   target: '_blank',
+// }
 </script>
 
 <style scoped lang="scss">

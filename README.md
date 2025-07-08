@@ -2,6 +2,11 @@
 
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
+Current version:
+Node version -- 22.17.0
+pnpm version -- 10.12.4
+
+
 ## Setup
 
 Make sure to install dependencies:
