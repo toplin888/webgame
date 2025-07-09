@@ -26,4 +26,4 @@ logs
 pnpm-lock.yaml
 pnpm-workspace.yaml
 .gitignore
-.package-lock.json
+package-lock.json
