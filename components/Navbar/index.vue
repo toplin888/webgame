@@ -3,7 +3,7 @@
   <nav class="bg-black shadow-md p-4 flex justify-between items-center">
     <!-- Logo -->
     <div
-      class="logo bg-[url('~/assets/images/logo.png')] bg-center bg-no-repeat bg-contain w-[80px] h-[22px] sm:w-[90px] sm:h-[25px] md:w-[107px] md:h-[29px]">
+      class="logo bg-[url('/images/logo.png')] bg-center bg-no-repeat bg-contain w-[80px] h-[22px] sm:w-[90px] sm:h-[25px] md:w-[107px] md:h-[29px]">
       <!-- <UIcon name="i-custom-logo" /> -->
 
       <!-- <NuxtImg src="@/assets/images/logo.png" /> -->
