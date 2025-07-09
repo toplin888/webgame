@@ -23,7 +23,7 @@
                             <!-- <NuxtImg class="max-w-96 max-h-80 object-cover w-full rounded-3xl" loading="eager"
                                 fetchpriority="high" width="80" height="80" :src="`/images/plan/${item.image}`"
                                 alt="" /> -->
-                            <img :src="`/images/plan/${item.image}`" alt="">
+                            <NuxtImg :src="`/images/plan/${item.image}`" alt="" />
                             <span class="absolute inset-0 rounded-3xl p-[2px] plan-gradient-border"></span>
                         </div>
                     </div>

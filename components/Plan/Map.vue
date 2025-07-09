@@ -27,8 +27,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="pt-10px">
-                    <img src="/images/plan/map.png" class="img-fluid rounded-[0_0_48px_48px]" format="webp" />
+                <div class="p-[20px] box-border">
+                    <NuxtImg src="/images/plan/map.png" class="w-full rounded-[48px] mt-[10px]" />
                 </div>
             </div>
         </section>

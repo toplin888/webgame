@@ -1,6 +1,8 @@
 {
   "nav": {
-    "openDapp": "Open Dapp"
+    "openDapp": "Open Dapp",
+    "roadmp": "Roadmap",
+    "whitePaper": "White Paper",
   },
   "home": {
     "goEarnCoins": "Go Earn Coins",
@@ -92,30 +94,5 @@
   },
   "documentation": {
     "developTitle": "Development roadmap"
-  },
-  "navigation": {
-    "home": "Home",
-    "about": "About",
-    "contact": "Contact Us",
-    "services": "Services"
-  },
-  "common": {
-    "submit": "Submit",
-    "cancel": "Cancel",
-    "confirm": "Confirm",
-    "loading": "Loading...",
-    "error": "Error",
-    "success": "Success",
-    "save": "Save",
-    "edit": "Edit",
-    "delete": "Delete",
-    "search": "Search"
-  },
-  "messages": {
-    "welcome_message": "Welcome to our website!",
-    "loading_data": "Loading data...",
-    "no_data": "No data available",
-    "operation_success": "Operation successful",
-    "operation_failed": "Operation failed"
   }
 }

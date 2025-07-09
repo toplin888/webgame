@@ -1,5 +1,9 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  // app: {
+  //   baseURL: '/', // 确保不是 "/&" 或其他异常值
+  // },
+  // spaLoadingTemplate: false, // 启用 SPA 加载模板
   compatibilityDate: '2025-05-15',
   devtools: { enabled: true },
   modules: [
@@ -13,6 +17,9 @@ export default defineNuxtConfig({
   // 国际化配置
   i18n: {
     strategy: 'prefix_and_default', // 强制所有路由都带前缀，解决水合问题
+    bundle: {
+      optimizeTranslationDirective: false // 官方建议禁用，避免未来报错
+    },
     locales: [
       {
         code: 'zh-CN', // 修改 code 以匹配类型

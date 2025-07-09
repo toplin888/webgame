@@ -12,12 +12,12 @@
         <div
           class="relative max-w-[1082px] max-h-[667px] w-full h-full bg-[url('~/assets/images/banner-bg2.svg')] bg-center bg-no-repeat mt-[-78.8px] bg-size-[100%_100%] ">
           <div>
-            <img class="absolute top-[134px] left-[152px] w-[121px] h-[184px] animate-float"
-              src="~/assets/images/parachute1.svg" alt="">
+            <NuxtImg class="absolute top-[134px] left-[152px] w-[121px] h-[184px] animate-float"
+              src="/images/parachute1.svg" alt="" />
           </div>
           <div>
-            <img class="absolute top-[87px] right-[95px] w-[123px] h-[180px] animate-float-delay"
-              src="~/assets/images/parachute2.svg" alt="">
+            <NuxtImg class="absolute top-[87px] right-[95px] w-[123px] h-[180px] animate-float-delay"
+              src="/images/parachute2.svg" alt="" />
           </div>
           <div class="flex justify-center">
             <div

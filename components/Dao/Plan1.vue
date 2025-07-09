@@ -26,7 +26,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, defineProps } from 'vue'
 
 const props = defineProps<{ title: string; desc: string }>()
 

@@ -10,13 +10,13 @@
             container: 'gap-2',
             item: 'basis-1/3',
         }" :auto-scroll="{
-                speed: 1,
-                direction: 'forward',
-            }" :count="3" :watchDrag="false">
+            speed: 1,
+            direction: 'forward',
+        }" :count="3" :watchDrag="false">
             <div>
                 <div class="testimonial-card max-w-[442px] max-h-[208px] min-h-[205px]">
                     <div class="flex items-center gap-3 mb-4">
-                        <img :src="item.avatar" size="lg" class="w-[40px] h-[40px]" />
+                        <NuxtImg :src="item.avatar" size="lg" class="w-[40px] h-[40px]" />
                         <div class="flex-1">
                             <div class="text-[14px] font-bold text-white">{{ item.name }}</div>
                         </div>
@@ -30,13 +30,13 @@
             container: 'gap-2',
             item: 'basis-1/3',
         }" :auto-scroll="{
-                speed: 1,
-                direction: 'backward',
-            }" :count="3" :watchDrag="false">
+            speed: 1,
+            direction: 'backward',
+        }" :count="3" :watchDrag="false">
             <div>
                 <div class="testimonial-card max-w-[442px] max-h-[208px] min-h-[205px]">
                     <div class="flex items-center gap-3 mb-4">
-                        <img :src="item.avatar" size="lg" class="w-[40px] h-[40px]" />
+                        <NuxtImg :src="item.avatar" size="lg" class="w-[40px] h-[40px]" />
                         <div class="flex-1">
                             <div class="text-[14px] font-bold text-white">{{ item.name }}</div>
                         </div>

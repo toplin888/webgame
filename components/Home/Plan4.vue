@@ -11,7 +11,7 @@
                 </div>
             </div>
             <div class="max-w-[1118px] mx-auto mt-[50px]">
-                <img class="w-full" src="~/assets/images/network.png" alt="">
+                <NuxtImg class="w-full" src="/images/network.png" alt="" />
             </div>
         </section>
     </main>

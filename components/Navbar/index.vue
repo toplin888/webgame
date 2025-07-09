@@ -23,8 +23,8 @@
         </NuxtLink>
       </li>
       <li class="px-5 py-3.5">
-        <UDropdownMenu :items="menuItems"
-          :ui="{ content: 'w-48 custom-dropdown-bg outline-none ring-1 ring-custom-border ', itemLabel: 'text-white text-base font-normal' }">
+        <UDropdownMenu :items="menuItems" :externalIcon="false"
+          :ui="{ item: 'selectItem before:selectItem', content: 'w-48 custom-dropdown-bg outline-none ring-1 ring-custom-border ', itemLabel: 'text-white text-base font-normal' }">
           <!-- bg-gradient-to-l from-neutral-900/25 to-gray-900/90 border-[0.50px] border-边框 -->
           <NuxtLink to="" class="nav-link hover:cursor-pointer flex items-center" data-text="documentation">
             documentation
@@ -60,27 +60,19 @@
 import type { DropdownMenuItem } from '@nuxt/ui'
 
 const localePath = useLocalePath()
+const t = useI18n().t
 
 const menuItems = [
   {
-    label: 'Developer',
-    url: '/documentation',
-    to: '/documentation'
+    label: t('nav.whitePaper'),
+    to: 'https://luckyx.gitbook.io/white-paper/',
+    target: '_blank',
   },
   {
-    label: 'Profile',
-    to: '/documentation',
-    target: '_blank',
-  }, {
-    label: 'Billing',
-    to: '/documentation',
-    target: '_blank',
-  }, {
-    label: 'Settings',
-    slot: 'profile' as const,
-    to: '/documentation',
-    target: '_blank',
-  },
+    label: t('nav.roadmp'),
+    url: '/documentation',
+    to: '/documentation'
+  }
   // {
   //   label: '白皮书',
   //   to: 'https://luckyx.gitbook.io/white-paper/',

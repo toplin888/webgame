@@ -19,11 +19,11 @@
                                 <div class="flex gap-[12px] mt-[18px]">
                                     <NuxtLink to="https://discord.gg/VEbmQxX4A4" target="_blank" data-text="Discord"
                                         active-class="active">
-                                        <img src="~/assets/images/vision/xIcon.svg" alt="Vision 1" class="w-[36px]">
+                                        <NuxtImg src="/images/vision/xIcon.svg" alt="Vision 1" class="w-[36px]" />
                                     </NuxtLink>
                                     <NuxtLink to="https://x.com/luckyx_game" target="_blank" data-text="Discord"
                                         active-class="active">
-                                        <img src="~/assets/images/vision/twIcon.svg" alt="Twitter 1" class="w-[36px]">
+                                        <NuxtImg src="/images/vision/twIcon.svg" alt="Twitter 1" class="w-[36px]" />
                                     </NuxtLink>
 
 
@@ -35,8 +35,7 @@
                                     {{ $t('dao.joinCardBtn1') }}
                                 </div>
                                 <div>
-                                    <img class="w-[20px] h-[20px]" src="~/assets/images/vision/arrow-right.svg"
-                                        alt="→" />
+                                    <NuxtImg class="w-[20px] h-[20px]" src="/images/vision/arrow-right.svg" alt="→" />
                                 </div>
                             </div>
                         </div>
@@ -74,8 +73,7 @@
                                     {{ $t('dao.joinCardBtn1') }}
                                 </div>
                                 <div>
-                                    <img class="w-[20px] h-[20px]" src="~/assets/images/vision/arrow-right.svg"
-                                        alt="→" />
+                                    <NuxtImg class="w-[20px] h-[20px]" src="/images/vision/arrow-right.svg" alt="→" />
                                 </div>
                             </div>
                         </div>
@@ -110,8 +108,7 @@
                                     {{ $t('dao.joinCardBtn1') }}
                                 </div>
                                 <div>
-                                    <img class="w-[20px] h-[20px]" src="~/assets/images/vision/arrow-right.svg"
-                                        alt="→" />
+                                    <NuxtImg class="w-[20px] h-[20px]" src="/images/vision/arrow-right.svg" alt="→" />
                                 </div>
                             </div>
                         </div>

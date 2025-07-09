@@ -14,14 +14,15 @@
         <!-- 游戏展示部分 -->
         <div class="flex justify-center mt-[45px]">
             <div class="flex relative h-[350px] items-center">
-                <img v-for="(game, index) in gameFilter" :key="game.name" :src="game.image" :class="[
-                    'cursor-pointer rounded-[50px] relative hover:scale-[1.1]',
-                    index === 2 ?
-                        'w-[286px] h-[283px] z-[30] scale-110' :
-                        `w-[calc(${game.width}px/2)] h-[calc(${game.height}px/2)] ${index < 2 ? '-mr-4' : '-ml-4'}`, `${(index == 1 || index == 3) ? 'w-[256px] h-[253px]' : index == 0 || index == 4 ? 'w-[160px] h-160px' : ''}`,
-                    `${(index == 0) ? 'rotate-[-30deg]' : (index == 1) ? 'rotate-[-15deg]' : (index == 3) ? 'rotate-[15deg]' : (index == 4) ? 'rotate-[10deg]' : ''} `,
-                    `${(index == 1 || index == 3) ? 'translate-y-15' : index == 0 || index == 4 ? 'translate-y-30' : ''}`
-                ]" :style="`z-index: ${index < 2 ? 20 - (2 - index) * 5 : 20 - (index - 2) * 5}`"
+                <NuxtImg v-for="(game, index) in gameFilter" :key="game.name" :src="'/images/game/' + game.image"
+                    :class="[
+                        'cursor-pointer rounded-[50px] relative hover:scale-[1.1]',
+                        index === 2 ?
+                            'w-[286px] h-[283px] z-[30] scale-110' :
+                            `w-[calc(${game.width}px/2)] h-[calc(${game.height}px/2)] ${index < 2 ? '-mr-4' : '-ml-4'}`, `${(index == 1 || index == 3) ? 'w-[256px] h-[253px]' : index == 0 || index == 4 ? 'w-[160px] h-160px' : ''}`,
+                        `${(index == 0) ? 'rotate-[-30deg]' : (index == 1) ? 'rotate-[-15deg]' : (index == 3) ? 'rotate-[15deg]' : (index == 4) ? 'rotate-[10deg]' : ''} `,
+                        `${(index == 1 || index == 3) ? 'translate-y-15' : index == 0 || index == 4 ? 'translate-y-30' : ''}`
+                    ]" :style="`z-index: ${index < 2 ? 20 - (2 - index) * 5 : 20 - (index - 2) * 5}`"
                     @click="selectGame(index)" :alt="game.name" />
             </div>
         </div>
@@ -34,45 +35,45 @@
     </section>
 </template>
 <script setup lang="ts">
-import game1Img from '~/assets/images/game1.png'
-import game2Img from '~/assets/images/game2.png'
-import game3Img from '~/assets/images/game3.png'
-import game4Img from '~/assets/images/game4.png'
-import game5Img from '~/assets/images/game5.png'
+// import game1Img from '~/assets/images/game1.png'
+// import game2Img from '~/assets/images/game2.png'
+// import game3Img from '~/assets/images/game3.png'
+// import game4Img from '~/assets/images/game4.png'
+// import game5Img from '~/assets/images/game5.png'
 
 // 游戏数据
 const games = ref([
     {
         name: 'Game 1',
-        image: game1Img,
+        image: 'game1.png',
         width: 175,
         height: 262,
         link: 'https://example.com/game1'
     },
     {
         name: 'Game 2',
-        image: game2Img,
+        image: 'game2.png',
         width: 254,
         height: 381,
         link: 'https://example.com/game2'
     },
     {
         name: 'Game 3',
-        image: game3Img,
+        image: 'game3.png',
         width: 302,
         height: 453,
         link: 'https://example.com/game3'
     },
     {
         name: 'Game 4',
-        image: game4Img,
+        image: 'game4.png',
         width: 273,
         height: 410,
         link: 'https://example.com/game4'
     },
     {
         name: 'Game 5',
-        image: game5Img,
+        image: 'game5.png',
         width: 171,
         height: 257,
         link: 'https://example.com/game5'

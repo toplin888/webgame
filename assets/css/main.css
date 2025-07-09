@@ -20,3 +20,7 @@
 
   --color-purple-500: #4F52FF;
 }
+
+.selectItem {
+  @apply before:content-[''] before:bg-transparent before:text-black;
+}

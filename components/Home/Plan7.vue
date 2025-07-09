@@ -6,8 +6,8 @@
                 <div class="grid grid-cols-5 gap-[70px] max-w-[1118px] mx-auto mt-[50px]">
                     <div class="flex justify-center" v-for="(item, index) in chainsTag" :key="item.title">
                         <div class="partner-container mb-5">
-                            <img class="partner-image transition-transform duration-300" :src="item.image"
-                                :alt="item.title" loading="lazy" />
+                            <NuxtImg class="partner-image w-full transition-transform duration-300"
+                                :src="'/images/partners/' + item.image" :alt="item.title" loading="lazy" />
                         </div>
                     </div>
                 </div>
@@ -16,76 +16,76 @@
     </main>
 </template>
 <script setup lang="ts">
-import partner1 from '~/assets/images/partners/1.png';
-import partner2 from '~/assets/images/partners/2.png';
-import partner3 from '~/assets/images/partners/3.png';
-import partner4 from '~/assets/images/partners/4.png';
-import partner5 from '~/assets/images/partners/5.png';
-import partner6 from '~/assets/images/partners/6.png';
-import partner7 from '~/assets/images/partners/7.png';
-import partner8 from '~/assets/images/partners/8.png';
-import partner9 from '~/assets/images/partners/9.png';
-import partner10 from '~/assets/images/partners/10.png';
+// import partner1 from '~/assets/images/partners/1.png';
+// import partner2 from '~/assets/images/partners/2.png';
+// import partner3 from '~/assets/images/partners/3.png';
+// import partner4 from '~/assets/images/partners/4.png';
+// import partner5 from '~/assets/images/partners/5.png';
+// import partner6 from '~/assets/images/partners/6.png';
+// import partner7 from '~/assets/images/partners/7.png';
+// import partner8 from '~/assets/images/partners/8.png';
+// import partner9 from '~/assets/images/partners/9.png';
+// import partner10 from '~/assets/images/partners/10.png';
 const chainsTag = ref([
     {
         icon: '',
         title: 'Transparent rules',
         desc: 'Using web3.0 technology, the game rules are written into the smart contract, and the game process is open and transparent.',
-        image: partner1,
+        image: '1.png',
         url: 'https://example.com/transparent-rules'
     },
     {
         title: 'Smart contract:',
         desc: 'Advanced security for digital asset protection.',
-        image: partner2,
+        image: '2.png',
         url: 'https://example.com/smart-contract'
     },
     {
         title: 'RNG random algorithm',
         desc: 'Advanced security for digital asset protection.',
-        image: partner3,
+        image: '3.png',
         url: 'https://example.com/rng-algorithm'
     },
     {
         title: 'Buy back and destroy',
         desc: 'Advanced security for digital asset protection.',
-        image: partner4,
+        image: '4.png',
         url: 'https://example.com/buy-back'
     },
     {
         title: 'DAO',
         desc: 'Advanced security for digital asset protection.',
-        image: partner5,
+        image: '5.png',
         url: 'https://example.com/dao'
     },
     {
         title: 'DAO2',
         desc: 'Advanced security for digital asset protection.',
-        image: partner6,
+        image: '6.png',
         url: 'https://example.com/dao2'
     },
     {
         title: 'DAO3',
         desc: 'Advanced security for digital asset protection.',
-        image: partner7,
+        image: '7.png',
         url: 'https://example.com/dao3'
     },
     {
         title: 'DAO4',
         desc: 'Advanced security for digital asset protection.',
-        image: partner8,
+        image: '8.png',
         url: 'https://example.com/dao4'
     },
     {
         title: 'DAO5',
         desc: 'Advanced security for digital asset protection.',
-        image: partner9,
+        image: '9.png',
         url: 'https://example.com/dao5'
     },
     {
         title: 'DAO6',
         desc: 'Advanced security for digital asset protection.',
-        image: partner10,
+        image: '10.png',
         url: 'https://example.com/dao6'
     }
 ]);

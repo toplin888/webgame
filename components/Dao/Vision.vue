@@ -16,7 +16,7 @@
                     <div class="relative">
                         <div
                             class="flex flex-col justify-center items-center w-[365px] w-full relative z-10 p-[40px_10px] box-border">
-                            <img src="~/assets/images/vision/vision1.svg" alt="Vision 1" class="w-[173px]">
+                            <NuxtImg src="/images/vision/vision1.svg" alt="Vision 1" class="w-[173px]" />
                             <div class="text-20px font-bold mt-[14px]">{{ $t('dao.visionCardTitle1') }}</div>
                             <div class="text-[15px] text-white/80 mt-[12px]">{{ $t('dao.visionCardDesc1') }}</div>
                         </div>
@@ -38,7 +38,7 @@
                     <div class="relative">
                         <div
                             class="flex flex-col justify-center items-center w-[615px] w-full relative z-10 p-[40px_10px] box-border">
-                            <img src="~/assets/images/vision/vision2.svg" alt="Vision 2" class="w-[487px]">
+                            <NuxtImg src="/images/vision/vision2.svg" alt="Vision 2" class="w-[487px]" />
                             <div class="text-20px font-bold mt-[14px]">{{ $t('dao.visionCardTitle1') }}</div>
                             <div class="text-[15px] text-white/80 mt-[12px]">{{ $t('dao.visionCardDesc1') }}</div>
                         </div>
@@ -60,7 +60,7 @@
                     <div class="relative">
                         <div
                             class="flex flex-col justify-center items-center w-[615px] w-full relative z-10 p-[40px_10px] box-border">
-                            <img src="~/assets/images/vision/vision3.svg" alt="Vision 3" class="w-[487px]">
+                            <NuxtImg src="/images/vision/vision3.svg" alt="Vision 3" class="w-[487px]" />
                             <div class="text-208px] font-bold mt-[14px]">{{ $t('dao.visionCardTitle3') }}</div>
                             <div class="text-[15px] text-white/80 mt-[12px]">{{ $t('dao.visionCardDesc3') }}</div>
                         </div>
@@ -80,7 +80,7 @@
                     <div class="relative">
                         <div
                             class="flex flex-col justify-center items-center w-[365px] w-full relative z-10 p-[40px_10px] box-border">
-                            <img src="~/assets/images/vision/vision4.svg" alt="Vision 4" class="w-[173px]">
+                            <NuxtImg src="/images/vision/vision4.svg" alt="Vision 4" class="w-[173px]" />
                             <div class="text-208px] font-bold mt-[14px]">{{ $t('dao.visionCardTitle4') }}</div>
                             <div class="text-[15px] text-white/80 mt-[12px]">{{ $t('dao.visionCardDesc4') }}</div>
                         </div>

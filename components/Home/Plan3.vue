@@ -12,12 +12,12 @@
                             </div>
                         </div>
                         <div>
-                            <img class="w-[453px] h-[320px]" :src="p1">
+                            <NuxtImg class="w-[473px] h-[320px]" src="/images/step1.png" />
                         </div>
                     </div>
                     <div class="flex justify-between items-center gap-[100px]">
                         <div>
-                            <img class="w-[453px] h-[320px]" :src="p1">
+                            <NuxtImg class="w-[473px] h-[320px]" src="/images/step2.png" />
                         </div>
                         <div>
                             <div class="text-[42px] ">Get a lot of LCX in two simple steps</div>
@@ -34,7 +34,7 @@
     </main>
 </template>
 <script setup lang="ts">
-import p1 from '~/assets/images/step.png'
+// import p1 from '~/assets/images/step.png'
 
 </script>
 <style scoped></style>

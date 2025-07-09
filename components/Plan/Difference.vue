@@ -9,7 +9,7 @@
                     </div>
                 </div>
                 <div class="flex justify-center relative pt-[55px]">
-                    <img src="/images/plan/report.svg" alt="Report"
+                    <NuxtImg src="/images/plan/report.svg" alt="Report"
                         class="max-h-[524px] max-w-[1200px] object-cover w-full" loading="eager" fetchpriority="high" />
                 </div>
             </div>
