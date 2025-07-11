@@ -24,3 +24,7 @@
 .selectItem {
   @apply before:content-[''] before:bg-transparent before:text-black;
 }
+
+.bg-linear-default {
+  @apply bg-[linear-gradient(180deg,#1A1726_0%,rgba(26,23,38,0.30)_100%)]
+}

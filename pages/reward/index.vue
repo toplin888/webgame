@@ -1,7 +1,7 @@
 <template>
     <main>
         <div
-            class="banner flex items-center justify-between max-w-[1200px] mx-auto relative after:content-[''] after:absolute after:top-[50%] after:left-[50%] after:-translate-x-1/2 after:-translate-y-1/2 after:w-[300px] after:h-[300px] after:bg-[radial-gradient(circle,rgba(48,0,131,0.5)_0%,_rgba(48,0,131,0.15)_50%,transparent_100%))] after:z-10 after:rounded-full">
+            class="banner mb-[15px] flex items-center justify-between max-w-[1200px] mx-auto relative after:content-[''] after:absolute after:top-[50%] after:left-[50%] after:-translate-x-1/2 after:-translate-y-1/2 after:w-[300px] after:h-[300px] after:bg-[radial-gradient(circle,rgba(48,0,131,0.5)_0%,_rgba(48,0,131,0.15)_50%,transparent_100%))] after:z-10 after:rounded-full">
             <div class="">
                 <div class="text-white text-6xl font-bold font-['Inter'] mb-[28px]">LCX领不停</div>
                 <div class="text-white text-xl font-normal font-['Inter']">完成任務，即可获得<span
@@ -13,7 +13,7 @@
             </div>
         </div>
         <!-- 每日签到 -->
-        <div class="mb-[24px] max-w-[1200px] mx-auto p-[34px_58px]">
+        <div class="mb-[24px] max-w-[1200px] mx-auto p-[34px_58px] ring-1 ring-white/10 rounded-2xl">
             <div class="flex items-center justify-between mb-[30px]">
                 <div>
                     <div class="mb-[10px] text-neutral-200 text-xl font-normal font-['Microsoft_YaHei']">每日签到</div>
@@ -37,12 +37,17 @@
                             class="relative mb-[15px] after:content-[''] after:absolute after:top-[50%] after:left-[50%] after:-translate-x-1/2 after:-translate-y-1/2 after:w-[80px] after:h-[80px] after:bg-[radial-gradient(circle,rgba(14,16,232,0.2)_0%,_rgba(14,16,232,0.2)_40%,rgba(14,16,232,0.1)_60%,rgba(180,29,255,0)_100%))] after:rounded-full">
                             <NuxtImg src="/images/lcx.png" class="w-[38px] h-[38px]" />
                         </div>
-                        <div v-else class="relative mb-[15px] ">
-                            <NuxtImg src="/images/reward/reward1.svg" class="w-[38px] h-[40px]" />
+                        <div v-else class="relative mb-[15px] " style="filter: drop-shadow(0 0 24px 8px #A377F0)">
+                            <NuxtImg src="/images/reward/reward2.png"
+                                class="w-[38px] h-[40px] drop-shadow-[0_0_24px_#A377F0]"
+                                style="filter: drop-shadow(1px 1px 150px #000);" />
                         </div>
                     </div>
+                    <!-- ,0_0_48px_16px_#CAB5FF,0_0_80px_32px_#B7A8F4 -->
                     <div class=" font-bold font-['DIN_Next_LT_Pro'] mb-[15px]"
-                        :class="[index == 6 ? 'text-[#7B3F9F] text-base' : 'text-white text-lg']">{{ item.value }}</div>
+                        :class="[index == 6 ? 'text-[#7B3F9F] text-base' : 'text-white text-lg']">{{ item.value
+                        }}
+                    </div>
                     <UButton v-if="!item.status && !item.lock" color="lucky"
                         class="w-[92px] h-[42px] justify-center rounded-xl">签到
                     </UButton>
@@ -57,14 +62,107 @@
                 </div>
             </div>
         </div>
-        <div>
-            <div class="flex"></div>
+        <div class="max-w-[1200px] mb-[50px] mx-auto p-[28px_32px] bg-linear-default rounded-2xl ring-1 ring-white/10">
+            <div class="flex gap-[20px] h-12">
+                <div v-for="(item, index) in tabList" @click="selectTab(index)"
+                    :class="['font-medium cursor-pointer', activeTab === index ? 'text-white text-xl font-medium' : 'text-white/50 text-base']">
+                    {{ item.label }}</div>
+            </div>
+            <div class="list flex flex-col gap-[16px] rounded-2xl p-[20px] mt-[20px]">
+                <div class="item flex justify-between p-[20px] rounded-[10px] items-center bg-[rgba(255,255,255,0.04)]"
+                    v-for="(item, index) in taskList" :key="index">
+                    <div class="flex items-center gap-[12px]">
+                        <div>
+                            <NuxtImg src="/images/reward/avtar1.svg" class="w-[46px] h-[46px]" />
+                        </div>
+                        <div class="">
+                            <div class="text-white/50 text-xl font-normal font-['Inter'] mb-[5px]">{{ item.name }}
+                            </div>
+                            <div class="text-white/50 text-sm font-normal font-['Inter']">{{ item.desc }}</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-[32px]">
+                        <div class="flex gap-[8px] items-center text-white text-sm font-bold font-['DIN_Alternate']">
+                            <NuxtImg src="/images/lcx.png" class="w-[32px] h-[32px]" />
+                            <span>{{ item.value }}LCX</span>
+                        </div>
+                        <div class="">
+                            <template v-if="item.lock">
+                                <div
+                                    class="w-24 h-10 relative bg-[rgba(41,43,66,0.5)] rounded-xl backdrop-blur-[1.25px] flex items-center justify-center">
+                                    <NuxtImg src="/images/reward/lock-disable.svg" class="w-[16x] h-[16px]" />
+                                </div>
+                            </template>
+                            <template v-else>
+                                <div v-if="item.status === 1"
+                                    class="w-24 h-10 relative flex items-center justify-center rounded-xl bg-[rgba(38,39,98,1)] text-white/20 text-sm font-normal">
+                                    已领取
+                                </div>
+                                <UButton @click="openModal(item)" v-else-if="item.status === 2" color="lucky"
+                                    class="w-[92px] h-[42px] justify-center rounded-xl">
+                                    领取
+                                </UButton>
+                                <div v-else
+                                    class="w-24 h-10 relative flex items-center justify-center bg-transparent text-[#7779FF] text-sm font-normal ring-1 ring-[#7779FF] rounded-xl">
+                                    去完成
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+        <UModal v-model:open="showModal" :ui="{
+            content: 'bg-[linear-gradient(180deg,#1A1726_0%,#0C0B14_100%)] ring-white/20 rounded-2xl',
+            overlay: 'bg-[rgba(0,0,0,0.8)]',
+        }">
+            <template #content>
+                <div class="p-[40px_45px] relative">
+                    <div class="absolute top-4 right-4 cursor-pointer">
+                        <NuxtImg src="/images/close.svg" alt="" class="w-[24px] h-[24px]" @click="showModal = false" />
+                    </div>
+                    <div class="text-white text-2xl font-normal font-['Inter'] mb-[40px]">如何将网页链接添加到桌面</div>
+                    <div class="mb-[30px]">
+                        <UStepper :highlight="false" :disabled="true" :ui="{
+                            trigger: 'mt-2.5 w-[26px] h-[26px] ring-1 ring-[rgba(193,123,255,1)] bg-transparent text-[rgba(193,123,255,1)] group-data-[state=active]:bg-[rgba(193,123,255,1)]',
+                            separator: 'border-dashed border-l-1 border-white/20 bg-transparent text-white/20',
+                            title: 'text-white/50 text-base font-normal mb-[16px]',
+                            description: 'text-white/20 text-sm font-normal',
+                        }" orientation="vertical" :items="items" class="w-full" />
+                    </div>
+                    <UButton class="w-full justify-center" color="lucky" @click="confirmModal">确定</UButton>
+                </div>
+            </template>
+        </UModal>
+        <UModal v-model:open="showModal" :ui="{
+            content: 'bg-[linear-gradient(180deg,#1A1726_0%,#0C0B14_100%)] ring-white/20 rounded-2xl',
+            overlay: 'bg-[rgba(0,0,0,0.8)]',
+        }">
+            <template #content>
+                <div class="p-[40px_45px] relative">
+                    <div class="absolute top-4 right-4 cursor-pointer">
+                        <NuxtImg src="/images/close.svg" alt="" class="w-[24px] h-[24px]" @click="showModal = false" />
+                    </div>
+                    <div class="text-white text-2xl font-normal font-['Inter'] mb-[40px]">如何将网页链接添加到桌面</div>
+                    <div class="mb-[30px]">
+                        <UStepper :highlight="false" :disabled="true" :ui="{
+                            trigger: 'mt-2.5 w-[26px] h-[26px] ring-1 ring-[rgba(193,123,255,1)] bg-transparent text-[rgba(193,123,255,1)] group-data-[state=active]:bg-[rgba(193,123,255,1)]',
+                            separator: 'border-dashed border-l-1 border-white/20 bg-transparent text-white/20',
+                            title: 'text-white/50 text-base font-normal mb-[16px]',
+                            description: 'text-white/20 text-sm font-normal',
+                        }" orientation="vertical" :items="items" class="w-full" />
+                    </div>
+                    <UButton class="w-full justify-center" color="lucky" @click="confirmModal">确定</UButton>
+                </div>
+            </template>
+        </UModal>
     </main>
 </template>
 
 <script setup lang="ts">
+import type { separator } from '#build/ui';
 import { UButton } from '#components';
+import type { StepperItem } from '@nuxt/ui'
 
 const signDay = ref(0)
 const signList = ref([
@@ -76,6 +174,66 @@ const signList = ref([
     { day: 6, status: false, name: 'Day 6', value: '50', lock: true },
     { day: 7, status: false, name: 'Day 7', value: '大奖', lock: true }
 ])
+
+const tabList = [{
+    label: '新手福利',
+    value: 'welfare',
+    id: 1
+}, {
+    label: '限时活动',
+    value: 'activity',
+    id: 2
+}]
+
+const activeTab = ref(0)
+const selectTab = (index: number) => {
+    activeTab.value = index
+    // 这里可以添加切换标签页的逻辑
+    console.log('Selected tab:', tabList[index].label)
+}
+
+const taskList = ref([
+    { id: 1, name: '将网页添加到桌面', value: '100,000.00 LCX', status: 1, lock: false, desc: '文件描述' },
+    { id: 2, name: '将网页添加到桌面', value: '100,000.00 LCX', status: 2, lock: false, desc: '文件描述' },
+    { id: 3, name: '将网页添加到桌面', value: '100,000.00 LCX', status: 3, lock: false, desc: '文件描述' },
+    { id: 4, name: '将网页添加到桌面', value: '100,000.00 LCX', status: 1, lock: true, desc: '文件描述' },
+    { id: 5, name: '将网页添加到桌面', value: '100,000.00 LCX', status: 2, lock: true, desc: '文件描述' },
+    { id: 6, name: '将网页添加到桌面', value: '100,000.00 LCX', status: 3, lock: true, desc: '文件描述' },
+])
+
+// 弹窗
+const showModal = ref(false)
+
+const openModal = (item: any) => {
+    showModal.value = true
+    console.log(item)
+}
+
+// 手动将完成到的步骤之前的icon都为check
+const items = ref<StepperItem[]>([
+    {
+        title: '已完成的步骤',
+        description: '提示文字提示文字提示文字提示文字提示文字提示文字提示文字提示文字提示文字',
+        icon: 'i-lucide-check'
+    },
+    {
+        title: '进行中的步骤',
+        description: '提示文字提示文字提示文字提示文字提示文字提示文字提示文字提示文字提示文字',
+    },
+    {
+        title: '未开始的步骤',
+        description: '提示文字提示文字提示文字提示文字提示文字提示文字提示文字提示文字提示文字'
+    },
+    {
+        title: '未开始的步骤',
+        description: '提示文字提示文字提示文字提示文字提示文字提示文字提示文字提示文字提示文字'
+    }
+])
+
+const confirmModal = () => {
+    showModal.value = false
+    console.log('确认操作')
+}
 </script>
 
 <style scoped>
