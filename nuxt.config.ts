@@ -3,7 +3,13 @@ export default defineNuxtConfig({
   // app: {
   //   baseURL: '/', // 确保不是 "/&" 或其他异常值
   // },
-  // spaLoadingTemplate: false, // 启用 SPA 加载模板
+  router: {
+    //   middleware: ['redirect-root']
+  },
+  routeRules: {
+    '/': { redirect: '/game' },
+  },
+  spaLoadingTemplate: true, // 启用 SPA 加载模板
   compatibilityDate: '2025-05-15',
   devtools: { enabled: true },
   modules: [
@@ -47,7 +53,7 @@ export default defineNuxtConfig({
       }
     ],
     langDir: 'locales/',
-    defaultLocale: 'en', // 更新默认语言
+    defaultLocale: 'zh-CN', // 更新默认语言
     lazy: false, // 禁用懒加载
     detectBrowserLanguage: {
       useCookie: true,
@@ -58,6 +64,7 @@ export default defineNuxtConfig({
     // detectBrowserLanguage: false
   },
 
+  // 使用 Nuxt Icon 自定义UIcon 指定路径
   icon: {
     customCollections: [{
       prefix: 'custom',

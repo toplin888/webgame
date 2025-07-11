@@ -3,7 +3,7 @@
         <div class="flex gap-[85px] max-w-[1242px] m-auto ">
             <div>
                 <div>
-                    <NuxtImg src="/images/logo.png" class="logo w-full max-w-[120px]" alt="" />
+                    <NuxtImg src="/images/logo.svg" class="logo w-full max-w-[120px]" alt="" />
                 </div>
                 <div class="max-w-[317px] mt-[20px] text-[12px] text-[#ADADAD]">
                     {{ $t('footer.desc') }}

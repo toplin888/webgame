@@ -28,7 +28,7 @@ export default defineAppConfig({
         // 品牌配置
         brand: {
             primaryColor: '#7578FF',
-            logo: '/logo.png',
+            logo: '/logo.svg',
             favicon: '/favicon.ico'
         },
 
@@ -46,7 +46,7 @@ export default defineAppConfig({
             baseUrl: process.env.NODE_ENV === 'development'
                 ? 'http://localhost:3001'
                 : 'https://api.luckyx.com'
-        },
+        }
 
     }
 })
