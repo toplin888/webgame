@@ -1,5 +1,5 @@
 <template>
-    <mian>
+    <main>
         <div
             class="banner flex items-center justify-between max-w-[1200px] mx-auto relative after:content-[''] after:absolute after:top-[50%] after:left-[50%] after:-translate-x-1/2 after:-translate-y-1/2 after:w-[300px] after:h-[300px] after:bg-[radial-gradient(circle,rgba(48,0,131,0.5)_0%,_rgba(48,0,131,0.15)_50%,transparent_100%))] after:z-10 after:rounded-full">
             <div class="">
@@ -14,9 +14,16 @@
         </div>
         <!-- 每日签到 -->
         <div class="mb-[24px] max-w-[1200px] mx-auto p-[34px_58px]">
-            <div class="mb-[10px] text-neutral-200 text-xl font-normal font-['Microsoft_YaHei']">每日签到</div>
-            <div class="text-neutral-400 text-sm font-normal font-['Microsoft_YaHei'] mb-[38px]">已连续签到<span
-                    class="text-indigo-400">{{ signDay }}</span>天</div>
+            <div class="flex items-center justify-between mb-[30px]">
+                <div>
+                    <div class="mb-[10px] text-neutral-200 text-xl font-normal font-['Microsoft_YaHei']">每日签到</div>
+                    <div class="text-neutral-400 text-sm font-normal font-['Microsoft_YaHei']">已连续签到<span
+                            class="text-indigo-400">{{ signDay }}</span>天</div>
+                </div>
+                <div>
+                    <NuxtImg src="/images/reward/history.svg" class="w-[20px] h-[20px]" />
+                </div>
+            </div>
             <div class="grid grid-cols-7 gap-[13px]">
                 <!-- bg-gradient-to-b from-violet-400 via-violet-300 to-violet-300 -->
                 <div class="flex flex-col items-center justify-center w-full p-[15px] rounded-2xl border border-dashed border-white/20"
@@ -50,7 +57,10 @@
                 </div>
             </div>
         </div>
-    </mian>
+        <div>
+            <div class="flex"></div>
+        </div>
+    </main>
 </template>
 
 <script setup lang="ts">
