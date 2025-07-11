@@ -68,48 +68,79 @@
                     :class="['font-medium cursor-pointer', activeTab === index ? 'text-white text-xl font-medium' : 'text-white/50 text-base']">
                     {{ item.label }}</div>
             </div>
-            <div class="list flex flex-col gap-[16px] rounded-2xl p-[20px] mt-[20px]">
-                <div class="item flex justify-between p-[20px] rounded-[10px] items-center bg-[rgba(255,255,255,0.04)]"
-                    v-for="(item, index) in taskList" :key="index">
-                    <div class="flex items-center gap-[12px]">
-                        <div>
-                            <NuxtImg src="/images/reward/avtar1.svg" class="w-[46px] h-[46px]" />
-                        </div>
-                        <div class="">
-                            <div class="text-white/50 text-xl font-normal font-['Inter'] mb-[5px]">{{ item.name }}
+            <div>
+                <Transition name="fade">
+                    <div class="list flex flex-col gap-[16px] rounded-2xl mt-[20px]" v-if="activeTab === 0">
+                        <div class="item flex justify-between p-[20px] rounded-[10px] items-center bg-[rgba(255,255,255,0.04)]"
+                            v-for="(item, index) in taskList" :key="index">
+                            <div class="flex items-center gap-[12px]">
+                                <div>
+                                    <NuxtImg src="/images/reward/avtar1.svg" class="w-[46px] h-[46px]" />
+                                </div>
+                                <div class="">
+                                    <div class="text-white/50 text-xl font-normal font-['Inter'] mb-[5px]">{{ item.name
+                                    }}
+                                    </div>
+                                    <div class="text-white/50 text-sm font-normal font-['Inter']">{{ item.desc }}</div>
+                                </div>
                             </div>
-                            <div class="text-white/50 text-sm font-normal font-['Inter']">{{ item.desc }}</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-[32px]">
-                        <div class="flex gap-[8px] items-center text-white text-sm font-bold font-['DIN_Alternate']">
-                            <NuxtImg src="/images/lcx.png" class="w-[32px] h-[32px]" />
-                            <span>{{ item.value }}LCX</span>
-                        </div>
-                        <div class="">
-                            <template v-if="item.lock">
+                            <div class="flex items-center gap-[32px]">
                                 <div
-                                    class="w-24 h-10 relative bg-[rgba(41,43,66,0.5)] rounded-xl backdrop-blur-[1.25px] flex items-center justify-center">
-                                    <NuxtImg src="/images/reward/lock-disable.svg" class="w-[16x] h-[16px]" />
+                                    class="flex gap-[8px] items-center text-white text-sm font-bold font-['DIN_Alternate']">
+                                    <NuxtImg src="/images/lcx.png" class="w-[32px] h-[32px]" />
+                                    <span>{{ item.value }}LCX</span>
                                 </div>
-                            </template>
-                            <template v-else>
-                                <div v-if="item.status === 1"
-                                    class="w-24 h-10 relative flex items-center justify-center rounded-xl bg-[rgba(38,39,98,1)] text-white/20 text-sm font-normal">
-                                    已领取
+                                <div class="">
+                                    <template v-if="item.lock">
+                                        <div
+                                            class="w-24 h-10 relative bg-[rgba(41,43,66,0.5)] rounded-xl backdrop-blur-[1.25px] flex items-center justify-center">
+                                            <NuxtImg src="/images/reward/lock-disable.svg" class="w-[16x] h-[16px]" />
+                                        </div>
+                                    </template>
+                                    <template v-else>
+                                        <div v-if="item.status === 1"
+                                            class="w-24 h-10 relative flex items-center justify-center rounded-xl bg-[rgba(38,39,98,1)] text-white/20 text-sm font-normal">
+                                            已领取
+                                        </div>
+                                        <UButton @click="openModal(item)" v-else-if="item.status === 2" color="lucky"
+                                            class="w-[92px] h-[42px] justify-center rounded-xl">
+                                            领取
+                                        </UButton>
+                                        <div v-else
+                                            class="w-24 h-10 relative flex items-center justify-center bg-transparent text-[#7779FF] text-sm font-normal ring-1 ring-[#7779FF] rounded-xl">
+                                            去完成
+                                        </div>
+                                    </template>
                                 </div>
-                                <UButton @click="openModal(item)" v-else-if="item.status === 2" color="lucky"
-                                    class="w-[92px] h-[42px] justify-center rounded-xl">
-                                    领取
-                                </UButton>
-                                <div v-else
-                                    class="w-24 h-10 relative flex items-center justify-center bg-transparent text-[#7779FF] text-sm font-normal ring-1 ring-[#7779FF] rounded-xl">
-                                    去完成
-                                </div>
-                            </template>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </Transition>
+
+                <Transition name="fade">
+
+                    <!-- 限时活动 -->
+                    <div class="list grid grid-cols-3 gap-[16px] mt-[20px]" v-if="activeTab === 1">
+                        <div v-for="(item, index) in activityList" :key="index"
+                            class="item flex gap-[16px] justify-between items-center p-[13px_19px] ring-1 ring-white/10 rounded-2xl bg-[rgba(255,255,255,0.04)]">
+                            <div>
+                                <NuxtImg :src="item.icon" class="w-[122px] h-[138px] rounded-2xl" />
+                            </div>
+                            <div class="">
+                                <div class="text-white text-lg font-normal font-['Inter'] mb-[6px]">{{ item.name }}
+                                </div>
+                                <div class="mb-[24px] text-white/50 text-xs font-normal font-['Inter'] leading-none">
+                                    {{ item.desc }}
+                                </div>
+                                <div>
+                                    <UButton color="lucky" class="w-[160px] justify-center rounded-[10px]"
+                                        @click="confirmModal2">领取
+                                    </UButton>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </Transition>
             </div>
         </div>
         <UModal v-model:open="showModal" :ui="{
@@ -134,25 +165,25 @@
                 </div>
             </template>
         </UModal>
-        <UModal v-model:open="showModal" :ui="{
+        <UModal v-model:open="showModal2" :ui="{
             content: 'bg-[linear-gradient(180deg,#1A1726_0%,#0C0B14_100%)] ring-white/20 rounded-2xl',
             overlay: 'bg-[rgba(0,0,0,0.8)]',
         }">
             <template #content>
-                <div class="p-[40px_45px] relative">
+                <div
+                    class="p-[40px_45px] relative after:content-[''] after:absolute after:top-[50%] after:left-[50%] after:-translate-x-1/2 after:-translate-y-1/2 after:w-[300px] after:h-[300px] after:bg-[radial-gradient(circle,rgba(48,0,131,0.5)_0%,_rgba(48,0,131,0.15)_50%,transparent_100%))]">
                     <div class="absolute top-4 right-4 cursor-pointer">
-                        <NuxtImg src="/images/close.svg" alt="" class="w-[24px] h-[24px]" @click="showModal = false" />
+                        <NuxtImg src="/images/close.svg" alt="" class="w-[24px] h-[24px]" @click="showModal2 = false" />
                     </div>
-                    <div class="text-white text-2xl font-normal font-['Inter'] mb-[40px]">如何将网页链接添加到桌面</div>
-                    <div class="mb-[30px]">
-                        <UStepper :highlight="false" :disabled="true" :ui="{
-                            trigger: 'mt-2.5 w-[26px] h-[26px] ring-1 ring-[rgba(193,123,255,1)] bg-transparent text-[rgba(193,123,255,1)] group-data-[state=active]:bg-[rgba(193,123,255,1)]',
-                            separator: 'border-dashed border-l-1 border-white/20 bg-transparent text-white/20',
-                            title: 'text-white/50 text-base font-normal mb-[16px]',
-                            description: 'text-white/20 text-sm font-normal',
-                        }" orientation="vertical" :items="items" class="w-full" />
+                    <div class="text-white text-2xl font-normal font-['Inter'] mb-[40px]">恭喜你完成签到任务</div>
+                    <div class="mb-[30px] flex justify-center items-center">
+                        <div>
+                            <NuxtImg src="/images/lcx.png" class="w-[76px] h-[76px] drop-shadow-[0_0_24px_#A377F0]" />
+                        </div>
+                        <div class="text-white text-3xl font-bold font-['DIN_Alternate'] leading-7 ml-[15px]">+100 LCX
+                        </div>
                     </div>
-                    <UButton class="w-full justify-center" color="lucky" @click="confirmModal">确定</UButton>
+                    <UButton class="w-full justify-center h-[48px]" color="lucky" @click="confirmModal2">确定</UButton>
                 </div>
             </template>
         </UModal>
@@ -203,6 +234,8 @@ const taskList = ref([
 
 // 弹窗
 const showModal = ref(false)
+const showModal2 = ref(false)
+
 
 const openModal = (item: any) => {
     showModal.value = true
@@ -232,12 +265,90 @@ const items = ref<StepperItem[]>([
 
 const confirmModal = () => {
     showModal.value = false
+    showModal2.value = true
     console.log('确认操作')
 }
+
+const confirmModal2 = () => {
+    showModal2.value = false
+    console.log('确认操作')
+}
+
+const activityList = ref([
+    {
+        name: '新人冲冲冲',
+        desc: '活动详情活动详情活动详情活动详情活动...',
+        status: 0,
+        icon: '/images/home/games/agame1.png'
+    },
+    {
+        name: '新人冲冲冲',
+        desc: '活动详情活动详情活动详情活动详情活动...',
+        status: 0,
+        icon: '/images/home/games/agame2.png'
+    },
+    {
+        name: '新人冲冲冲',
+        desc: '活动详情活动详情活动详情活动详情活动...',
+        status: 0,
+        icon: '/images/home/games/agame3.png'
+    },
+    {
+        name: '新人冲冲冲',
+        desc: '活动详情活动详情活动详情活动详情活动...',
+        status: 0,
+        icon: '/images/home/games/agame4.png'
+    },
+    {
+        name: '新人冲冲冲',
+        desc: '活动详情活动详情活动详情活动详情活动...',
+        status: 0,
+        icon: '/images/home/games/agame5.png'
+    },
+    {
+        name: '新人冲冲冲',
+        desc: '活动详情活动详情活动详情活动详情活动...',
+        status: 0,
+        icon: '/images/home/games/agame6.png'
+    },
+    {
+        name: '新人冲冲冲',
+        desc: '活动详情活动详情活动详情活动详情活动...',
+        status: 0,
+        icon: '/images/home/games/agame7.png'
+    },
+    {
+        name: '新人冲冲冲',
+        desc: '活动详情活动详情活动详情活动详情活动...',
+        status: 0,
+        icon: '/images/home/games/agame8.png'
+    },
+    {
+        name: '新人冲冲冲',
+        desc: '活动详情活动详情活动详情活动详情活动...',
+        status: 0,
+        icon: '/images/home/games/agame1.png'
+    }
+])
 </script>
 
 <style scoped>
 .bgLight {
     background: linear-gradient(to bottom, #A377F0 0%, #CAB5FF 25%, #A36BEC 75%, #B7A8F4 100%);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.3s;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+
+.fade-enter-to,
+.fade-leave-from {
+    opacity: 1;
 }
 </style>
