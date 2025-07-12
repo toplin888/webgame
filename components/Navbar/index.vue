@@ -140,7 +140,7 @@ const menuItems = [
   },
   {
     label: t('nav.leaderboard'),
-    to: '/leaderboard'
+    to: '/ranking'
   },
   {
     label: t('nav.reward'),

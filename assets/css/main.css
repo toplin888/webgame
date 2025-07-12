@@ -28,3 +28,7 @@
 .bg-linear-default {
   @apply bg-[linear-gradient(180deg,#1A1726_0%,rgba(26,23,38,0.30)_100%)]
 }
+
+.ring-default {
+  @apply ring-1 ring-white/20 rounded-2xl;
+}
