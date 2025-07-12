@@ -79,7 +79,8 @@
             </NuxtLink>
           </div>
 
-          <div class="flex justify-center items-center ml-6 gap-[8px]">
+          <div class="flex justify-center items-center ml-6 gap-[8px] cursor-pointer hover:cursor-pointer"
+            @click="toMe">
             <div>
               <NuxtImg src="/images/nav/user.png" alt="User" class="w-[32px] h-[32px] rounded-full" />
             </div>
@@ -87,6 +88,7 @@
               {{ formatName('0XMSSHJUYI0XMSSHJUYI') }}
             </div>
           </div>
+
         </div>
         <NuxtLink v-if="!loginStatus" @click="loginStatus = true"
           class="nav-link hover:cursor-pointer flex items-center" data-text="documentation" target="_blank">
@@ -161,6 +163,10 @@ const toBelongings = () => {
     //   color: 'warning',
     // })
   }
+}
+
+const toMe = () => {
+  navigateTo('/me')
 }
 
 </script>

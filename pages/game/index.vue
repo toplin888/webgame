@@ -79,6 +79,7 @@
           <div>
             <NuxtImg src="/images/arrow-right.svg" alt="lcx" class="w-[16px] h-[16px]" />
           </div>
+          <!-- 渐变边框 -->
           <span class="absolute inset-0 rounded-[10px]" style="
             padding:2px;
             background:linear-gradient(90deg,#471A8D 0%,#4B4CEE 100%);
@@ -118,10 +119,10 @@
             </div>
             <div class="max-w-[55px]">
               <div class="text-right justify-center text-indigo-600/50 text-xs font-normal font-['Inter']">{{ item.time
-                }}</div>
+              }}</div>
               <div class="text-right mt-[6px] justify-center text-white text-sm font-normal font-['Inter']">{{ 'X' +
                 item.count
-                }}</div>
+              }}</div>
             </div>
           </div>
         </div>
