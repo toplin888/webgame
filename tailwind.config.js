@@ -77,7 +77,9 @@ export default {
                     800: '#412db5',
                     900: '#372a8f',
                     950: '#231970'
-                }
+                },
+                'transparent': 'transparent', // 透明色，用于背景或边框
+
             },
 
             /**

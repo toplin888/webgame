@@ -20,7 +20,7 @@
                     <div class="text-neutral-400 text-sm font-normal font-['Microsoft_YaHei']">已连续签到<span
                             class="text-indigo-400">{{ signDay }}</span>天</div>
                 </div>
-                <div>
+                <div @click="toHistory">
                     <NuxtImg src="/images/reward/history.svg" class="w-[20px] h-[20px]" />
                 </div>
             </div>
@@ -79,7 +79,7 @@
                                 </div>
                                 <div class="">
                                     <div class="text-white/50 text-xl font-normal font-['Inter'] mb-[5px]">{{ item.name
-                                    }}
+                                        }}
                                     </div>
                                     <div class="text-white/50 text-sm font-normal font-['Inter']">{{ item.desc }}</div>
                                 </div>
@@ -330,6 +330,11 @@ const activityList = ref([
         icon: '/images/home/games/agame1.png'
     }
 ])
+
+const toHistory = () => {
+    // 跳转到活动记录页面
+    navigateTo('/reward/history')
+}
 </script>
 
 <style scoped>

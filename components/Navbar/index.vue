@@ -31,10 +31,11 @@
         <div v-if="loginStatus" class="flex">
           <div
             class="flex items-center ring-1 ring-white/10 rounded-[69px] bg-[linear-gradient(180deg,#FFFFFF14_0%,rgba(255, 255, 255, 0.08)_100%)] relative">
-            <UDropdownMenu :items="currencyList" :externalIcon="false"
-              :ui="{ item: '', content: 'w-48 bg-[rgba(43,43,54,1)] ring-0 ', itemLabel: 'text-white text-base font-normal' }">
-              <!-- bg-gradient-to-l from-neutral-900/25 to-gray-900/90 border-[0.50px] border-边框 -->
-              <div class="flex items-center gap-[10px] p-[10px_0_10px_20px]">
+
+            <!-- bg-gradient-to-l from-neutral-900/25 to-gray-900/90 border-[0.50px] border-边框 -->
+            <div class="flex items-center gap-[10px] p-[10px_0_10px_20px]">
+              <UDropdownMenu :items="currencyList" :externalIcon="false"
+                :ui="{ item: '', content: 'w-48 bg-[rgba(43,43,54,1)] ring-0 ', itemLabel: 'text-white text-base font-normal' }">
                 <div class="">
                   <NuxtImg src="/images/nav/arrow-down.svg" alt="More dropdown"
                     class="w-[16px] h-[15px] rounded-full" />
@@ -42,6 +43,17 @@
                 <div>
                   <NuxtImg :src="currentCurrency.icon" class="w-[26px] h-[26px]" />
                 </div>
+                <template #item="{ item }">
+                  <div
+                    :class="['flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-[rgba(249, 251, 252, 0.1)] rounded-lg', currentCurrency.id === item.id ? 'bg-[rgba(249, 251, 252, 0.1)]' : '']"
+                    @click="currentCurrency = item">
+                    <NuxtImg :src="item.icon" class="w-6 h-6" />
+                    <span class="text-white text-base font-normal font-['Inter']">{{ item.val }}</span>
+                    <span class="text-white/50 text-sm font-normal font-['Inter']">{{ item.val2 }}</span>
+                  </div>
+                </template>
+              </UDropdownMenu>
+              <div class="flex items-center cursor-pointer" @click="toBelongings">
                 <div class="text-white text-base font-normal font-['Inter']">
                   1.01
                 </div>
@@ -49,16 +61,8 @@
                   ≈152.22
                 </div>
               </div>
-              <template #item="{ item }">
-                <div
-                  :class="['flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-[rgba(249, 251, 252, 0.1)] rounded-lg', currentCurrency.id === item.id ? 'bg-[rgba(249, 251, 252, 0.1)]' : '']"
-                  @click="currentCurrency = item">
-                  <NuxtImg :src="item.icon" class="w-6 h-6" />
-                  <span class="text-white text-base font-normal font-['Inter']">{{ item.val }}</span>
-                  <span class="text-white/50 text-sm font-normal font-['Inter']">{{ item.val2 }}</span>
-                </div>
-              </template>
-            </UDropdownMenu>
+            </div>
+
 
             <div class="p-[20px] ml-[20px]">
               <NuxtImg src="/images/nav/topup.png" alt="Top up" class="w-[16px] h-[16px]" />
@@ -70,7 +74,9 @@
           </div>
 
           <div class="flex items-center ml-6">
-            <NuxtImg src="/images/nav/notify.png" alt="Notify" class="w-[16px] h-[16px]" />
+            <NuxtLink to="/notify" class="hover:cursor-pointerr" data-text="notification">
+              <NuxtImg src="/images/nav/notify.png" alt="Notify" class="w-[16px] h-[16px]" />
+            </NuxtLink>
           </div>
 
           <div class="flex justify-center items-center ml-6 gap-[8px]">
@@ -81,7 +87,6 @@
               {{ formatName('0XMSSHJUYI0XMSSHJUYI') }}
             </div>
           </div>
-
         </div>
         <NuxtLink v-if="!loginStatus" @click="loginStatus = true"
           class="nav-link hover:cursor-pointer flex items-center" data-text="documentation" target="_blank">
@@ -93,6 +98,7 @@
   </nav>
 </template>
 <script setup lang="ts">
+const toast = useToast()
 import type { DropdownMenuItem } from '@nuxt/ui'
 import { formatName } from '~/utils'
 
@@ -103,7 +109,7 @@ const loginStatus = ref(false)
 
 const currencyList = [
   {
-    icon: '/images/nav/usdt.png',
+    icon: '/images/nav/usdt.svg',
     label: 'USDT',
     id: 'usdt',
     val: '1.01',
@@ -142,6 +148,20 @@ const menuItems = [
   }
 ] satisfies DropdownMenuItem[]
 
+const toBelongings = () => {
+  if (loginStatus.value) {
+    // 跳转到个人物品页面
+    navigateTo('/belongings')
+  } else {
+    // 如果未登录，提示用户登录
+    // loginStatus.value = true
+    // toast.add({
+    //   title: 'Please login first',
+    //   description: 'You need to login to access your belongings.',
+    //   color: 'warning',
+    // })
+  }
+}
 
 </script>
 

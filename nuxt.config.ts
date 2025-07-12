@@ -79,6 +79,7 @@ export default defineNuxtConfig({
         'primary',
         'secondary',
         'lucky',
+        'transparent', // 添加透明色
         'info',
         'success',
         'warning',

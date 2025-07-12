@@ -2,7 +2,8 @@ export default defineAppConfig({
     ui: {
         // 注册 lucky 作为可用颜色
         colors: {
-            lucky: 'purple'
+            lucky: 'purple',
+            transparent: 'transparent',
         },
 
         // 可选：设置 lucky 为默认 primary 颜色
