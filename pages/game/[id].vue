@@ -516,7 +516,6 @@ const columns: TableColumn<TableRowType>[] = [
           // 阻止默认行为 
           event?.preventDefault()
           // 处理验证逻辑
-          console.log('Verify clicked for row:', row.getValue('op'), row.original.id)
         }
       }, '验证')
     }
@@ -530,7 +529,6 @@ function onSelect(row: TableRow<TableRowType>, e?: Event) {
   /* If you decide to also select the column you can do this  */
   row.toggleSelected(!row.getIsSelected())
 
-  console.log(e)
 }
 
 interface PaginatedTableProps<T> {

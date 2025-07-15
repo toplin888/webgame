@@ -177,7 +177,6 @@ onMounted(() => {
 const currentData = ref<null | { id: number; year: number; title: string; desc: string; content: string }>(null)
 function onCardClick(i: number) {
     const item = items[i]
-    console.log(items[i])
     currentData.value = item
     modalState.value = true
 }

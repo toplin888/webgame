@@ -120,7 +120,7 @@
                                             <div class="flex-1">
                                                 <div class="text-white text-sm font-normal font-['Inter']">{{
                                                     item.value
-                                                    }}
+                                                }}
                                                 </div>
                                             </div>
                                         </div>
@@ -208,7 +208,6 @@ const selectedType = ref(1)
 const popoverOpen = ref(false)
 function onTypeChange(value: number) {
     selectedType.value = value
-    console.log(value)
     popoverOpen.value = false
     nextTick(() => {
         popoverOpen.value = false

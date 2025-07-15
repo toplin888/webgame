@@ -7,12 +7,14 @@ export default defineNuxtConfig({
     //   middleware: ['redirect-root']
   },
   routeRules: {
-    '/': { redirect: '/game' },
+    // '/': { redirect: '/game' },
   },
   spaLoadingTemplate: true, // 启用 SPA 加载模板
   compatibilityDate: '2025-05-15',
   devtools: { enabled: true },
   modules: [
+    '@pinia/nuxt',
+    'pinia-plugin-persistedstate/nuxt',
     '@nuxt/eslint',
     '@nuxt/image',
     '@nuxt/ui',
@@ -28,13 +30,13 @@ export default defineNuxtConfig({
     },
     locales: [
       {
-        code: 'zh-CN', // 修改 code 以匹配类型
+        code: 'zh_cn', // 修改 code 以匹配类型
         iso: 'zh-CN',
         name: '简体中文',
         file: 'zh-cn.json'
       },
       {
-        code: 'zh-TW', // 修改 code 以匹配类型
+        code: 'zh_tw', // 修改 code 以匹配类型
         iso: 'zh-TW',
         name: '繁體中文',
         file: 'zh-tw.json'
@@ -53,7 +55,7 @@ export default defineNuxtConfig({
       }
     ],
     langDir: 'locales/',
-    defaultLocale: 'zh-CN', // 更新默认语言
+    defaultLocale: 'zh_cn', // 更新默认语言
     lazy: false, // 禁用懒加载
     detectBrowserLanguage: {
       useCookie: true,
@@ -117,6 +119,17 @@ export default defineNuxtConfig({
     }
   },
   css: ['~/assets/css/main.css'],
+
+  runtimeConfig: {
+    // 只支持服务端
+    apiSecretKey: process.env.NUXT_API_SECRET_KEY || '',
+    // apiBase: process.env.NUXT_API_BASE || 'http://localhost:3000',
+    // public双端支持
+    public: {
+      projectId: process.env.NUXT_PROJECT_ID,
+      apiBase: process.env.NUXT_BASE_URL || '',
+    }
+  },
   devServer: {
     host: '0.0.0.0',  // 同时允许 localhost 和 IP 地址访问
     port: 3000       // 使用默认端口或指定其他端口

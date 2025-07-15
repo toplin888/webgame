@@ -61,7 +61,6 @@ const pageSizeList = ref([
 
 function onSelect(row: TableRow<any>, e?: Event) {
     row.toggleSelected(!row.getIsSelected())
-    console.log(e)
 }
 </script>
 

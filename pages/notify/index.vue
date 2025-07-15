@@ -2,9 +2,12 @@
     <main>
         <div class="max-w-[1691px] mx-auto py-[40px] ">
             <div class="flex gap-[20px] h-12">
-                <div v-for="(item, index) in tabList" @click="selectTab(index)"
-                    :class="['font-medium cursor-pointer', activeTab === index ? 'text-white text-xl font-medium' : 'text-white/50 text-base']">
-                    {{ item.label }}</div>
+                <template v-for="(item, index) in tabList">
+                    <div v-if="!item.auth || (item.auth && globalStore.loginStatus)" @click="selectTab(index)"
+                        :class="['font-medium cursor-pointer', activeTab === index ? 'text-white text-xl font-medium' : 'text-white/50 text-base']">
+                        {{ item.label }}
+                    </div>
+                </template>
             </div>
             <div>
                 <!-- <Transition name="fade"> -->
@@ -69,13 +72,18 @@
 
 <script setup lang="ts">
 
+import { useGlobalStore } from '#imports'
+const globalStore = useGlobalStore()
+
 const tabList = [{
     label: '公告',
     value: 'bulletin',
-    id: 1
+    id: 1,
+    auth: false,
 }, {
     label: '个人通知',
     value: 'notice',
+    auth: true,
     id: 2
 }]
 
@@ -83,7 +91,6 @@ const activeTab = ref(0)
 const selectTab = (index: number) => {
     activeTab.value = index
     // 这里可以添加切换标签页的逻辑
-    console.log('Selected tab:', tabList[index].label)
     notifyTabs.value = index === 0 ? bulletinTabs : noticeTabs // 根据选中的标签页更新通知列表
     notifyTab.value = notifyTabs.value[0].id // 重置通知标签页为第一个
     list.value = index === 0 ? [...tab1List] : [...tab2List] // 根据选中的标签页更新列表

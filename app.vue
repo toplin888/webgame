@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <NuxtRouteAnnouncer />
-    <UApp :locale="locales[locale.replace('-', '_') as keyof typeof locales]">
+    <UApp :locale="uiLocale">
       <NuxtLayout>
         <NuxtPage />
       </NuxtLayout>
@@ -12,7 +12,79 @@
 <script setup lang="ts">
 import * as locales from '@nuxt/ui/locale'
 
+import { useI18n } from 'vue-i18n'
+import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
+import { createAppKit } from '@reown/appkit/vue'
+import { networks } from './config/appkit'
+import { useWalletEvents } from '~/composables/useWalletEvents'
+import { useGlobalStore } from '~/stores/global'
+import { useAccount } from '@wagmi/vue'
+import type { AppKitNetwork } from '@reown/appkit/networks'
+
 const { locale } = useI18n()
+const uiLocale = computed(() => locales[locale.value] || locales.en)
+// import { isClient } from '#imports'
+const config = useRuntimeConfig()
+const projectId = config.public.projectId || ''
+const wagmiAdapter = new WagmiAdapter({ networks, projectId })
+const { isConnected } = useAccount()
+const globalStore = useGlobalStore()
+const walletLogin = useWalletLogin()
+
+// useWalletEvents()
+// if (import.meta.client) {
+const appkitNetworks = networks as [AppKitNetwork, ...AppKitNetwork[]]
+useWalletEvents()
+createAppKit({
+  adapters: [wagmiAdapter],
+  networks: appkitNetworks,
+  projectId,
+  metadata: {
+    name: 'Dapp Game',
+    description: 'A Dapp Game',
+    url: 'https://reown.com/appkit',
+    icons: ['https://avatars.githubusercontent.com/u/179229932?s=200&v=4']
+  },
+  features: {
+    email: false, // default to true
+    // socials: [
+    //   "google",
+    //   "x",
+    //   "github",
+    //   "discord",
+    //   "apple",
+    //   "facebook",
+    //   "farcaster",
+    // ],
+    socials: false,
+    emailShowWallets: false,
+    swaps: false
+  }
+})
+// }
+
+// onMounted(() => {
+//   console.log('useWalletEvents onMounted')
+
+// 监听连接状态变化，未连接时清除 store
+watch(isConnected, (val) => {
+  console.log('useWalletEvents watch isConnected:', val)
+
+  if (!val) {
+    // globalStore.logout()
+  } else if (val && !globalStore.isWalletConnected) {
+    console.log('点击钱包登录:')
+
+    // 如果连接了钱包但 store 还未设置，执行登录
+    walletLogin()
+  } else if (val && globalStore.isWalletConnected && globalStore.walletAddress) {
+    // 如果连接了钱包且 store 已设置，可能需要更新状态或执行其他操作
+    console.log('静默钱包登录:', globalStore.walletAddress)
+    globalStore.setLoginStatus(true)
+  }
+
+}, { immediate: true })
+// })
 </script>
 
 <style>

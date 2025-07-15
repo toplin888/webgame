@@ -3,7 +3,7 @@
     <div class="flex-1">
       <div class="banner p-[60px_0]">
         <div class="relative">
-          <NuxtImg src="/images/home/banner.png" alt="hero" class="w-full rounded-2xl" />
+          <NuxtImg src="/images/home/banner.png" preload alt="hero" class="w-full rounded-2xl" />
           <div class="absolute bottom-6 right-6 w-[32px] h-[32px] cursor-pointer">
             <NuxtImg src="/images/home/enlarge.svg" alt="Enlarge Banner" class="w-full" />
           </div>
@@ -24,13 +24,15 @@
           <div>slots</div>
         </div>
         <div class="game-list grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 my-[40px_35px]">
-          <div v-for="(game, idx) in games" :key="idx" @click="toGameDetail(game)"
-            class="flex flex-col items-center bg-white/5 rounded-xl relative">
-            <NuxtImg :src="game.image" alt="game" class="w-full h-full object-contain" />
-            <div v-show="!game.status"
-              class="absolute bottom-0 py-[15px] font-['Poppins'] text-xs text-white text-center">{{ game.name }}
+          <template v-if="games.length">
+            <div v-for="(game, idx) in games" :key="idx" @click="toGameDetail(game)"
+              class="flex flex-col items-center bg-white/5 rounded-xl relative">
+              <NuxtImg :src="game.image" alt="game" class="w-full h-full object-contain" />
+              <div v-show="!game.status"
+                class="absolute bottom-0 py-[15px] font-['Poppins'] text-xs text-white text-center">{{ game.name }}
+              </div>
             </div>
-          </div>
+          </template>
         </div>
         <div
           class="flex pl-[52px] box-border w-full h-16 bg-[linear-gradient(180deg,#1A1726_0%,rgba(26,23,38,0.30)_100%)] rounded-2xl border border-white/10 gap-[70px]">
@@ -61,7 +63,7 @@
             <NuxtImg src="/images/money.svg" alt="usdt" class="w-[20px] h-[20px]" />
           </div>
           <div class="ml-[10px] flex-1 text-white text-base font-bold font-['DIN_Alternate'] leading-none">
-            19,390.323</div>
+            19,390.3234</div>
           <div class="text-sm text-indigo-400 font-normal cursor-pointer">验证</div>
         </div>
         <div class="mt-[17px] self-stretch justify-start text-indigo-200 text-base font-normal font-['Inter']">
@@ -73,7 +75,8 @@
             <NuxtImg src="/images/lcx.png" alt="lcx" class="w-[36px] h-[36px]" />
           </div>
           <div class="ml-[10px] flex-1">
-            <div class="text-white text-base font-bold font-['DIN_Alternate'] leading-none mb-[4px]">182,392.05</div>
+            <div class="text-white text-base font-bold font-['DIN_Alternate'] leading-none mb-[4px]">{{ totalLcx }}
+            </div>
             <div class="text-indigo-200/50 text-xs font-normal font-['Inter']">持有LCX可获得大量空投</div>
           </div>
           <div>
@@ -106,16 +109,16 @@
         </div>
         <!-- 盈利列表 -->
         <div class="flex flex-col items-center justify-center gap-6 mt-[20px]">
-          <div class="flex items-center justify-between w-full" v-for="(item, index) in profitList" :key="index">
+          <div class="flex items-center justify-between w-full" v-for="(item, index) in profitList" :key="item.id">
             <div class="p-[4px] ring-1 ring-[#7476FF] rounded-[50%] flex items-center justify-center">
-              <NuxtImg :src="item.image" class="w-[37px] h-[37px]" />
+              <NuxtImg :src="item.avatar" class="w-[37px] h-[37px]" />
             </div>
             <div class="flex-1 ml-[10px]">
               <div class="h-3.5 justify-center text-indigo-600/70 text-xs font-normal font-['Inter']">{{
-                formatName(item.name) }}
+                formatName(item.user_name) }}
               </div>
               <div class="mt-[6px] self-stretch justify-center text-white text-base font-medium font-['Inter']">{{
-                item.value + 'LCX' }}</div>
+                item.total_point + 'LCX' }}</div>
             </div>
             <div class="max-w-[55px]">
               <div class="text-right justify-center text-indigo-600/50 text-xs font-normal font-['Inter']">{{ item.time
@@ -134,10 +137,12 @@
 
 <script setup lang="ts">
 import { formatName } from '~/utils'
+import { getGameList, getConfigStatistic, getWinnersList } from '~/composables/apiServices'
 // 页面元数据
 definePageMeta({
   title: 'Index'
 })
+
 // 设置页面 SEO
 useSeoMeta({
   title: 'Home',
@@ -149,48 +154,30 @@ useSeoMeta({
 const { locale, locales } = useI18n()
 const localePath = useLocalePath()
 
-const games = [
-  { id: 1, name: 'game1', image: '/images/home/games/game1.png', status: true },
-  { id: 2, name: 'game2', image: '/images/home/games/game3.png', status: false },
-  { id: 3, name: 'game3', image: '/images/home/games/game4.png', status: false },
-  { id: 4, name: 'game4', image: '/images/home/games/game4.png', status: false },
-  { id: 5, name: 'game5', image: '/images/home/games/game4.png', status: false },
-  { id: 6, name: 'game6', image: '/images/home/games/game2.png', status: true },
-  { id: 7, name: 'game7', image: '/images/home/games/game4.png', status: false },
-  { id: 8, name: 'game8', image: '/images/home/games/game5.png', status: false },
-  { id: 9, name: 'game9', image: '/images/home/games/game6.png', status: false },
-  { id: 10, name: 'game10', image: '/images/home/games/game7.png', status: false },
-  { id: 11, name: 'game11', image: '/images/home/games/game8.png', status: false },
-  { id: 12, name: 'game12', image: '/images/home/games/game8.png', status: false },
-  { id: 13, name: 'game13', image: '/images/home/games/game8.png', status: false },
-  { id: 14, name: 'game14', image: '/images/home/games/game8.png', status: false },
-  { id: 15, name: 'game15', image: '/images/home/games/game8.png', status: false },
-  { id: 16, name: 'game16', image: '/images/home/games/game8.png', status: false },
-  { id: 17, name: 'game17', image: '/images/home/games/game8.png', status: false },
-  { id: 18, name: 'game18', image: '/images/home/games/game8.png', status: false },
-]
+let gameParams = {
+  limit: 10,
+  page: 1,
+  status: 0
+}
+const gameRes = await getGameList({ ...gameParams })
+const games = ref<Game[]>([])
+games.value = gameRes.data.list || []
 
-const profitList = [
-  { value: 58.25, count: 5, time: '11:32:11', name: '0XMSSHJUYI0XMSSHJUYI', image: '/images/home/profit/1.png', profit: '1000 LCX' },
-  { value: 58.25, count: 5, time: '11:32:11', name: '0XMSSHJUYI0XMSSHJUYI', image: '/images/home/profit/2.png', profit: '800 LCX' },
-  { value: 58.25, count: 5, time: '11:32:11', name: '0XMSSHJUYI0XMSSHJUYI', image: '/images/home/profit/3.png', profit: '600 LCX' },
-  { value: 58.25, count: 5, time: '11:32:11', name: '0XMSSHJUYI0XMSSHJUYI', image: '/images/home/profit/4.png', profit: '400 LCX' },
-  { value: 58.25, count: 5, time: '11:32:11', name: '0XMSSHJUYI0XMSSHJUYI', image: '/images/home/profit/4.png', profit: '400 LCX' },
-  { value: 58.25, count: 5, time: '11:32:11', name: '0XMSSHJUYI0XMSSHJUYI', image: '/images/home/profit/4.png', profit: '400 LCX' },
-  { value: 58.25, count: 5, time: '11:32:11', name: '0XMSSHJUYI0XMSSHJUYI', image: '/images/home/profit/4.png', profit: '400 LCX' },
-  { value: 58.25, count: 5, time: '11:32:11', name: '0XMSSHJUYI0XMSSHJUYI', image: '/images/home/profit/4.png', profit: '400 LCX' },
-  { value: 58.25, count: 5, time: '11:32:11', name: '0XMSSHJUYI0XMSSHJUYI', image: '/images/home/profit/4.png', profit: '400 LCX' },
-  { value: 58.25, count: 5, time: '11:32:11', name: '0XMSSHJUYI0XMSSHJUYI', image: '/images/home/profit/4.png', profit: '400 LCX' },
-  { value: 58.25, count: 5, time: '11:32:11', name: '0XMSSHJUYI0XMSSHJUYI', image: '/images/home/profit/4.png', profit: '400 LCX' },
+let winnerParams = {
+  limit: 10,
+  page: 1,
+  status: 0
+}
 
-]
+const winnerRes = await getWinnersList({ ...winnerParams })
+const profitList = ref<Game[]>([])
+profitList.value = winnerRes.data.list || []
 
 const enlargeStatus = ref(false)
 // 满屏放大图片
 const toggleEnlarge = () => {
   enlargeStatus.value = !enlargeStatus.value
 }
-
 
 const currentLocale = computed(() => {
   const current = locales.value.find((l: any) => l.code === locale.value)
@@ -220,6 +207,16 @@ interface ProfitItem {
 const toGameDetail = (item: Game): void => {
   navigateTo(localePath('/game/' + item.id))
 }
+
+const totalLcx = ref('0.00')
+
+onMounted(async () => {
+  // 获取统计数据
+  const res1 = await getConfigStatistic()
+  // 将数据除以10000且千分位加逗号
+  totalLcx.value = formatLcx(res1?.data?.total_lcx)
+  console.log('Total LCX:', totalLcx.value)
+})
 
 </script>
 <style scoped>

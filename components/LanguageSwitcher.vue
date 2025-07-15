@@ -12,9 +12,15 @@
 </template>
 
 <script setup lang="ts">
+import { getConfigLanguagesList } from '~/composables/apiServices'
 
 const { locale, locales } = useI18n()
 const switchLocalePath = useSwitchLocalePath()
+
+
+// const langRes = await getConfigLanguagesList({})
+// const languages = ref([])
+// languages.value = langRes.list || []
 
 type LocaleCode = typeof locales.value[number]['code']
 
@@ -23,19 +29,26 @@ interface Language {
   name: string
 }
 
-const languages: Language[] = [
-  { code: 'zh-CN', name: '简体中文' },
-  { code: 'zh-TW', name: '繁體中文' },
-  { code: 'en', name: 'English' },
-  { code: 'ja', name: '日本語' },
-]
+const languages = computed(() =>
+  locales.value.map(l => ({
+    code: l.code,
+    name: l.name
+  }))
+)
+
+// const languages: Language[] = [
+//   { code: 'zh-CN', name: '简体中文' },
+//   { code: 'zh-TW', name: '繁體中文' },
+//   { code: 'en', name: 'English' },
+//   { code: 'ja', name: '日本語' },
+// ]
 
 const currentLanguage = computed(() => {
-  return languages.find(lang => lang.code === locale.value) || languages[0]
+  return languages.value.find(lang => lang.code === locale.value) || languages.value[0]
 })
 
 const languageItems = computed(() => {
-  return languages.map(lang => ({
+  return languages.value.map(lang => ({
     label: lang.name,
     checked: lang.code === locale.value, // 直接使用 locale.value 比较
     onSelect: () => changeLanguage(lang.code)

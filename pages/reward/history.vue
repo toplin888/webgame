@@ -13,6 +13,10 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+    title: 'Reward History',
+    middleware: ['auth-client']
+})
 import type { TableColumn, TableRow } from '@nuxt/ui'
 import { NuxtImg } from '#components'
 const UIcon = resolveComponent('UIcon')
@@ -52,7 +56,6 @@ const selectedType = ref(1)
 const popoverOpen = ref(false)
 function onTypeChange(value: number) {
     selectedType.value = value
-    console.log(value)
     popoverOpen.value = false
     nextTick(() => {
         popoverOpen.value = false

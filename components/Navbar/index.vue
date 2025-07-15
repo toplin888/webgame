@@ -28,7 +28,17 @@
       </button>
 
       <div class="flex items-center gap-6">
-        <div v-if="loginStatus" class="flex">
+
+        <div class="flex items-center ml-6">
+          <UIcon name="i-lucide-search" alt="Search" class="w-[16px] h-[16px]" />
+        </div>
+
+        <div class="flex items-center ml-6">
+          <NuxtLink to="/notify" class="hover:cursor-pointerr" data-text="notification">
+            <NuxtImg src="/images/nav/notify.svg" alt="Notify" class="w-[16px] h-[16px]" />
+          </NuxtLink>
+        </div>
+        <div v-if="globalStore.loginStatus" class="flex">
           <div
             class="flex items-center ring-1 ring-white/10 rounded-[69px] bg-[linear-gradient(180deg,#FFFFFF14_0%,rgba(255, 255, 255, 0.08)_100%)] relative">
 
@@ -68,7 +78,7 @@
               <NuxtImg src="/images/nav/topup.png" alt="Top up" class="w-[16px] h-[16px]" />
             </div>
           </div>
-
+          <!-- 
           <div class="flex items-center ml-6">
             <NuxtImg src="/images/nav/search.svg" alt="Search" class="w-[16px] h-[16px]" />
           </div>
@@ -77,22 +87,22 @@
             <NuxtLink to="/notify" class="hover:cursor-pointerr" data-text="notification">
               <NuxtImg src="/images/nav/notify.png" alt="Notify" class="w-[16px] h-[16px]" />
             </NuxtLink>
-          </div>
+          </div> -->
 
           <div class="flex justify-center items-center ml-6 gap-[8px] cursor-pointer hover:cursor-pointer"
             @click="toMe">
             <div>
-              <NuxtImg src="/images/nav/user.png" alt="User" class="w-[32px] h-[32px] rounded-full" />
+              <NuxtImg :src="globalStore?.userInfo?.avatar || ''" alt="User" class="w-[32px] h-[32px] rounded-full" />
             </div>
             <div class="text-white text-sm font-normal font-['Inter']">
-              {{ formatName('0XMSSHJUYI0XMSSHJUYI') }}
+              {{ formatName(globalStore.walletAddress || '') }}
             </div>
           </div>
 
         </div>
-        <NuxtLink v-if="!loginStatus" @click="loginStatus = true"
-          class="nav-link hover:cursor-pointer flex items-center" data-text="documentation" target="_blank">
-          <UButton color="lucky" class="w-32 h-10 justify-center">{{ $t('nav.openBtn') }}</UButton>
+        <NuxtLink v-if="!globalStore.loginStatus" class="nav-link hover:cursor-pointer flex items-center"
+          data-text="documentation" target="_blank">
+          <UButton color="lucky" class="w-32 h-10 justify-center" @click="connect">{{ $t('nav.openBtn') }}</UButton>
         </NuxtLink>
         <LanguageSwitcher />
       </div>
@@ -100,15 +110,44 @@
   </nav>
 </template>
 <script setup lang="ts">
-const toast = useToast()
+import { useAppKit } from '@reown/appkit/vue';
 import type { DropdownMenuItem } from '@nuxt/ui'
 import { formatName } from '~/utils'
+import { useGlobalStore } from '~/stores/global'
+
+const globalStore = useGlobalStore()
 
 const localePath = useLocalePath()
 const { t } = useI18n()
 const route = useRoute()
-const loginStatus = ref(false)
+// 监听钱包连接状态变化
+// watchEffect(() => {
+//   if (isConnected.value && address.value) {
+//     globalStore.setWallet(address.value)
+//     console.log('Wallet connected:', address.value)
+//     useWalletLogin()
+//   }
+// })
 
+// let open: ((options: any) => void) | undefined
+
+if (import.meta.client) {
+  // 只在客户端获取 open 方法
+}
+
+
+
+const connect = async () => {
+  // if (open) {
+  const { open } = useAppKit()
+  open({ view: 'Connect' })
+  // console.log('Connect result:', result)
+  // 假设 result.address 是钱包地址
+  // if (result?.address) {
+  //   globalStore.setWallet(result.address)
+  // }
+  // }
+}
 const currencyList = [
   {
     icon: '/images/nav/usdt.svg',
@@ -151,7 +190,7 @@ const menuItems = [
 ] satisfies DropdownMenuItem[]
 
 const toBelongings = () => {
-  if (loginStatus.value) {
+  if (globalStore.loginStatus) {
     // 跳转到个人物品页面
     navigateTo('/belongings')
   } else {

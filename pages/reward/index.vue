@@ -79,7 +79,7 @@
                                 </div>
                                 <div class="">
                                     <div class="text-white/50 text-xl font-normal font-['Inter'] mb-[5px]">{{ item.name
-                                        }}
+                                    }}
                                     </div>
                                     <div class="text-white/50 text-sm font-normal font-['Inter']">{{ item.desc }}</div>
                                 </div>
@@ -239,7 +239,6 @@ const showModal2 = ref(false)
 
 const openModal = (item: any) => {
     showModal.value = true
-    console.log(item)
 }
 
 // 手动将完成到的步骤之前的icon都为check

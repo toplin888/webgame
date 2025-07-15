@@ -26,6 +26,9 @@
                                                 :data-clipboard-text="user.address" />
                                         </div>
                                     </div>
+                                    <div class="flex items-center ml-1">
+                                        <UButton color="lucky" @click="disconnectHandle">断开连接</UButton>
+                                    </div>
                                 </div>
                                 <div class="pb-[22px] border-b-1 border-white/20 mb-6">
                                     <div class="mb-[10px]">钱包地址</div>
@@ -299,6 +302,10 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+    title: 'Me',
+    middleware: ['auth-client']
+})
 import ClipboardJS from 'clipboard'
 import type { TableColumn, TableRow } from '@nuxt/ui'
 import { NuxtImg } from '#components'
@@ -306,6 +313,10 @@ const UIcon = resolveComponent('UIcon')
 const UPopover = resolveComponent('UPopover')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 const UButton = resolveComponent('UButton')
+import { useDisconnect } from '@wagmi/vue'
+import { useGlobalStore } from '#imports'
+const { disconnectAsync } = useDisconnect()
+const globalStore = useGlobalStore()
 
 const user = ref({
     address: '0x8213sdslasdasdasdsadsadasfkewopriopewrewr',
@@ -325,11 +336,17 @@ const tabList = [
     { label: '我的收藏', value: 4 }
 ]
 
-const activeTab = ref(1)
+const activeTab = ref(0)
 const lastTab = ref(0)
 const transitionName = computed(() =>
     activeTab.value > lastTab.value ? 'slide-left' : 'slide-right'
 )
+
+const disconnectHandle = async () => {
+    await disconnectAsync()
+    globalStore.logout()
+    navigateTo('/')
+}
 
 const selectTab = (index: number) => {
     lastTab.value = activeTab.value
@@ -392,7 +409,7 @@ const statusList = [
     { label: '待激活', value: 0, id: 0 },
 ]
 
-const selectedStatus = ref(1)
+const selectedStatus = ref(0)
 
 const popoverOpen = ref(false)
 function onTypeChange(value: number) {

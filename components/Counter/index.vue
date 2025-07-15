@@ -24,7 +24,6 @@ const displayValue = computed(() => {
 })
 
 useIntersectionObserver(target, ([{ isIntersecting }]) => {
-    console.log('isIntersecting:', isIntersecting)
     if (isIntersecting) {
         startNum.value = props.value
     } else {
