@@ -3,7 +3,8 @@
     <div class="flex-1">
       <div class="banner p-[60px_0]">
         <div class="relative">
-          <NuxtImg src="/images/home/banner.png" preload alt="hero" class="w-full rounded-2xl" />
+          <NuxtImg :src="games.length && games[0].img3 ? games[0].img3 : '/images/home/banner.png'" preload
+            @click="toGameDetail(games[0])" alt="hero" class="w-full rounded-2xl cursor-pointer" />
           <div class="absolute bottom-6 right-6 w-[32px] h-[32px] cursor-pointer">
             <NuxtImg src="/images/home/enlarge.svg" alt="Enlarge Banner" class="w-full" />
           </div>
@@ -24,15 +25,17 @@
           <div>slots</div>
         </div>
         <div class="game-list grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 my-[40px_35px]">
-          <template v-if="games.length">
-            <div v-for="(game, idx) in games" :key="idx" @click="toGameDetail(game)"
-              class="flex flex-col items-center bg-white/5 rounded-xl relative">
-              <NuxtImg :src="game.image" alt="game" class="w-full h-full object-contain" />
-              <div v-show="!game.status"
-                class="absolute bottom-0 py-[15px] font-['Poppins'] text-xs text-white text-center">{{ game.name }}
+          <div v-if="games.length">
+            <div v-for="(game, idx) in games.slice(1, games.length)" :key="game.id" @click="toGameDetail(game)"
+              class="flex flex-col items-center bg-white/5 rounded-xl relative"
+              :class="game.status === 1 ? '' : 'opacity-80'">
+              <NuxtImg :src="game.img2" alt="game" class="w-full h-full rounded-[10px] object-contain" />
+              <div v-show="game.status === 1"
+                class="absolute bottom-0 py-[15px] font-['Poppins'] text-xs text-white text-center">{{ game.status === 1
+                  ? '' : 'Coming Soon' }}
               </div>
             </div>
-          </template>
+          </div>
         </div>
         <div
           class="flex pl-[52px] box-border w-full h-16 bg-[linear-gradient(180deg,#1A1726_0%,rgba(26,23,38,0.30)_100%)] rounded-2xl border border-white/10 gap-[70px]">
@@ -111,20 +114,21 @@
         <div class="flex flex-col items-center justify-center gap-6 mt-[20px]">
           <div class="flex items-center justify-between w-full" v-for="(item, index) in profitList" :key="item.id">
             <div class="p-[4px] ring-1 ring-[#7476FF] rounded-[50%] flex items-center justify-center">
-              <NuxtImg :src="item.avatar" class="w-[37px] h-[37px]" />
+              <NuxtImg :src="item.avatar" class="w-[37px] h-[37px] rounded-full" />
             </div>
             <div class="flex-1 ml-[10px]">
               <div class="h-3.5 justify-center text-indigo-600/70 text-xs font-normal font-['Inter']">{{
-                formatName(item.user_name) }}
+                item.user_name }}
               </div>
               <div class="mt-[6px] self-stretch justify-center text-white text-base font-medium font-['Inter']">{{
-                item.total_point + 'LCX' }}</div>
+                item.change_gb / 10000 + 'LCX' }}</div>
             </div>
             <div class="max-w-[55px]">
-              <div class="text-right justify-center text-indigo-600/50 text-xs font-normal font-['Inter']">{{ item.time
+              <div class="text-right justify-center text-indigo-600/50 text-xs font-normal font-['Inter']">{{
+                formatTimeToHMS(item.end_date)
               }}</div>
               <div class="text-right mt-[6px] justify-center text-white text-sm font-normal font-['Inter']">{{ 'X' +
-                item.count
+                item.total_point
               }}</div>
             </div>
           </div>
@@ -136,7 +140,7 @@
 </template>
 
 <script setup lang="ts">
-import { formatName } from '~/utils'
+import { formatName, formatTimeToHMS } from '~/utils'
 import { getGameList, getConfigStatistic, getWinnersList } from '~/composables/apiServices'
 // 页面元数据
 definePageMeta({
@@ -155,23 +159,50 @@ const { locale, locales } = useI18n()
 const localePath = useLocalePath()
 
 let gameParams = {
-  limit: 10,
+  limit: 13,
   page: 1,
   status: 0
 }
-const gameRes = await getGameList({ ...gameParams })
-const games = ref<Game[]>([])
-games.value = gameRes.data.list || []
+// const gameRes = await getGameList({ ...gameParams })
+// const games = ref<Game[]>([])
+// games.value = gameRes.data.list || []
 
-let winnerParams = {
-  limit: 10,
-  page: 1,
-  status: 0
+// let winnerParams = {
+//   limit: 10,
+//   page: 1,
+//   status: 0
+// }
+
+// const winnerRes = await getWinnersList({ ...winnerParams })
+// const profitList = ref<ProfitItem[]>([])
+// profitList.value = winnerRes.data.list || []
+const games = ref([])
+const totalLcx = ref({})
+const profitList = ref([])
+
+
+try {
+  // const { data: gameRes } = await useAsyncData('games', () => getGameList({ limit: 10, page: 1, status: 0 }))
+  // const games = computed(() => gameRes.value?.data?.list ?? [])
+
+  // const { data: winnerRes } = await useAsyncData('winners', () => getWinnersList({ limit: 10, page: 1, status: 0 }))
+  // const profitList = computed(() => winnerRes.value?.data?.list ?? [])
+
+  // const { data: lcxRes } = await useAsyncData('lcx', () => getConfigStatistic())
+  // const totalLcx = computed(() => formatLcx(lcxRes.value?.data?.total_lcx))
+
+  const gameRes = await getGameList({ limit: 10, page: 1, status: 0 })
+  games.value = gameRes?.data?.list ?? []
+
+  const winnerRes = await getWinnersList({ limit: 10, page: 1, status: 0 })
+  profitList.value = winnerRes.data?.list ?? []
+
+  const lcxRes = await getConfigStatistic()
+  totalLcx.value = formatLcx(lcxRes?.data?.total_lcx)
+} catch (err) {
+  console.error(err)
 }
 
-const winnerRes = await getWinnersList({ ...winnerParams })
-const profitList = ref<Game[]>([])
-profitList.value = winnerRes.data.list || []
 
 const enlargeStatus = ref(false)
 // 满屏放大图片
@@ -190,32 +221,32 @@ const availableLocales = computed(() => {
 
 interface Game {
   id: number
-  name: string
-  image: string
-  status: boolean
+  thumbnail: string
+  status: number
 }
 
 interface ProfitItem {
-  value: number
-  count: number
-  time: string
-  name: string
-  image: string
-  profit: string
+  address: string
+  avatar: string
+  id: number
+  total_point: number
+  user_name: string
+  end_date: string
+  change_gb: number
 }
 
 const toGameDetail = (item: Game): void => {
   navigateTo(localePath('/game/' + item.id))
 }
 
-const totalLcx = ref('0.00')
+// const totalLcx = ref('0.00')
 
 onMounted(async () => {
   // 获取统计数据
-  const res1 = await getConfigStatistic()
-  // 将数据除以10000且千分位加逗号
-  totalLcx.value = formatLcx(res1?.data?.total_lcx)
-  console.log('Total LCX:', totalLcx.value)
+  //   const res1 = await getConfigStatistic()
+  //   // 将数据除以10000且千分位加逗号
+  //   totalLcx.value = formatLcx(res1?.data?.total_lcx)
+  //   console.log('Total LCX:', totalLcx.value)
 })
 
 </script>

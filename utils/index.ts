@@ -18,3 +18,12 @@ export function formatLcx(num: number): string {
         maximumFractionDigits: 2
     })
 }
+
+// 将时间格式化为美式时间在进行本地化,截取出时分秒
+export function formatTimeToHMS(timestamp: string | number): string {
+    const date = new Date(timestamp)
+    const h = String(date.getHours()).padStart(2, '0')
+    const m = String(date.getMinutes()).padStart(2, '0')
+    const s = String(date.getSeconds()).padStart(2, '0')
+    return `${h}:${m}:${s}`
+}

@@ -20,6 +20,7 @@ import { useWalletEvents } from '~/composables/useWalletEvents'
 import { useGlobalStore } from '~/stores/global'
 import { useAccount } from '@wagmi/vue'
 import type { AppKitNetwork } from '@reown/appkit/networks'
+import { useWalletLogin } from '~/composables/useWalletLogin'
 
 const { locale } = useI18n()
 const uiLocale = computed(() => locales[locale.value] || locales.en)

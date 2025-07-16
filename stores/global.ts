@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import { useCookie } from '#app';
-import { setUserInfo, clearUserInfo } from '~/utils/localUtils';
 export interface GlobalState {
     token: string | null
     walletAddress: string | null
@@ -58,7 +57,9 @@ export const useGlobalStore = defineStore('global', {
             this.token = null;
             this.loginStatus = false; // 清除登录状态
             (this as any).logoutWallet();
-            clearUserInfo(); // 清除用户信息
+            this.userInfo = null; // 清除用户信息
+            this.uid = 0; // 重置用户ID
+            // clearUserInfo(); // 清除用户信息
         },
         setLoginStatus(status: boolean) {
             this.loginStatus = status;
@@ -71,7 +72,7 @@ export const useGlobalStore = defineStore('global', {
         },
         setUserInfo(userInfo: UserInfo) {
             this.userInfo = userInfo;
-            setUserInfo(userInfo); // 存储用户信息到 localStorage
+            // setUserInfo(userInfo); // 存储用户信息到 localStorage
         }
     },
     persist: {

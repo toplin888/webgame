@@ -38,13 +38,31 @@
 import type { TableColumn, TableRow } from '@nuxt/ui'
 import { NuxtImg } from '#components'
 const UCheckbox = resolveComponent('UCheckbox')
-
+//  table?.tableApi?.getColumn(column.id)?.toggleVisibility(!!checked)
 const props = defineProps<{
     columns: TableColumn<any>[],
     data: any[],
     total?: number,
     pagination?: { page: number; pageSize: number }
 }>()
+
+// const columns = ref([...props.columns])
+// watch(
+//     () => props.columns,
+//     (newVal) => {
+//         columns.value = [...newVal]
+//         console.log('columns:', columns.value)
+//     },
+//     { deep: true, immediate: true }
+// )
+// // const newColumns = computed(() => props.columns)
+// watch(props, (newProps) => {
+//     console.log(newProps.columns, newProps.data, newProps.total)
+//     if (newProps.columns) {
+//         // props.columns = newProps.columns
+//         // pagination.value = newProps.pagination
+//     }
+// }, { immediate: true })
 
 // 表格
 const table = useTemplateRef('table')
@@ -62,6 +80,10 @@ const pageSizeList = ref([
 function onSelect(row: TableRow<any>, e?: Event) {
     row.toggleSelected(!row.getIsSelected())
 }
+
+defineExpose({
+    table
+})
 </script>
 
 <style scoped></style>

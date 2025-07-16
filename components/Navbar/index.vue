@@ -9,7 +9,7 @@
 
       <!-- PC端导航菜单 (中等屏幕及以上显示) -->
       <ul class="hidden md:flex items-center rounded-[50px] pl-[10px] h-[72px] pr-[10px] text-white">
-        <li v-for="(item, index) in menuItems" :key="index" :class="[
+        <li v-for="(item, index) in menuItems" :key="item.to" :class="[
           'nav-menu-item flex items-center justify-center px-5 py-3.5 w-[160px] box-border h-full',
           route.path === localePath(item.to) ? 'active' : ''
         ]">

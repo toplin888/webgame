@@ -28,13 +28,15 @@ export function useWalletLogin() {
                     // const token = res?.token
                     // if (token) {
                     globalStore.setLoginStatus(true)
-                    globalStore.setUid(res.data.user_id)
-                    globalStore.setStatus(res.data.status)
+                    globalStore.setUid(res.data.user.user_id)
+                    globalStore.setStatus(res.data.isreg || false)
                     globalStore.setWallet(accountData.address.value)
                     globalStore.setUserInfo({
-                        ...res.data,
+                        ...res.data.user,
                         address: accountData.address.value,
-                        uid: res.data.user_id,
+                        uid: res.data.user.user_id,
+                        money: res.data.user.money || 0,
+                        isNewUser: res.data.isreg || false,
                     })
 
                     // }

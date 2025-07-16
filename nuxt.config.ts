@@ -1,5 +1,9 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  devtools: {
+    enabled: true,
+  },
+  // debug: true,
   // app: {
   //   baseURL: '/', // 确保不是 "/&" 或其他异常值
   // },
@@ -11,7 +15,6 @@ export default defineNuxtConfig({
   },
   spaLoadingTemplate: true, // 启用 SPA 加载模板
   compatibilityDate: '2025-05-15',
-  devtools: { enabled: true },
   modules: [
     '@pinia/nuxt',
     'pinia-plugin-persistedstate/nuxt',

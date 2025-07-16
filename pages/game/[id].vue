@@ -12,14 +12,16 @@
     </transition>
     <div class="flex-1 p-[60px_0]">
       <div class="banner ring-1 ring-[rgba(255, 255, 255, 0.1)] rounded-2xl">
-        <div class="relative">
-          <iframe class="w-full aspect-[70/39] rounded-2xl " :src="iframeSrc" frameborder="0" :key="iframeKey"></iframe>
+        <div class="relative min-h-[500px]">
+          <iframe v-if="gameIframeData?.game_url" class="w-full aspect-[70/39] rounded-2xl "
+            :src="gameIframeData.game_url" frameborder="0" :key="iframeKey"></iframe>
         </div>
         <div class="flex justify-between p-[30px] box-border">
           <div class="flex items-center gap-[10px]">
-            <div class="text-white text-2xl font-medium font-['Inter']">MAHJONG WINS</div>
+            <div class="text-white text-2xl font-medium font-['Inter']">{{ gameData.game_translation.name || '--' }}
+            </div>
             <div>
-              <NuxtImg @click="toggleDetail" src="/images/nav/arrow-down.svg"
+              <NuxtImg @click="toggleDetail" src="/images/nav/arrow-down.svg" v-if="gameData.game_translation.name"
                 :class="['w-[20px] h-[16px] transition-transform', showDetail ? 'rotate-180' : '']" />
 
             </div>
@@ -67,27 +69,36 @@
               </div>
               <div class="grid grid-cols-2 md:grid-cols-6 gap-6 text-center mb-6">
                 <div>
-                  <Counter :value="98" suffix="%" class="text-2xl mb-[10px] font-medium text-white" />
+                  <div class="flex items-center justify-center">
+                    <!-- <Counter :value="gameData.value1" suffix="%" class="text-2xl mb-[10px] font-medium text-white" /> -->
+                    <span class="text-2xl mb-[10px] font-medium text-white">{{ gameData.game.value1 }}</span>
+                  </div>
                   <div class="text-white/60 text-sm font-normal">RTP(玩家回报率)</div>
                 </div>
                 <div>
-                  <Counter :value="2" suffix="%" class="text-2xl mb-[10px] font-medium text-white" />
+                  <!-- <Counter :value="2" suffix="%" class="text-2xl mb-[10px] font-medium text-white" /> -->
+                  <span class="text-2xl mb-[10px] font-medium text-white">{{ gameData.game.value2 }}</span>
                   <div class="text-white/60 text-sm font-normal">庄家优势</div>
                 </div>
                 <div>
-                  <Counter :value="2" suffix="%" class="text-2xl mb-[10px] font-medium text-white" />
+                  <!-- <Counter :value="2" suffix="%" class="text-2xl mb-[10px] font-medium text-white" /> -->
+                  <span class="text-2xl mb-[10px] font-medium text-white">{{ gameData.game.value3 }}</span>
                   <div class="text-white/60 text-sm font-normal">奖池爆奖</div>
                 </div>
                 <div>
-                  <Counter :value="2" suffix="%" class="text-2xl mb-[10px] font-medium text-white" />
+                  <!-- <Counter :value="2" suffix="%" class="text-2xl mb-[10px] font-medium text-white" /> -->
+                  <span class="text-2xl mb-[10px] font-medium text-white">{{ gameData.game.value4 }}</span>
                   <div class="text-white/60 text-sm font-normal">最高额彩金</div>
                 </div>
                 <div>
-                  <Counter :value="100" :end="1000" prefix="$" class="text-2xl mb-[10px] font-medium text-white" />
+                  <!-- <Counter :value="100" :end="1000" class=" text-2xl mb-[10px] font-medium text-white" /> -->
+
+                  <span class="text-2xl mb-[10px] font-medium text-white">{{ gameData.game.value5 }}</span>
                   <div class="text-white/60 text-sm font-normal font-['Inter']">下注范围</div>
                 </div>
                 <div>
-                  <span class="text-2xl font-medium mb-[10px] text-white">3-3</span>
+                  <!-- <span class="text-2xl font-medium mb-[10px] text-white">3-3</span> -->
+                  <span class="text-2xl mb-[10px] font-medium text-white">{{ gameData.game.value6 }}</span>
                   <div class="text-white/60 text-sm font-normal font-['Inter']">布局</div>
                 </div>
               </div>
@@ -97,10 +108,7 @@
               <div>
                 <div class="text-white/50 text-sm font-medium font-['Inter'] mb-4">玩法说明</div>
                 <div class="text-white/90 text-xs font-normal font-['Inter'] leading-7">
-                  Rapid Gems 777 老虎机以其经典的 3x3 布局和鲜艳的宝石符号，营造出怀旧氛围。这款中等波动的游戏提供 9 种投注方式，最高奖金为 300 倍，适合休闲玩家和高额玩家，投注额从 0.1 到
-                  100 不等。百搭符号占据主导地位，有时还会包含倍数来提高赔付。复古主题融合了鲜艳的 777 图标，营造出永恒的氛围，对于喜欢传统老虎机并融入现代元素的玩家来说，它绝对是不二之选。Rapid Gems
-                  777 老虎机以其经典的 3x3 布局和鲜艳的宝石符号，营造出怀旧氛围。这款中等波动的游戏提供 9 种投注方式，最高奖金为 300 倍，适合休闲玩家和高额玩家，投注额从 0.1 到 100
-                  不等。百搭符号占据主导地位，有时还会包含倍数来提高赔付。复古主题融合了鲜艳的 777 图标，营造出永恒的氛围，对于喜欢传统老虎机并融入现代元素的玩家来说，它绝对是不二之选。
+                  {{ gameData.game_translation.description || '暂无玩法说明' }}
                 </div>
               </div>
             </div>
@@ -117,13 +125,17 @@
             :class="[' text-xl font-medium cursor-pointer', activeTab === index ? 'text-white text-xl font-medium' : 'text-white/50']">
             {{ item.label }}</div>
         </div>
+        <div class="flex justify-end">
+          <UButton color="lucky" class="mr-2" @click="showMultipleHandle">批量选择</UButton>
+          <UButton color="lucky" class="" @click="confirmMultipleHandle">批量上链</UButton>
+        </div>
         <!-- <UDataTable :data="tableData" :columns="columns" class="w-full" /> -->
         <!-- :pagination-options="{
             getPaginationRowModel: getPaginationRowModel()
           }"
           v-model:pagination="pagination" 
           -->
-        <UTable ref="table" v-model:row-selection="rowSelection" :data="tableData" :columns="columns" :ui="{
+        <!-- <UTable ref="table" v-model:row-selection="rowSelection" :data="tableData" :columns="columns" :ui="{
           tbody: 'divide-none space-y-[20px] ',
           th: 'text-[rgba(255,255,255,0.50)] text-sm font-normal font-Inter bg-transparent text-center',
           tr: ' mb-[10px] rounded-[20px] overflow-hidden text-center',
@@ -131,12 +143,12 @@
           thead: 'text-indigo-200 text-sm font-normal font-Inter',
           separator: 'bg-transparent',
         }" @select="onSelect" />
-        <div class="flex justify-end gap-4 items-center pt-4">
-          <!-- <UPagination :default-page="(table?.tableApi?.getState().pagination.pageIndex || 0) + 1"
+        <div class="flex justify-end gap-4 items-center pt-4"> -->
+        <!-- <UPagination :default-page="(table?.tableApi?.getState().pagination.pageIndex || 0) + 1"
             :items-per-page="table?.tableApi?.getState().pagination.pageSize"
             :total="table?.tableApi?.getFilteredRowModel().rows.length"
             @update:page="(p) => table?.tableApi?.setPageIndex(p - 1)" /> -->
-          <UPagination v-model:page="pagination.page" :total="total" :ui="{
+        <!-- <UPagination v-model:page="pagination.page" :total="total" :ui="{
             list: 'border-0 ring-0 text-whitebg-transparent hover:text-white',
             item: 'text-white bg-transparent hover:bg-indigo-400 rounded-full hover:text-white ring-0',
             prev: 'text-white bg-transparent hover:bg-indigo-400 rounded-full hover:text-white ring-0',
@@ -156,7 +168,11 @@
               item: 'text-[rgba(255,255,255,0.5)]'
             }" />
           </div>
-        </div>
+        </div> -->
+
+        <PaginatedTable ref="tableRef" :columns="columns" :data="gameHistory" :pagination="{ page: 1, pageSize: 10 }"
+          class="w-full" />
+
       </div>
       <div
         class="flex mt-[18px] pl-[52px] box-border w-full h-16 bg-[linear-gradient(180deg,#1A1726_0%,rgba(26,23,38,0.30)_100%)] rounded-2xl border border-white/10 gap-[70px]">
@@ -230,25 +246,35 @@
         </div>
         <!-- 盈利列表 -->
         <div class="flex flex-col items-center justify-center gap-6 mt-[20px]">
-          <div class="flex items-center justify-between w-full" v-for="(item, index) in profitList" :key="index">
-            <div class="p-[4px] ring-1 ring-[#7476FF] rounded-[50%] flex items-center justify-center">
-              <NuxtImg :src="item.image" class="w-[37px] h-[37px]" />
+          <template v-if="otherRewardsData.length">
+
+            <div class="flex items-center justify-between w-full" v-for="(item, index) in otherRewardsData"
+              :key="index">
+              <div class="p-[4px] ring-1 ring-[#7476FF] rounded-[50%] flex items-center justify-center">
+                <NuxtImg :src="item.image" class="w-[37px] h-[37px]" />
+              </div>
+              <div class="flex-1 ml-[10px]">
+                <!-- <div class="h-3.5 justify-center text-indigo-600/70 text-xs font-normal font-['Inter']">{{
+                  formatName(item.name) }}
+                </div> -->
+                <div class="mt-[6px] self-stretch justify-center text-white text-base font-medium font-['Inter']">{{
+                  item.value + 'LCX' }}</div>
+              </div>
+              <div class="max-w-[55px]">
+                <div class="text-right justify-center text-indigo-600/50 text-xs font-normal font-['Inter']">{{
+                  item.time
+                }}</div>
+                <!-- <div class="text-right mt-[6px] justify-center text-white text-sm font-normal font-['Inter']">{{ 'X' +
+                  item.count
+                  }}</div> -->
+              </div>
+            </div>|
+          </template>
+          <template v-else>
+            <div class="text-white/50 text-sm font-normal font-['Inter']">
+              <NotData />
             </div>
-            <div class="flex-1 ml-[10px]">
-              <!-- <div class="h-3.5 justify-center text-indigo-600/70 text-xs font-normal font-['Inter']">{{
-                formatName(item.name) }}
-              </div> -->
-              <div class="mt-[6px] self-stretch justify-center text-white text-base font-medium font-['Inter']">{{
-                item.value + 'LCX' }}</div>
-            </div>
-            <div class="max-w-[55px]">
-              <div class="text-right justify-center text-indigo-600/50 text-xs font-normal font-['Inter']">{{ item.time
-              }}</div>
-              <!-- <div class="text-right mt-[6px] justify-center text-white text-sm font-normal font-['Inter']">{{ 'X' +
-                item.count
-                }}</div> -->
-            </div>
-          </div>
+          </template>
         </div>
 
       </div>
@@ -257,37 +283,77 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  title: 'Game Detail',
+  middleware: ['auth-client']
+})
 import { NuxtImg } from '#components'
 import type { TableColumn, TableRow } from '@nuxt/ui'
-import { formatName } from '~/utils'
+import { getGameDetail, getGameLogin, getOtherRewards, getGameHistory } from '~/composables/apiServices'
+import type { GameData, TableRowType } from '~/types/game'
+import { formatTimeToHMS } from '~/utils'
+
 const UCheckbox = resolveComponent('UCheckbox')
 // 页面元数据
-definePageMeta({
-  title: 'Index'
-})
 // 获取当前语言信息
 const { locale, locales } = useI18n()
+const route = useRoute()
+const gameid = Number(route.params.id)
 
-const games = [
-  { name: 'game1', image: '/images/home/games/game1.png', status: true },
-  { name: 'game1', image: '/images/home/games/game3.png', status: false },
-  { name: 'game1', image: '/images/home/games/game4.png', status: false },
-  { name: 'game1', image: '/images/home/games/game4.png', status: false },
-  { name: 'game1', image: '/images/home/games/game4.png', status: false },
-  { name: 'game1', image: '/images/home/games/game2.png', status: true },
-  { name: 'game1', image: '/images/home/games/game4.png', status: false },
-  { name: '0XMSSHJUYI0XMSSHJUYI', image: '/images/home/games/game5.png', status: false },
-  { name: '0XMSSHJUYI0XMSSHJUYI', image: '/images/home/games/game6.png', status: false },
-  { name: '0XMSSHJUYI0XMSSHJUYI', image: '/images/home/games/game7.png', status: false },
-  { name: '0XMSSHJUYI0XMSSHJUYI', image: '/images/home/games/game8.png', status: false },
-  { name: '0XMSSHJUYI0XMSSHJUYI', image: '/images/home/games/game8.png', status: false },
-  { name: '0XMSSHJUYI0XMSSHJUYI', image: '/images/home/games/game8.png', status: false },
-  { name: '0XMSSHJUYI0XMSSHJUYI', image: '/images/home/games/game8.png', status: false },
-  { name: '0XMSSHJUYI0XMSSHJUYI', image: '/images/home/games/game8.png', status: false },
-  { name: '0XMSSHJUYI0XMSSHJUYI', image: '/images/home/games/game8.png', status: false },
-  { name: '0XMSSHJUYI0XMSSHJUYI', image: '/images/home/games/game8.png', status: false },
-  { name: '0XMSSHJUYI0XMSSHJUYI', image: '/images/home/games/game8.png', status: false },
-]
+// 获取全局 store
+const globalStore = useGlobalStore()
+console.log(globalStore.locale)
+// const { data: gameRes } = await useAsyncData('games', () => getGameDetail({ gameid, language: globalStore.locale }))
+// const gameData = computed(() => gameRes.value?.data ?? {})
+
+const gameData = ref({})
+const gameIframeData = ref({})
+console.log('globalStore.uid', globalStore.uid)
+
+try {
+  const gameRes = await getGameDetail({ gameid, language: globalStore.locale })
+  gameData.value = gameRes.data ?? {}
+
+  const gameIframeRes = await getGameLogin({ gameid: gameData.value?.game?.game_id, userid: globalStore.uid })
+  gameIframeData.value = gameIframeRes.data ?? {}
+} catch (error) {
+  console.error('Error fetching game login data:', error)
+}
+
+const otherRewardsData = ref([])
+// 获取其他奖励数据
+try {
+  const otherRewardsRes = await getOtherRewards({ limit: 20, page: 1, userid: globalStore.uid })
+  otherRewardsData.value = otherRewardsRes.data.list ?? []
+  console.log('otherRewardsRes', otherRewardsData.value)
+} catch (error) {
+  console.error('Error fetching game login data:', error)
+}
+
+
+const gameHistory = ref([])
+// 获取其他奖励数据
+try {
+  const gameHistoryRes = await getGameHistory({ limit: 20, page: 1, userid: globalStore.uid })
+  gameHistory.value = gameHistoryRes.data.list ?? []
+  console.log('otherRewardsRes', gameHistoryRes.value)
+} catch (error) {
+  console.error('Error fetching game login data:', error)
+}
+
+
+
+
+
+
+// try {
+
+//   console.log('gameIframeRes', gameIframeRes)
+//   console.log('gameIframeData', gameIframeData.value)
+// } catch (error) {
+//   console.error('Error fetching game login data:', error)
+// }
+
 
 const profitList = [
   { value: 58.25, count: 5, time: '11:32:11', name: '0XMSSHJUYI0XMSSHJUYI', image: '/images/home/profit/1.png', profit: '1000 LCX' },
@@ -301,7 +367,6 @@ const profitList = [
   { value: 58.25, count: 5, time: '11:32:11', name: '0XMSSHJUYI0XMSSHJUYI', image: '/images/home/profit/4.png', profit: '400 LCX' },
   { value: 58.25, count: 5, time: '11:32:11', name: '0XMSSHJUYI0XMSSHJUYI', image: '/images/home/profit/4.png', profit: '400 LCX' },
   { value: 58.25, count: 5, time: '11:32:11', name: '0XMSSHJUYI0XMSSHJUYI', image: '/images/home/profit/4.png', profit: '400 LCX' },
-
 ]
 
 const enlargeStatus = ref(false)
@@ -319,6 +384,17 @@ const currentLocale = computed(() => {
 const availableLocales = computed(() => {
   return locales.value.map((l: any) => l.name)
 })
+
+const showMultiple = ref(false)
+const showMultipleHandle = () => {
+  showMultiple.value = !showMultiple.value
+}
+
+const confirmMultipleHandle = () => {
+  // 确认批量操作
+  console.log('Confirm multiple handle')
+  // showMultiple.value = false
+}
 
 const toShare = () => {
   // 处理分享逻辑
@@ -370,24 +446,10 @@ const tableData: TableRowType[] = Array.from({ length: total }, (_, i) => ({
   status: i % 2
 }))
 
-type TableRowType = {
-  id: string
-  name: string
-  amount: Number
-  multiplier: string
-  icon: string
-  reward: string
-  extra: string
-  start: string
-  end: string
-  hash: string
-  op: string
-  status: number
-}
-
-const columns: TableColumn<TableRowType>[] = [
+const columns: TableColumn<TableRowType>[] = ref([
   {
     id: 'select',
+    enableHiding: false,
     header: ({ table }) =>
       h(UCheckbox, {
         color: 'lucky',
@@ -407,14 +469,18 @@ const columns: TableColumn<TableRowType>[] = [
       })
   },
   {
-    accessorKey: 'name',
+    accessorKey: 'id',
+    header: 'Play ID'
+  },
+  {
+    accessorKey: 'game_name',
     header: 'Name'
   },
   {
-    accessorKey: 'amount',
+    accessorKey: 'valid_bet',
     header: 'Amount',
     cell: ({ row }) => {
-      const value = row.getValue('amount')
+      const value = row.getValue('valid_bet')
       return h('div', { class: 'flex gap-[10px] items-center justify-center' }, [
         h(
           NuxtImg,
@@ -428,18 +494,18 @@ const columns: TableColumn<TableRowType>[] = [
     }
   },
   {
-    accessorKey: 'multiplier',
+    accessorKey: 'total_point',
     header: 'Multiplier',
     cell: ({ row }) => {
-      const value = row.getValue('multiplier')
+      const value = row.getValue('total_point')
       return h('span', { class: 'bg-indigo-400 rounded-3xl text-white text-sm text-white/90 text-sm font-normal font-Inter capitalize leading-[10px] p-[7px_10px]' }, 'x' + value)
     }
   },
   {
-    accessorKey: 'reward',
+    accessorKey: 'change_gb',
     header: 'Reward',
     cell: ({ row }) => {
-      const value = row.getValue('reward')
+      const value = row.getValue('change_gb')
       return h('div', { class: 'flex gap-[10px] items-center justify-center' }, [
         h(
           NuxtImg,
@@ -448,7 +514,7 @@ const columns: TableColumn<TableRowType>[] = [
             class: 'w-[32px] h-[32px]'
           }
         ),
-        h('span', { class: 'text-white text-sm font-font-bold' }, value + ' LCX')
+        h('span', { class: 'text-white text-sm font-font-bold' }, (value as number > 0 ? value : '0') + ' LCX')
       ])
     }
   },
@@ -470,30 +536,18 @@ const columns: TableColumn<TableRowType>[] = [
     }
   },
   {
-    accessorKey: 'start',
+    accessorKey: 'game_time',
     header: 'Start',
-    // cell: ({ row }) => {
-    //   return new Date(row.getValue('start')).toLocaleString('en-US', {
-    //     day: 'numeric',
-    //     month: 'short',
-    //     hour: '2-digit',
-    //     minute: '2-digit',
-    //     hour12: false
-    //   })
-    // }
+    cell: ({ row }) => {
+      return formatTimeToHMS(row.getValue('game_time'))
+    }
   },
   {
-    accessorKey: 'end',
+    accessorKey: 'end_date',
     header: 'End',
-    // cell: ({ row }) => {
-    //   return new Date(row.getValue('end')).toLocaleString('en-US', {
-    //     day: 'numeric',
-    //     month: 'short',
-    //     hour: '2-digit',
-    //     minute: '2-digit',
-    //     hour12: false
-    //   })
-    // }
+    cell: ({ row }) => {
+      return formatTimeToHMS(row.getValue('end_date'))
+    }
   },
   {
     accessorKey: 'hash',
@@ -520,7 +574,33 @@ const columns: TableColumn<TableRowType>[] = [
       }, '验证')
     }
   }
-]
+])
+
+const selectColumn: TableColumn<TableRowType> = {
+  id: 'select',
+  header: ({ table }) =>
+    h(UCheckbox, {
+      color: 'lucky',
+      modelValue: table.getIsSomePageRowsSelected()
+        ? 'indeterminate'
+        : table.getIsAllPageRowsSelected(),
+      'onUpdate:modelValue': (value: boolean | 'indeterminate') =>
+        table.toggleAllPageRowsSelected(!!value),
+      'aria-label': 'Select all'
+    }),
+  cell: ({ row }) =>
+    h(UCheckbox, {
+      color: 'lucky',
+      modelValue: row.getIsSelected(),
+      'onUpdate:modelValue': (value: boolean | 'indeterminate') => row.toggleSelected(!!value),
+      'aria-label': 'Select row'
+    })
+}
+// const columns = computed(() =>
+//   showMultiple.value
+//     ? [selectColumn, ...baseColumns]
+//     : baseColumns
+// )
 
 
 const rowSelection = ref<Record<string, boolean>>({})
@@ -601,6 +681,13 @@ const selectTab = (index: number) => {
   console.log('Selected tab:', tabList[index].label)
 }
 
+const tableRef = ref()
+onMounted(() => {
+  // 访问子组件暴露的 table
+  console.log('tableRef:', tableRef.value?.table)
+  // 也可以调用子组件暴露的方法
+  // tableRef.value?.someMethod()
+})
 // 设置页面 SEO
 useSeoMeta({
   title: 'Home',
