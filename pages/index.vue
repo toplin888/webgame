@@ -126,10 +126,10 @@
             <div class="max-w-[55px]">
               <div class="text-right justify-center text-indigo-600/50 text-xs font-normal font-['Inter']">{{
                 formatTimeToHMS(item.end_date)
-              }}</div>
+                }}</div>
               <div class="text-right mt-[6px] justify-center text-white text-sm font-normal font-['Inter']">{{ 'X' +
                 item.total_point
-              }}</div>
+                }}</div>
             </div>
           </div>
         </div>
@@ -177,7 +177,7 @@ let gameParams = {
 // const profitList = ref<ProfitItem[]>([])
 // profitList.value = winnerRes.data.list || []
 const games = ref([])
-const totalLcx = ref({})
+const totalLcx = ref('0.00')
 const profitList = ref([])
 
 

@@ -28,10 +28,10 @@
                 <!-- bg-gradient-to-b from-violet-400 via-violet-300 to-violet-300 -->
                 <div class="flex flex-col items-center justify-center w-full p-[15px] rounded-2xl border border-dashed border-white/20"
                     :class="index == 6 ? 'bgLight' : 'bg-[rgba(8, 9, 16, 1)]'" v-for="(item, index) in signList"
-                    :key="index">
+                    :key="item.id">
                     <div class=" text-sm mb-[20px]"
                         :class="[index == 6 ? 'text-[#6C2993] font-bold' : 'text-white/50 font-normal']">{{
-                            item.name }}</div>
+                            `第${item.day_index}天` }}</div>
                     <div>
                         <div v-if="index != 6"
                             class="relative mb-[15px] after:content-[''] after:absolute after:top-[50%] after:left-[50%] after:-translate-x-1/2 after:-translate-y-1/2 after:w-[80px] after:h-[80px] after:bg-[radial-gradient(circle,rgba(14,16,232,0.2)_0%,_rgba(14,16,232,0.2)_40%,rgba(14,16,232,0.1)_60%,rgba(180,29,255,0)_100%))] after:rounded-full">
@@ -45,17 +45,18 @@
                     </div>
                     <!-- ,0_0_48px_16px_#CAB5FF,0_0_80px_32px_#B7A8F4 -->
                     <div class=" font-bold font-['DIN_Next_LT_Pro'] mb-[15px]"
-                        :class="[index == 6 ? 'text-[#7B3F9F] text-base' : 'text-white text-lg']">{{ item.value
+                        :class="[index == 6 ? 'text-[#7B3F9F] text-base' : 'text-white text-lg']">{{
+                            index == 6 ? $t('reward.sign7dayName') : item.reward_amount / 10000
                         }}
                     </div>
-                    <UButton v-if="!item.status && !item.lock" color="lucky"
+                    <UButton v-if="item.day_index === signDay && !signStatus" @click="signHandler(item)" color="lucky"
                         class="w-[92px] h-[42px] justify-center rounded-xl">签到
                     </UButton>
-                    <div v-if="item.status"
+                    <div v-if="item.day_index === signDay && signStatus"
                         class="w-24 h-10 relative flex items-center justify-center rounded-xl bg-[rgba(38,39,98,1)] text-white/20 text-sm font-normal">
                         已签
                     </div>
-                    <div v-if="item.lock"
+                    <div v-if="item.day_index > signDay"
                         class="w-24 h-10 relative bg-[rgba(41,43,66,0.5)] rounded-xl backdrop-blur-[1.25px] flex items-center justify-center">
                         <NuxtImg src="/images/reward/lock-disable.svg" class="w-[16x] h-[16px]" />
                     </div>
@@ -78,17 +79,20 @@
                                     <NuxtImg src="/images/reward/avtar1.svg" class="w-[46px] h-[46px]" />
                                 </div>
                                 <div class="">
-                                    <div class="text-white/50 text-xl font-normal font-['Inter'] mb-[5px]">{{ item.name
+                                    <div class="text-white/50 text-xl font-normal font-['Inter'] mb-[5px]">{{
+                                        item.activity.title
                                     }}
                                     </div>
-                                    <div class="text-white/50 text-sm font-normal font-['Inter']">{{ item.desc }}</div>
+                                    <div class="text-white/50 text-sm font-normal font-['Inter']">{{
+                                        item.activity.content }}
+                                    </div>
                                 </div>
                             </div>
                             <div class="flex items-center gap-[32px]">
                                 <div
                                     class="flex gap-[8px] items-center text-white text-sm font-bold font-['DIN_Alternate']">
                                     <NuxtImg src="/images/lcx.png" class="w-[32px] h-[32px]" />
-                                    <span>{{ item.value }}LCX</span>
+                                    <span>{{ formatLcx(item.activity.reward_amount) }}LCX</span>
                                 </div>
                                 <div class="">
                                     <template v-if="item.lock">
@@ -106,7 +110,7 @@
                                             class="w-[92px] h-[42px] justify-center rounded-xl">
                                             领取
                                         </UButton>
-                                        <div v-else
+                                        <div v-else @click="toDoTask(item)"
                                             class="w-24 h-10 relative flex items-center justify-center bg-transparent text-[#7779FF] text-sm font-normal ring-1 ring-[#7779FF] rounded-xl">
                                             去完成
                                         </div>
@@ -175,15 +179,20 @@
                     <div class="absolute top-4 right-4 cursor-pointer">
                         <NuxtImg src="/images/close.svg" alt="" class="w-[24px] h-[24px]" @click="showModal2 = false" />
                     </div>
-                    <div class="text-white text-2xl font-normal font-['Inter'] mb-[40px]">恭喜你完成签到任务</div>
-                    <div class="mb-[30px] flex justify-center items-center">
+                    <div class="text-white text-center text-2xl font-semibold font-['Inter'] mb-[40px]">恭喜你完成任务</div>
+                    <div class="mb-[65px] flex justify-center items-center">
                         <div>
                             <NuxtImg src="/images/lcx.png" class="w-[76px] h-[76px] drop-shadow-[0_0_24px_#A377F0]" />
                         </div>
-                        <div class="text-white text-3xl font-bold font-['DIN_Alternate'] leading-7 ml-[15px]">+100 LCX
+                        <div
+                            class="text-white text-3xl font-bold font-['DIN_Alternate'] leading-7 ml-[15px] relative z-10">
+                            +{{
+                                rewardValue }} LCX
                         </div>
                     </div>
-                    <UButton class="w-full justify-center h-[48px]" color="lucky" @click="confirmModal2">确定</UButton>
+                    <UButton class="w-full justify-center h-[48px] relative z-10" color="lucky"
+                        @click="showModal2 = false">确定
+                    </UButton>
                 </div>
             </template>
         </UModal>
@@ -191,11 +200,14 @@
 </template>
 
 <script setup lang="ts">
-import type { separator } from '#build/ui';
 import { UButton } from '#components';
 import type { StepperItem } from '@nuxt/ui'
-
+import { getActivityList, getSignList, signin } from '~/composables/apiServices'
+import { formatLcx } from '~/utils';
+const toast = useToast()
+const globalStore = useGlobalStore()
 const signDay = ref(0)
+const signStatus = ref(false)
 const signList = ref([
     { day: 1, status: true, name: 'Day 1', value: '50', lock: false },
     { day: 2, status: false, name: 'Day 2', value: '50', lock: false },
@@ -205,6 +217,17 @@ const signList = ref([
     { day: 6, status: false, name: 'Day 6', value: '50', lock: true },
     { day: 7, status: false, name: 'Day 7', value: '大奖', lock: true }
 ])
+
+const getSignListHandler = async () => {
+    let params = { userid: globalStore.uid, language: globalStore.locale }
+    const res = await getSignList(params)
+    signList.value = res.data.list
+    signDay.value = res.data.day
+    signStatus.value = res.data.issign
+    console.log('活动列表:', res.data)
+}
+
+await getSignListHandler()
 
 const tabList = [{
     label: '新手福利',
@@ -232,6 +255,37 @@ const taskList = ref([
     { id: 6, name: '将网页添加到桌面', value: '100,000.00 LCX', status: 3, lock: true, desc: '文件描述' },
 ])
 
+const getActivityListHandler = async () => {
+    let params = { userid: globalStore.uid, language: globalStore.locale }
+    const res = await getActivityList(params)
+    taskList.value = res.data
+    console.log('活动列表:', res.data)
+}
+
+await getActivityListHandler()
+
+const rewardValue = ref(0)
+const signHandler = (item: any) => {
+    console.log(item)
+    signin({
+        userid: globalStore.uid,
+        id: signDay.value,
+    }).then((res: any) => {
+        if (res.code === 200) {
+            showModal2.value = true
+            rewardValue.value = item.reward_amount / 10000
+            signStatus.value = true
+        } else if (res.code === 30001) {
+            toast.add({
+                title: res.msg || '已签到',
+            })
+        }
+    }).catch((err: any) => {
+        toast.add({
+            title: '签到失败，请重新尝试',
+        })
+    })
+}
 // 弹窗
 const showModal = ref(false)
 const showModal2 = ref(false)
@@ -333,6 +387,12 @@ const activityList = ref([
 const toHistory = () => {
     // 跳转到活动记录页面
     navigateTo('/reward/history')
+}
+
+const toDoTask = (item: any) => {
+    // 跳转到任务详情页面
+
+
 }
 </script>
 

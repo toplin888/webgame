@@ -20,6 +20,11 @@ export default defineAppConfig({
             }
         }
     },
+    toast: {
+        position: 'top-right' as const,
+        expand: true,
+        duration: 2000
+    },
     // 应用程序配置
     app: {
         name: 'LuckyX Frontend',

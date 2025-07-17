@@ -106,6 +106,48 @@ export function getGameHistory<T extends Record<string, any> = Record<string, an
   })
 }
 
+export function favoriteGame<T extends Record<string, any> = Record<string, any>>(data: T) {
+  const { $request } = useNuxtApp() as unknown as { $request: RequestFn }
+  return $request('/api/favoriteGame', {
+    method: 'POST',
+    body: {
+      ...data
+    }
+  })
+}
+
+export function getActivityList<T extends Record<string, any> = Record<string, any>>(data: T) {
+  const { $request } = useNuxtApp() as unknown as { $request: RequestFn }
+  return $request('/api/getActivityList', {
+    method: 'POST',
+    body: {
+      ...data
+    }
+  })
+}
+
+export function getSignList<T extends Record<string, any> = Record<string, any>>(data: T) {
+  const { $request } = useNuxtApp() as unknown as { $request: RequestFn }
+  return $request('/api/getSignList', {
+    method: 'POST',
+    body: {
+      ...data
+    }
+  })
+}
+
+export function signin<T extends Record<string, any> = Record<string, any>>(data: T) {
+  const { $request } = useNuxtApp() as unknown as { $request: RequestFn }
+  return $request('/api/signin', {
+    method: 'POST',
+    body: {
+      ...data
+    }
+  })
+}
+
+
+
 export function getConfigStatistic2() {
   return useFetch('/api/getConfigStatistic', {
     method: 'POST'

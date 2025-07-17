@@ -14,6 +14,16 @@ export interface GameTranslation {
     [key: string]: any
 }
 
+interface GameInfo {
+    value1: number | string
+    value2: number | string
+    value3: number | string
+    value4: number | string
+    value5: number | string
+    value6: number | string
+    game_id?: number | string
+}
+
 export interface GameData {
     game?: GameInfo
     game_translation?: GameTranslation

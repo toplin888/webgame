@@ -28,6 +28,11 @@ export default eventHandler(async (event: H3Event) => {
     return res
   } catch (e: any) {
     console.error('Error fetching config statistics:', e)
+    return {
+      data: {
+        total_lcx: 0,
+      }
+    }
     // throw createError({
     //   statusCode: 502,
     //   statusMessage: 'Bad Gateway: ' + (e.message || 'Failed to fetch metrics')

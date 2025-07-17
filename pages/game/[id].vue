@@ -14,29 +14,31 @@
       <div class="banner ring-1 ring-[rgba(255, 255, 255, 0.1)] rounded-2xl">
         <div class="relative min-h-[500px]">
           <iframe v-if="gameIframeData?.game_url" class="w-full aspect-[70/39] rounded-2xl "
-            :src="gameIframeData.game_url" frameborder="0" :key="iframeKey"></iframe>
+            :src="gameIframeData?.game_url" frameborder="0" :key="iframeKey"></iframe>
         </div>
         <div class="flex justify-between p-[30px] box-border">
           <div class="flex items-center gap-[10px]">
-            <div class="text-white text-2xl font-medium font-['Inter']">{{ gameData.game_translation.name || '--' }}
+            <div class="text-white text-2xl font-medium font-['Inter']">{{ gameData?.game_translation?.name || '--' }}
             </div>
             <div>
-              <NuxtImg @click="toggleDetail" src="/images/nav/arrow-down.svg" v-if="gameData.game_translation.name"
+              <NuxtImg @click="toggleDetail" src="/images/nav/arrow-down.svg" v-if="gameData?.game_translation?.name"
                 :class="['w-[20px] h-[16px] transition-transform', showDetail ? 'rotate-180' : '']" />
 
             </div>
           </div>
           <div class="flex items-center gap-[32px]">
-            <div @click="toShare">
+            <div @click="toShare" class="cursor-pointer">
               <NuxtImg src="/images/home/share.svg" class="w-[24px] h-[24px]" />
             </div>
-            <div @click="toCollect">
-              <NuxtImg src="/images/home/like.svg" class="w-[26px] h-[24px]" />
+            <div @click="toCollect" class="cursor-pointer">
+              <NuxtImg v-show="isFavorite" src="/images/home/isfavorite.svg" class="w-[26px] h-[24px]" />
+              <NuxtImg v-show="!isFavorite" src="/images/home/like.svg" class="w-[26px] h-[24px]" />
+
             </div>
-            <div @click="toReload">
+            <div @click="toReload" class="cursor-pointer">
               <NuxtImg src="/images/home/reload.svg" class="w-[22px] h-[22px]" />
             </div>
-            <div @click="toEnlarge">
+            <div @click="toEnlarge" class="cursor-pointer">
               <NuxtImg src="/images/home/large.svg" class="w-[22px] h-[22px]" />
             </div>
           </div>
@@ -71,34 +73,34 @@
                 <div>
                   <div class="flex items-center justify-center">
                     <!-- <Counter :value="gameData.value1" suffix="%" class="text-2xl mb-[10px] font-medium text-white" /> -->
-                    <span class="text-2xl mb-[10px] font-medium text-white">{{ gameData.game.value1 }}</span>
+                    <span class="text-2xl mb-[10px] font-medium text-white">{{ gameData?.game?.value1 }}</span>
                   </div>
                   <div class="text-white/60 text-sm font-normal">RTP(玩家回报率)</div>
                 </div>
                 <div>
                   <!-- <Counter :value="2" suffix="%" class="text-2xl mb-[10px] font-medium text-white" /> -->
-                  <span class="text-2xl mb-[10px] font-medium text-white">{{ gameData.game.value2 }}</span>
+                  <span class="text-2xl mb-[10px] font-medium text-white">{{ gameData?.game?.value2 }}</span>
                   <div class="text-white/60 text-sm font-normal">庄家优势</div>
                 </div>
                 <div>
                   <!-- <Counter :value="2" suffix="%" class="text-2xl mb-[10px] font-medium text-white" /> -->
-                  <span class="text-2xl mb-[10px] font-medium text-white">{{ gameData.game.value3 }}</span>
+                  <span class="text-2xl mb-[10px] font-medium text-white">{{ gameData?.game?.value3 }}</span>
                   <div class="text-white/60 text-sm font-normal">奖池爆奖</div>
                 </div>
                 <div>
                   <!-- <Counter :value="2" suffix="%" class="text-2xl mb-[10px] font-medium text-white" /> -->
-                  <span class="text-2xl mb-[10px] font-medium text-white">{{ gameData.game.value4 }}</span>
+                  <span class="text-2xl mb-[10px] font-medium text-white">{{ gameData?.game?.value4 }}</span>
                   <div class="text-white/60 text-sm font-normal">最高额彩金</div>
                 </div>
                 <div>
                   <!-- <Counter :value="100" :end="1000" class=" text-2xl mb-[10px] font-medium text-white" /> -->
 
-                  <span class="text-2xl mb-[10px] font-medium text-white">{{ gameData.game.value5 }}</span>
+                  <span class="text-2xl mb-[10px] font-medium text-white">{{ gameData?.game?.value5 }}</span>
                   <div class="text-white/60 text-sm font-normal font-['Inter']">下注范围</div>
                 </div>
                 <div>
                   <!-- <span class="text-2xl font-medium mb-[10px] text-white">3-3</span> -->
-                  <span class="text-2xl mb-[10px] font-medium text-white">{{ gameData.game.value6 }}</span>
+                  <span class="text-2xl mb-[10px] font-medium text-white">{{ gameData?.game?.value6 }}</span>
                   <div class="text-white/60 text-sm font-normal font-['Inter']">布局</div>
                 </div>
               </div>
@@ -108,7 +110,7 @@
               <div>
                 <div class="text-white/50 text-sm font-medium font-['Inter'] mb-4">玩法说明</div>
                 <div class="text-white/90 text-xs font-normal font-['Inter'] leading-7">
-                  {{ gameData.game_translation.description || '暂无玩法说明' }}
+                  {{ gameData?.game_translation?.description || '暂无玩法说明' }}
                 </div>
               </div>
             </div>
@@ -170,8 +172,12 @@
           </div>
         </div> -->
 
-        <PaginatedTable ref="tableRef" :columns="columns" :data="gameHistory" :pagination="{ page: 1, pageSize: 10 }"
-          class="w-full" />
+        <!-- <PaginatedTable ref="tableRef" :columnVisibility="columnVisibility" :columns="columns" :data="gameHistory"
+          @update:page="onPageChange" @update:pageSize="onPageSizeChange" :pagination="{ page: 1, pageSize: 1 }"
+          :total="" class="w-full" /> -->
+        <PaginatedTable ref="tableRef" :columnVisibility="columnVisibility" :data="tableData" :columns="columns"
+          :page="pagination.page" :pageSize="pagination.pageSize" :total="total" @update:page="onPageChange"
+          @update:pageSize="onPageSizeChange" class="w-full" />
 
       </div>
       <div
@@ -214,7 +220,8 @@
             <NuxtImg src="/images/lcx.png" alt="lcx" class="w-[36px] h-[36px]" />
           </div>
           <div class="ml-[10px] flex-1">
-            <div class="text-white text-base font-bold font-['DIN_Alternate'] leading-none mb-[4px]">182,392.05</div>
+            <div class="text-white text-base font-bold font-['DIN_Alternate'] leading-none mb-[4px]">{{ totalLcx }}
+            </div>
             <div class="text-indigo-200/50 text-xs font-normal font-['Inter']">持有LCX可获得大量空投</div>
           </div>
           <div>
@@ -251,18 +258,18 @@
             <div class="flex items-center justify-between w-full" v-for="(item, index) in otherRewardsData"
               :key="index">
               <div class="p-[4px] ring-1 ring-[#7476FF] rounded-[50%] flex items-center justify-center">
-                <NuxtImg :src="item.image" class="w-[37px] h-[37px]" />
+                <NuxtImg :src="item?.image" class="w-[37px] h-[37px]" />
               </div>
               <div class="flex-1 ml-[10px]">
                 <!-- <div class="h-3.5 justify-center text-indigo-600/70 text-xs font-normal font-['Inter']">{{
                   formatName(item.name) }}
                 </div> -->
                 <div class="mt-[6px] self-stretch justify-center text-white text-base font-medium font-['Inter']">{{
-                  item.value + 'LCX' }}</div>
+                  item?.value + 'LCX' }}</div>
               </div>
               <div class="max-w-[55px]">
                 <div class="text-right justify-center text-indigo-600/50 text-xs font-normal font-['Inter']">{{
-                  item.time
+                  item?.time
                 }}</div>
                 <!-- <div class="text-right mt-[6px] justify-center text-white text-sm font-normal font-['Inter']">{{ 'X' +
                   item.count
@@ -287,11 +294,20 @@ definePageMeta({
   title: 'Game Detail',
   middleware: ['auth-client']
 })
+
+// 设置页面 SEO
+useSeoMeta({
+  title: 'Home',
+  ogTitle: 'Home',
+  description: 'Welcome to our multilingual website',
+  ogDescription: 'Welcome to our multilingual website'
+})
 import { NuxtImg } from '#components'
 import type { TableColumn, TableRow } from '@nuxt/ui'
-import { getGameDetail, getGameLogin, getOtherRewards, getGameHistory } from '~/composables/apiServices'
+import { getGameDetail, getGameLogin, getOtherRewards, getGameHistory, getConfigStatistic, favoriteGame } from '~/composables/apiServices'
 import type { GameData, TableRowType } from '~/types/game'
 import { formatTimeToHMS } from '~/utils'
+import { useSignByParams } from '~/utils/cryptoSign'
 
 const UCheckbox = resolveComponent('UCheckbox')
 // 页面元数据
@@ -306,13 +322,17 @@ console.log(globalStore.locale)
 // const { data: gameRes } = await useAsyncData('games', () => getGameDetail({ gameid, language: globalStore.locale }))
 // const gameData = computed(() => gameRes.value?.data ?? {})
 
-const gameData = ref({})
+const gameData = ref<GameData>({
+  game: {},
+  game_translation: {}
+})
 const gameIframeData = ref({})
 console.log('globalStore.uid', globalStore.uid)
-
+const isFavorite = ref(false)
 try {
   const gameRes = await getGameDetail({ gameid, language: globalStore.locale })
   gameData.value = gameRes.data ?? {}
+  isFavorite.value = gameRes.data?.game?.is_favorite || false
 
   const gameIframeRes = await getGameLogin({ gameid: gameData.value?.game?.game_id, userid: globalStore.uid })
   gameIframeData.value = gameIframeRes.data ?? {}
@@ -331,20 +351,14 @@ try {
 }
 
 
-const gameHistory = ref([])
-// 获取其他奖励数据
+const totalLcx = ref('0.00')
+
 try {
-  const gameHistoryRes = await getGameHistory({ limit: 20, page: 1, userid: globalStore.uid })
-  gameHistory.value = gameHistoryRes.data.list ?? []
-  console.log('otherRewardsRes', gameHistoryRes.value)
-} catch (error) {
-  console.error('Error fetching game login data:', error)
+  const lcxRes = await getConfigStatistic()
+  totalLcx.value = formatLcx(lcxRes?.data?.total_lcx)
+} catch (err) {
+  console.error(err)
 }
-
-
-
-
-
 
 // try {
 
@@ -387,6 +401,8 @@ const availableLocales = computed(() => {
 
 const showMultiple = ref(false)
 const showMultipleHandle = () => {
+  // showMultiple.value = !showMultiple.value
+  tableRef.value?.table?.tableApi?.getColumn('select')?.toggleVisibility(!showMultiple.value)
   showMultiple.value = !showMultiple.value
 }
 
@@ -404,6 +420,7 @@ const toShare = () => {
 const toCollect = () => {
   // 处理收藏逻辑
   console.log('Collect clicked')
+  toggleFavoriteGame()
 }
 
 const iframeKey = ref(0)
@@ -420,36 +437,39 @@ const toEnlarge = () => {
   toggleEnlarge()
 }
 
+//  table?.tableApi?.getColumn(column.id)?.toggleVisibility(!!checked)
 
 const showDetail = ref(true)
 const toggleDetail = () => { showDetail.value = !showDetail.value }
 
 // 表格
-const table = useTemplateRef('table')
-const pageSize = 10
-const currentPage = ref(1)
+const tableRef = useTemplateRef('tableRef')
+
 const selected = ref<number[]>([])
 // 模拟数据
-const total = 10
-const tableData: TableRowType[] = Array.from({ length: total }, (_, i) => ({
-  id: `B1008${100 + i}`,
-  name: '幸运777',
-  amount: 100000000,
-  multiplier: `${[5, 3, 1][i % 3]}`,
-  icon: '/images/lcx.png',
-  reward: '100,000.00 LCX',
-  extra: '100,000.00 LCX',
-  start: '2021/10/12 18:11:15',
-  end: '2021/10/12 18:11:15',
-  hash: i % 2 ? '0215...SDZ' : '待生成',
-  op: '验证',
-  status: i % 2
-}))
+// const total = 10
+// const tableData: TableRowType[] = Array.from({ length: total }, (_, i) => ({
+//   id: `B1008${100 + i}`,
+//   name: '幸运777',
+//   amount: 100000000,
+//   multiplier: `${[5, 3, 1][i % 3]}`,
+//   icon: '/images/lcx.png',
+//   reward: '100,000.00 LCX',
+//   extra: '100,000.00 LCX',
+//   start: '2021/10/12 18:11:15',
+//   end: '2021/10/12 18:11:15',
+//   hash: i % 2 ? '0215...SDZ' : '待生成',
+//   op: '验证',
+//   status: i % 2
+// }))
+
+const columnVisibility = ref({
+  select: showMultiple.value // 初始化时隐藏 age 列
+})
 
 const columns: TableColumn<TableRowType>[] = ref([
   {
     id: 'select',
-    enableHiding: false,
     header: ({ table }) =>
       h(UCheckbox, {
         color: 'lucky',
@@ -469,10 +489,12 @@ const columns: TableColumn<TableRowType>[] = ref([
       })
   },
   {
+    id: 'id',
     accessorKey: 'id',
     header: 'Play ID'
   },
   {
+    id: 'game_name',
     accessorKey: 'game_name',
     header: 'Name'
   },
@@ -519,10 +541,27 @@ const columns: TableColumn<TableRowType>[] = ref([
     }
   },
   {
-    accessorKey: 'extra',
-    header: 'Extra',
+    accessorKey: 'added_bonus',
+    header: '额外',
     cell: ({ row }) => {
-      const value = row.getValue('extra')
+      const value = row.getValue('added_bonus')
+      return h('div', { class: 'flex gap-[10px] items-center justify-center' }, [
+        h(
+          NuxtImg,
+          {
+            src: '/images/lcx.png',
+            class: 'w-[32px] h-[32px]'
+          }
+        ),
+        h('span', { class: 'text-white text-sm font-font-bold' }, value + ' LCX')
+      ])
+    }
+  },
+  {
+    accessorKey: 'self_rebate',
+    header: '反水',
+    cell: ({ row }) => {
+      const value = row.getValue('self_rebate')
       return h('div', { class: 'flex gap-[10px] items-center justify-center' }, [
         h(
           NuxtImg,
@@ -539,7 +578,7 @@ const columns: TableColumn<TableRowType>[] = ref([
     accessorKey: 'game_time',
     header: 'Start',
     cell: ({ row }) => {
-      return formatTimeToHMS(row.getValue('game_time'))
+      return row.getValue('game_time') ? formatTimeToHMS(row.getValue('game_time') || '--') : '--'
     }
   },
   {
@@ -618,10 +657,10 @@ interface PaginatedTableProps<T> {
   pageSize?: number
 }
 
-const pagination = ref({ page: 0, pageSize: 10 })
-const pageSize2 = ref(10)
+// const pagination = ref({ page: 0, pageSize: 10 })
+// const pageSize2 = ref(10)
 // 是否请求
-const serveMode = ref(false)
+// const serveMode = ref(false)
 // const total = ref(0)
 
 // const fetcher = () => {
@@ -681,20 +720,105 @@ const selectTab = (index: number) => {
   console.log('Selected tab:', tabList[index].label)
 }
 
-const tableRef = ref()
+const createSSE = () => {
+  const config = useRuntimeConfig()
+  const apiBase = config.public.apiBase
+  const { sign, timestamp } = useSignByParams({
+    userid: globalStore.uid,
+  })
+  const params = new URLSearchParams({
+    userid: String(globalStore.uid),
+    sign: String(sign),
+    timestamp: String(timestamp)
+  }).toString()
+  console.log('SSE params:', params)
+  const source = new EventSource(`${apiBase}/sse?${params}`);
+
+  // 监听消息事件
+  source.onmessage = function (event) {
+    const data = JSON.parse(event.data)
+    console.log('收到消息:', data)
+    // 第一次连接成功会有一条信息返回type，message
+    if (!data?.type) {
+      console.log('SSE 连接成功，初始消息插入:', data?.type)
+      console.log('SSE 连接成功，初始消息插入:', data)
+      tableData.value.pop()
+      const newRow = data
+      tableData.value.unshift(newRow)
+      total.value += 1 // 更新总数
+    }
+  };
+
+  // 监听连接打开
+  source.onopen = function () {
+    console.log('SSE 连接已建立');
+  };
+
+  // 监听错误
+  source.onerror = function (error) {
+    console.error('SSE 发生错误', error);
+  };
+}
 onMounted(() => {
   // 访问子组件暴露的 table
   console.log('tableRef:', tableRef.value?.table)
+  createSSE()
   // 也可以调用子组件暴露的方法
   // tableRef.value?.someMethod()
 })
-// 设置页面 SEO
-useSeoMeta({
-  title: 'Home',
-  ogTitle: 'Home',
-  description: 'Welcome to our multilingual website',
-  ogDescription: 'Welcome to our multilingual website'
-})
+
+// 表格
+const pagination = ref({ page: 1, pageSize: 1 })
+const total = ref(0)
+const tableData = ref<TableRowType[]>([])
+const fetchTableData = async () => {
+  console.log('Fetching table data with pagination:', pagination.value)
+  const res = await getGameHistory({
+    page: pagination.value.page,
+    limit: pagination.value.pageSize,
+    userid: globalStore.uid
+  })
+  tableData.value = res.data.list ?? []
+  total.value = res.data.total ?? 0
+}
+await fetchTableData()
+// watch(pagination, fetchTableData, { immediate: true, deep: true })
+
+// const gameHistory = ref([])
+// // 获取其他奖励数据
+// try {
+//   const gameHistoryRes = await getGameHistory({ limit: 20, page: 1, userid: globalStore.uid })
+//   gameHistory.value = gameHistoryRes.data.list ?? []
+//   console.log('otherRewardsRes', gameHistoryRes.value)
+// } catch (error) {
+//   console.error('Error fetching game login data:', error)
+// }
+
+const onPageSizeChange = (newPageSize: number) => {
+  pagination.value.pageSize = newPageSize
+  // 这里可以添加分页大小变化的逻辑
+  console.log('Page size changed:', newPageSize)
+  fetchTableData()
+}
+
+const onPageChange = (newPage: number) => {
+  pagination.value.page = newPage // 调整为从0开始
+  // 这里可以添加页码变化的逻辑
+  console.log('Page changed:', newPage)
+  fetchTableData()
+}
+
+const toggleFavoriteGame = () => {
+  favoriteGame({ gameid: gameData?.value?.game?.game_id, userid: globalStore.uid })
+    .then((res) => {
+      console.log('Game favorited successfully', res)
+      isFavorite.value = !isFavorite.value // 切换收藏状态
+    })
+    .catch((error) => {
+      console.error('Error favoriting game:', error)
+    })
+}
+
 
 </script>
 <style scoped>

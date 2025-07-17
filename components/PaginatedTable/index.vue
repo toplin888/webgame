@@ -1,7 +1,7 @@
 <template>
     <div>
         <UTable class="w-full" ref="table" v-model:row-selection="rowSelection" :data="props.data"
-            :columns="props.columns" :ui="{
+            v-model:column-visibility="localColumnVisibility" :columns="props.columns" :ui="{
                 tbody: 'divide-none space-y-[20px] ',
                 th: 'text-[rgba(255,255,255,0.50)] text-sm font-normal font-Inter bg-transparent text-center',
                 tr: ' mb-[10px] rounded-[20px] overflow-hidden text-center',
@@ -10,16 +10,28 @@
                 separator: 'bg-transparent',
             }" @select="onSelect" />
         <div class="flex justify-end gap-4 items-center pt-4">
-            <UPagination v-model:page="pagination.page" :total="props.total ?? props.data.length" :ui="{
-                list: 'border-0 ring-0 text-whitebg-transparent hover:text-white',
-                item: 'text-white bg-transparent hover:bg-indigo-400 rounded-full hover:text-white ring-0',
-                prev: 'text-white bg-transparent hover:bg-indigo-400 rounded-full hover:text-white ring-0',
-                next: 'text-white bg-transparent hover:bg-indigo-400 rounded-full hover:text-white ring-0',
-                last: 'text-white bg-transparent hover:bg-indigo-400 rounded-full hover:text-white ring-0',
-                first: 'text-white bg-transparent hover:bg-indigo-400 rounded-full hover:text-white ring-0',
-                root: ' bg-transparent hover:text-white border-0 ring-0 rounded-full',
-                label: 'text-white/50 text-sm font-normal font-Inter ring-0',
-            }" />
+            <!-- :page="page" :total="total" @update:page="p => emit('update:page', p)" -->
+            <!-- <UPagination v-model:page="pagination.page" :total="props.total ?? props.data.length" @update:page="p => emit('update:page', p)" :ui="{
+                list: 'border-0 ring-0 text-whitebg-transparent hover:text-white disabled:bg-transparent',
+                item: 'text-white bg-transparent hover:bg-indigo-400 rounded-full hover:text-white ring-0 disabled:bg-transparent',
+                prev: 'text-white bg-transparent hover:bg-indigo-400 rounded-full hover:text-white ring-0 disabled:bg-transparent',
+                next: 'text-white bg-transparent hover:bg-indigo-400 rounded-full hover:text-white ring-0 disabled:bg-transparent',
+                last: 'text-white bg-transparent hover:bg-indigo-400 rounded-full hover:text-white ring-0 disabled:bg-transparent',
+                first: 'text-white bg-transparent hover:bg-indigo-400 rounded-full hover:text-white ring-0 disabled:bg-transparent',
+                root: ' bg-transparent hover:text-white border-0 ring-0 rounded-full disabled:bg-transparent',
+                label: 'text-white/50 text-sm font-normal font-Inter ring-0 disabled:bg-transparent',
+            }" /> -->
+            <UPagination :page="props.page" :items-per-page="props.pageSize" :total="props.total ?? props.data.length"
+                @update:page="p => emit('update:page', p)" :ui="{
+                    list: 'border-0 ring-0 text-whitebg-transparent hover:text-white disabled:bg-transparent',
+                    item: 'text-white bg-transparent hover:bg-indigo-400 rounded-full hover:text-white ring-0 disabled:bg-transparent',
+                    prev: 'text-white bg-transparent hover:bg-indigo-400 rounded-full hover:text-white ring-0 disabled:bg-transparent',
+                    next: 'text-white bg-transparent hover:bg-indigo-400 rounded-full hover:text-white ring-0 disabled:bg-transparent',
+                    last: 'text-white bg-transparent hover:bg-indigo-400 rounded-full hover:text-white ring-0 disabled:bg-transparent',
+                    first: 'text-white bg-transparent hover:bg-indigo-400 rounded-full hover:text-white ring-0 disabled:bg-transparent',
+                    root: ' bg-transparent hover:text-white border-0 ring-0 rounded-full disabled:bg-transparent',
+                    label: 'text-white/50 text-sm font-normal font-Inter ring-0 disabled:bg-transparent',
+                }" />
             <div>共{{ props.total ?? props.data.length }}条</div>
             <div>
                 <USelect v-model="pagination.pageSize" class="w-[100px]" :items="pageSizeList" :ui="{
@@ -42,10 +54,17 @@ const UCheckbox = resolveComponent('UCheckbox')
 const props = defineProps<{
     columns: TableColumn<any>[],
     data: any[],
-    total?: number,
-    pagination?: { page: number; pageSize: number }
+    page: number
+    pageSize: number
+    total: number
+    columnVisibility: {}
 }>()
 
+const table = useTemplateRef('table')
+
+const localColumnVisibility = ref<Record<string, boolean>>(props.columnVisibility ?? {})
+
+const emit = defineEmits(['update:page', 'update:pageSize'])
 // const columns = ref([...props.columns])
 // watch(
 //     () => props.columns,
@@ -63,9 +82,17 @@ const props = defineProps<{
 //         // pagination.value = newProps.pagination
 //     }
 // }, { immediate: true })
+const showMultipleHandle = () => {
+    // showMultiple.value = !showMultiple.value
+    console.log('tableRef2:', table.value?.tableApi?.getColumn('select')?.getIsVisible())
+
+    table.value?.tableApi?.getColumn('select')?.toggleVisibility(false)
+    console.log('tableRef2:', table.value?.tableApi?.getColumn('select')?.getIsVisible())
+
+
+}
 
 // 表格
-const table = useTemplateRef('table')
 const rowSelection = ref<Record<string, boolean>>({})
 
 // 分页

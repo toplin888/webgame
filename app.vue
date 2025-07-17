@@ -2,6 +2,7 @@
   <div class="app-container">
     <NuxtRouteAnnouncer />
     <UApp :locale="uiLocale">
+      <UToast position="top-center" :expand="true" :duration="2000" />
       <NuxtLayout>
         <NuxtPage />
       </NuxtLayout>
@@ -11,7 +12,7 @@
 
 <script setup lang="ts">
 import * as locales from '@nuxt/ui/locale'
-
+import { UToast } from '#components'
 import { useI18n } from 'vue-i18n'
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
 import { createAppKit } from '@reown/appkit/vue'

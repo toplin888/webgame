@@ -5,4 +5,7 @@
     "reward": "奖励",
     "openBtn": "连接钱包",
   },
+  "reward": {
+    "sign7dayName": "大奖",
+  }
 }

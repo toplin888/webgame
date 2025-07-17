@@ -77,6 +77,7 @@ export default defineNuxtConfig({
     }]
   },
 
+
   ui: {
     fonts: false, // 禁用 Google Fonts 获取
     theme: {
@@ -129,6 +130,7 @@ export default defineNuxtConfig({
     // apiBase: process.env.NUXT_API_BASE || 'http://localhost:3000',
     // public双端支持
     public: {
+      apiSecretKey: process.env.NUXT_API_SECRET_KEY || '',
       projectId: process.env.NUXT_PROJECT_ID,
       apiBase: process.env.NUXT_BASE_URL || '',
     }

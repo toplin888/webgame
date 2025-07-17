@@ -8,7 +8,7 @@ export default eventHandler(async (event: H3Event) => {
   const body = await readBody(event) as Record<string, any>
   const config = useRuntimeConfig()
   // 一定是 config.apiBase，而不是 config.public.apiBase
-  const targetUrl = `${config.public.apiBase}/api/game/list`
+  const targetUrl = `${config.public.apiBase}/api/activity/signinlist`
 
   console.log('Requesting game list with body:', body, 'to URL:', targetUrl)
   // const { sign, timestamp } = useSign('UserLogin'+address)
@@ -32,8 +32,9 @@ export default eventHandler(async (event: H3Event) => {
       code: 500,
       message: '接口异常，已返回默认数据',
       data: {
-        list: []
-
+        list: [],
+        day: 1,
+        issign: false
       }
     }
   }

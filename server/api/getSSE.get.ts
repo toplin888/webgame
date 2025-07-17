@@ -8,7 +8,7 @@ export default eventHandler(async (event: H3Event) => {
   const body = await readBody(event) as Record<string, any>
   const config = useRuntimeConfig()
   // 一定是 config.apiBase，而不是 config.public.apiBase
-  const targetUrl = `${config.public.apiBase}/api/game/list`
+  const targetUrl = `${config.public.apiBase}/sse`
 
   console.log('Requesting game list with body:', body, 'to URL:', targetUrl)
   // const { sign, timestamp } = useSign('UserLogin'+address)
@@ -18,7 +18,7 @@ export default eventHandler(async (event: H3Event) => {
   console.log('Requesting game list for address:', 'with sign:', sign, 'and timestamp:', timestamp, 'to URL:', targetUrl)
   try {
     const res = await $fetch(targetUrl, {
-      method: 'POST',
+      method: 'GET',
       headers: { 'Content-Type': 'application/json' },
       body: {
         sign,
@@ -28,13 +28,6 @@ export default eventHandler(async (event: H3Event) => {
     })
     return res
   } catch (e: any) {
-    return {
-      code: 500,
-      message: '接口异常，已返回默认数据',
-      data: {
-        list: []
-
-      }
-    }
+    console.error(e)
   }
 })

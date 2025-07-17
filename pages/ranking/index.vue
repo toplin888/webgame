@@ -24,13 +24,13 @@
             </div>
             <div class="flex gap-[19px] mb-50px">
                 <div class="flex-1 relative" v-if="ranks.length" v-for="(item, index) in [ranks[1], ranks[0], ranks[2]]"
-                    :key="item.user_id || index" :class="index === 1 ? '-mt-[72px]' : ''">
+                    :key="item?.user_id || index" :class="index === 1 ? '-mt-[72px]' : ''">
                     <div class="flex flex-col items-center justify-center mb-[22px]">
                         <div class="mb-[20px]">
-                            <NuxtImg v-if="item.avatar" :src="item.avatar"
+                            <NuxtImg v-if="item?.avatar" :src="item?.avatar"
                                 class="max-w-[180px] max-h-[180px] w-[130px] object-cover" style="" />
                         </div>
-                        <div class="text-neutral-200 text-xl font-normal font-['Microsoft_YaHei']">{{ item.user_name ||
+                        <div class="text-neutral-200 text-xl font-normal font-['Microsoft_YaHei']">{{ item?.user_name ||
                             '--' }}
                         </div>
                     </div>
@@ -42,7 +42,7 @@
                             <NuxtImg :src="`/images/ranking/no${index + 1}.svg`"
                                 class="w-[51px] object-cover mb-[18px]" />
                             <div class="text-neutral-200 text-xl font-bold font-['DIN_Alternate']">
-                                {{ item.amount?.toLocaleString() || 0 }}</div>
+                                {{ item?.amount?.toLocaleString() || 0 }}</div>
                             <div class="text-neutral-200 opacity-30 text-sm font-medium font-['Inter']">LCX</div>
                         </div>
                     </div>
@@ -72,17 +72,17 @@
                 <div class="list flex-col gap-[16px] mt-[20px]">
                     <div v-if="ranks.length > 3" v-for="(item, index) in ranks.slice(2, ranks.length)" :key="index"
                         class="item grid grid-cols-3 mb-[16px] gap-[16px] justify-between items-center p-[13px_19px] rounded-2xl bg-[rgba(255,255,255,0.04)]">
-                        <div class="text-center">{{ item.user_id }}</div>
+                        <div class="text-center">{{ item?.user_id }}</div>
                         <div class="flex flex-2 items-center gap-[12px] justify-center">
                             <div>
                                 <NuxtImg :src="item?.avatar" class="w-[32px] h-[32px] rounded-full" />
                             </div>
                             <div class="">
                                 <div class="text-white text-base font-normal font-['Inter'] mb-[5px]">
-                                    {{ item.user_name }}
+                                    {{ item?.user_name }}
                                 </div>
                                 <div class="text-white/60 text-sm font-normal font-['Inter']">
-                                    {{ item.address }}
+                                    {{ item?.address }}
                                 </div>
                             </div>
                         </div>
@@ -96,6 +96,9 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div v-else class="p-[100px]">
+                        <NotData />
                     </div>
                 </div>
             </div>
@@ -131,8 +134,6 @@ const changeTime = (id: number) => {
     rankParams.datatype = currentTime.value
     getRankListHandler()
 }
-
-
 
 const timeList = ref([
     { id: 1, label: '日', value: 1 },
@@ -192,7 +193,9 @@ const changeTab = (index: number | string) => {
 }
 
 const getRankListHandler = async () => {
-    const res = await getRankList(rankParams)
+    let params = { userid: globalStore.uid, ranktype: activeTab.value, datatype: currentTime.value }
+
+    const res = await getRankList(params)
     ranks.value = res.data.list || notDataList
     mydata.value = {
         mydata: res.data.mydata,
