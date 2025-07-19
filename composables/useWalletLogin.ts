@@ -19,8 +19,6 @@ export function useWalletLogin() {
     // 返回一个方法，由外部 setup 环境调用
     return async () => {
         // watchEffect(async () => {
-        console.log('钱包连接状态变化:', accountData.value, accountData.value.address, !globalStore.isWalletConnected)
-
         if (accountData.value.isConnected && accountData.value.address && !globalStore.isWalletConnected) {
             console.log('连接钱包输出:', accountData.value, accountData.value.address, !globalStore.isWalletConnected)
 
@@ -32,7 +30,6 @@ export function useWalletLogin() {
                         addtype: chainId.value || 1, // 默认使用1，可能需要根据实际情况调整
                     },
                 })
-                console.log('获取签名消息:', singRes)
                 const signMessageStr = singRes.data.value
 
                 const signature = await signMessageAsync({
@@ -48,9 +45,8 @@ export function useWalletLogin() {
                         message: signMessageStr,
                     },
                 })
-                // console.log('登录响应:', res)
-                // const token = res?.token
-                // if (token) {
+
+
                 globalStore.setLoginStatus(true)
                 globalStore.setUid(res.data.user.user_id)
                 globalStore.setStatus(res.data.isreg || false)
@@ -62,6 +58,11 @@ export function useWalletLogin() {
                     money: res.data.user.money || 0,
                     isNewUser: res.data.isreg || false,
                 })
+
+                // 邀请码
+                if (res.data.isreg) {
+                    globalStore.setInviteModal(res.data.isreg)
+                }
 
                 // }
             } catch (err) {

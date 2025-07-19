@@ -26,19 +26,11 @@ export default eventHandler(async (event: H3Event) => {
     })
     return res
   } catch (e: any) {
-    console.error(e)
     return {
-      code: 500,
-      message: '接口异常，已返回默认数据',
-      data: {
-
-      },
-      error: e
+      code: 502,
+      message: '接口异常',
+      error: e?.message || e,
+      data: {}
     }
-
-    // throw createError({
-    //   statusCode: 502,
-    //   statusMessage: 'Bad Gateway: ' + (e.message || 'Failed to fetch metrics')
-    // })
   }
 })

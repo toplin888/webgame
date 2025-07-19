@@ -9,6 +9,7 @@ export interface GlobalState {
     uid: number
     status: number
     userInfo: any
+    inviteModal: boolean
 }
 
 export interface UserInfo {
@@ -31,6 +32,7 @@ export const useGlobalStore = defineStore('global', {
         uid: 0, // 用户ID
         status: 1, // 用户状态
         userInfo: null, // 用户信息
+        inviteModal: false
     }),
     actions: {
         setToken(token: string) {
@@ -72,6 +74,9 @@ export const useGlobalStore = defineStore('global', {
         setUserInfo(userInfo: UserInfo) {
             this.userInfo = userInfo;
             // setUserInfo(userInfo); // 存储用户信息到 localStorage
+        },
+        setInviteModal(status: boolean) {
+            this.inviteModal = status;
         }
     },
     persist: {

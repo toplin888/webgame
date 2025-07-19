@@ -33,7 +33,12 @@ export default eventHandler(async (event: H3Event) => {
     //     list: []
     //   }
     // }
-    return e
+    return {
+      code: 502,
+      message: '接口异常',
+      error: e?.message || e,
+      data: {}
+    }
 
   }
 })

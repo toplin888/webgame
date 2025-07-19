@@ -237,6 +237,16 @@ export function getBelonging<T extends Record<string, any> = Record<string, any>
 }
 
 
+export function checkActivity<T extends Record<string, any> = Record<string, any>>(data: T) {
+  const { $request } = useNuxtApp() as unknown as { $request: RequestFn }
+  return $request('/api/checkActivity', {
+    method: 'POST',
+    body: {
+      ...data
+    }
+  })
+}
+
 export function getBelongingList<T extends Record<string, any> = Record<string, any>>(data: T) {
   const { $request } = useNuxtApp() as unknown as { $request: RequestFn }
   return $request('/api/getBelongingList', {
@@ -246,6 +256,28 @@ export function getBelongingList<T extends Record<string, any> = Record<string, 
     }
   })
 }
+
+export function bindTelegram<T extends Record<string, any> = Record<string, any>>(data: T) {
+  const { $request } = useNuxtApp() as unknown as { $request: RequestFn }
+  return $request('/api/bindTelegram', {
+    method: 'POST',
+    body: {
+      ...data
+    }
+  })
+}
+
+
+export function bindPromote<T extends Record<string, any> = Record<string, any>>(data: T) {
+  const { $request } = useNuxtApp() as unknown as { $request: RequestFn }
+  return $request('/api/bindPromote', {
+    method: 'POST',
+    body: {
+      ...data
+    }
+  })
+}
+
 
 export function getConfigStatistic2() {
   return useFetch('/api/getConfigStatistic', {

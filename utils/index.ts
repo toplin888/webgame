@@ -13,6 +13,7 @@ export function formatName(name: string) {
  */
 export function formatLcx(num: number): string {
     const rawLcx = Number(num) || 0
+    if (rawLcx === 0) return '0.00';
     return (rawLcx / 10000).toLocaleString('en-US', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2

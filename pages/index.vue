@@ -24,16 +24,15 @@
           <NuxtImg src="/images/home/slots.png" class="w-[28px] h-[38px]" />
           <div>slots</div>
         </div>
-        <div class="game-list grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 my-[40px_35px]">
-          <div v-if="games.length">
-            <div v-for="(game, idx) in games.slice(1, games.length)" :key="game.id" @click="toGameDetail(game)"
-              class="flex flex-col items-center bg-white/5 rounded-xl relative"
-              :class="game.status === 1 ? '' : 'opacity-80'">
-              <NuxtImg :src="game.img2" alt="game" class="w-full h-full rounded-[10px] object-contain" />
-              <div v-show="game.status === 1"
-                class="absolute bottom-0 py-[15px] font-['Poppins'] text-xs text-white text-center">{{ game.status === 1
-                  ? '' : 'Coming Soon' }}
-              </div>
+        <div class="game-list grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 my-[40px_35px]"
+          v-if="games.length">
+          <div v-for="(game, idx) in games.slice(1, games.length)" :key="game.id" @click="toGameDetail(game)"
+            class="flex flex-col items-center bg-white/5 rounded-xl relative"
+            :class="game.status === 1 ? '' : 'opacity-80'">
+            <NuxtImg :src="game.img2" alt="game" class="w-full h-full rounded-[10px] object-contain" />
+            <div v-show="game.status === 1"
+              class="absolute bottom-0 py-[15px] font-['Poppins'] text-xs text-white text-center">{{ game.status === 1
+                ? '' : 'Coming Soon' }}
             </div>
           </div>
         </div>
@@ -126,10 +125,10 @@
             <div class="max-w-[55px]">
               <div class="text-right justify-center text-indigo-600/50 text-xs font-normal font-['Inter']">{{
                 formatTimeToHMS(item.end_date)
-                }}</div>
+              }}</div>
               <div class="text-right mt-[6px] justify-center text-white text-sm font-normal font-['Inter']">{{ 'X' +
                 item.total_point
-                }}</div>
+              }}</div>
             </div>
           </div>
         </div>
@@ -246,7 +245,6 @@ onMounted(async () => {
   //   const res1 = await getConfigStatistic()
   //   // 将数据除以10000且千分位加逗号
   //   totalLcx.value = formatLcx(res1?.data?.total_lcx)
-  //   console.log('Total LCX:', totalLcx.value)
 })
 
 </script>

@@ -52,25 +52,26 @@ export default defineNuxtPlugin(nuxtApp => {
 
         // 超时处理
         const controller = new AbortController()
-        const timeout = (options as any)?.timeout ?? 30000
-        const timer = setTimeout(() => {
-            controller.abort()
-        }, timeout)
-        defaultOptions.signal = controller.signal
+        const timeout = (options as any)?.timeout ?? 10000
+        const timer = setTimeout(() => controller.abort(), timeout)
 
         try {
-            const result = await $fetch<T>(finalUrl, defaultOptions)
-
-            clearTimeout(timer)
+            const result = await $fetch<T>(finalUrl, {
+                ...defaultOptions,
+                signal: controller.signal
+            })
             return result
         } catch (err: any) {
-            console.log(err)
-            clearTimeout(timer)
+            if (err.name === 'AbortError') {
+                console.error('请求超时')
+            }
             // 全局错误处理
             if (err?.status === 401) {
                 // 未登录或 token 失效，可做跳转或提示
             }
             throw err
+        } finally {
+            clearTimeout(timer)
         }
     })
 })

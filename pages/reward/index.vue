@@ -46,7 +46,7 @@
                     <!-- ,0_0_48px_16px_#CAB5FF,0_0_80px_32px_#B7A8F4 -->
                     <div class=" font-bold font-['DIN_Next_LT_Pro'] mb-[15px]"
                         :class="[index == 6 ? 'text-[#7B3F9F] text-base' : 'text-white text-lg']">{{
-                            index == 6 ? $t('reward.sign7dayName') : item.reward_amount / 10000
+                            index == 6 ? $t('reward.sign7dayName') : ((item?.reward_amount || 0) / 10000)
                         }}
                     </div>
                     <UButton v-if="item.day_index === signDay && !signStatus" @click="signHandler(item)" color="lucky"
@@ -80,11 +80,11 @@
                                 </div>
                                 <div class="">
                                     <div class="text-white text-xl font-normal font-['Inter'] mb-[5px]">{{
-                                        item.activity.title
-                                        }}
+                                        item?.title || '--'
+                                    }}
                                     </div>
                                     <div class="text-white/50 text-sm font-normal font-['Inter']">{{
-                                        item.activity.content }}
+                                        item?.content || '--' }}
                                     </div>
                                 </div>
                             </div>
@@ -92,7 +92,7 @@
                                 <div
                                     class="flex gap-[8px] items-center text-white text-sm font-bold font-['DIN_Alternate']">
                                     <NuxtImg src="/images/lcx.png" class="w-[32px] h-[32px]" />
-                                    <span>{{ formatLcx(item.activity.reward_amount) }}LCX</span>
+                                    <span>{{ formatLcx(item?.reward_amount) }}LCX</span>
                                 </div>
                                 <div class="">
                                     <template v-if="item.lock">
@@ -102,15 +102,15 @@
                                         </div>
                                     </template>
                                     <template v-else>
-                                        <div v-if="item.status === 1"
+                                        <div v-if="item.step === 3"
                                             class="w-24 h-10 relative flex items-center justify-center rounded-xl bg-[rgba(38,39,98,1)] text-white/20 text-sm font-normal">
                                             已领取
                                         </div>
-                                        <UButton @click="openModal(item)" v-else-if="item.status === 2" color="lucky"
-                                            class="w-[92px] h-[42px] justify-center rounded-xl">
+                                        <UButton @click="openSuccessModal(item)" v-else-if="item.step === 2"
+                                            color="lucky" class="w-[92px] h-[42px] justify-center rounded-xl">
                                             领取
                                         </UButton>
-                                        <div v-else @click="toDoTask(item)"
+                                        <div v-else-if="item.step === 1" @click="toDoTask(item)"
                                             class="w-24 h-10 relative flex items-center justify-center bg-transparent text-[#7779FF] text-sm font-normal ring-1 ring-[#7779FF] rounded-xl">
                                             去完成
                                         </div>
@@ -156,16 +156,24 @@
                     <div class="absolute top-4 right-4 cursor-pointer">
                         <NuxtImg src="/images/close.svg" alt="" class="w-[24px] h-[24px]" @click="showModal = false" />
                     </div>
-                    <div class="text-white text-2xl font-normal font-['Inter'] mb-[40px]">如何将网页链接添加到桌面</div>
+                    <div class="text-white text-2xl font-normal font-['Inter'] mb-[40px]">{{ currentTask?.title }}</div>
                     <div class="mb-[30px]">
                         <UStepper :highlight="false" :disabled="true" :ui="{
                             trigger: 'mt-2.5 w-[26px] h-[26px] ring-1 ring-[rgba(193,123,255,1)] bg-transparent text-[rgba(193,123,255,1)] group-data-[state=active]:bg-[rgba(193,123,255,1)]',
                             separator: 'border-dashed border-l-1 border-white/20 bg-transparent text-white/20',
-                            title: 'text-white/50 text-base font-normal mb-[16px]',
-                            description: 'text-white/20 text-sm font-normal',
-                        }" orientation="vertical" :items="items" class="w-full" />
+                            title: 'text-white text-base font-normal mb-[16px]',
+                            description: 'text-white/50 text-sm font-normal',
+                        }" orientation="vertical" :items="currentTask?.steps" class="w-full" v-model="currentStep">
+                            <template #title="{ item }">
+                                <div class="flex items">{{ $t('reward.step') + (item.index + 1) }}:</div>
+                            </template>
+                        </UStepper>
                     </div>
-                    <UButton class="w-full justify-center" color="lucky" @click="confirmModal">确定</UButton>
+
+                    <UButton v-if="currentTask.key === 'bindemail'" class="w-full justify-center" color="lucky"
+                        @click="toEmail">
+                        去完成</UButton>
+                    <UButton v-else class="w-full justify-center" color="lucky" @click="confirmModal">确定</UButton>
                 </div>
             </template>
         </UModal>
@@ -196,14 +204,35 @@
                 </div>
             </template>
         </UModal>
+        <UModal v-model:open="showModal3" :ui="{
+            content: 'bg-[linear-gradient(180deg,#1A1726_0%,#0C0B14_100%)] ring-white/20 rounded-2xl',
+            overlay: 'bg-[rgba(0,0,0,0.8)]',
+        }">
+            <template #content>
+                <div
+                    class="p-[40px_45px] relative after:content-[''] after:absolute after:top-[50%] after:left-[50%] after:-translate-x-1/2 after:-translate-y-1/2 after:w-[300px] after:h-[300px] after:bg-[radial-gradient(circle,rgba(48,0,131,0.5)_0%,_rgba(48,0,131,0.15)_50%,transparent_100%))] after:z-[-1]">
+                    <div class="text-white text-center text-2xl font-semibold font-['Inter'] mb-[40px]">{{
+                        currentTask?.title }}</div>
+                    <TelegramAuth :url="currentTask?.task.joinurl" :token="currentTask?.task.token"
+                        v-if="currentTask?.activity?.activity_key === 'telegram'" @callback="joinTelegramCB" />
+                    <div v-if="currentTask?.activity?.activity_key === 'discord'" class="flex justify-center ">
+                        <UButton color="lucky" class="justify-center w-[200px]" @click="joinDiscordCB">{{
+                            $t('global.joinDiscord') }}
+                        </UButton>
+                    </div>
+                </div>
+            </template>
+        </UModal>
     </main>
 </template>
 
 <script setup lang="ts">
 import { UButton } from '#components';
 import type { StepperItem } from '@nuxt/ui'
-import { getActivityList, getSignList, signin, goActivityDetail } from '~/composables/apiServices'
+import { get } from '@vueuse/core';
+import { getActivityList, getSignList, signin, goActivityDetail, checkActivity, bindTelegram } from '~/composables/apiServices'
 import { formatLcx } from '~/utils';
+const { t } = useI18n()
 const toast = useToast()
 const globalStore = useGlobalStore()
 const signDay = ref(0)
@@ -243,20 +272,28 @@ const selectTab = (index: number) => {
     // 这里可以添加切换标签页的逻辑
 }
 
-const taskList = ref([
-    { id: 1, name: '将网页添加到桌面', value: '100,000.00 LCX', status: 1, lock: false, desc: '文件描述' },
-    { id: 2, name: '将网页添加到桌面', value: '100,000.00 LCX', status: 2, lock: false, desc: '文件描述' },
-    { id: 3, name: '将网页添加到桌面', value: '100,000.00 LCX', status: 3, lock: false, desc: '文件描述' },
-    { id: 4, name: '将网页添加到桌面', value: '100,000.00 LCX', status: 1, lock: true, desc: '文件描述' },
-    { id: 5, name: '将网页添加到桌面', value: '100,000.00 LCX', status: 2, lock: true, desc: '文件描述' },
-    { id: 6, name: '将网页添加到桌面', value: '100,000.00 LCX', status: 3, lock: true, desc: '文件描述' },
-])
-
+interface TaskItem {
+    activity: {
+        id: number | string
+        activity_key: string
+        title: string
+        content?: string
+        reward_amount: number
+    }
+    status: number
+    lock?: boolean
+    step?: number
+}
+const taskList = ref<TaskItem[]>([])
 const getActivityListHandler = async () => {
     try {
         let params = { userid: globalStore.uid, language: globalStore.locale }
         const res = await getActivityList(params)
-        taskList.value = res.data
+        taskList.value = res.data.map((item: any) => ({
+            ...item.activity,
+            step: item.step ?? 1
+        }))
+        console.log('taskList.value', taskList.value, res.data)
     } catch (err) {
         taskList.value = []
     }
@@ -286,12 +323,18 @@ const signHandler = (item: any) => {
     })
 }
 // 弹窗
-const showModal = ref(false)
-const showModal2 = ref(false)
+const showModal = ref(false) // 任务详情弹窗
+const showModal2 = ref(false) // 领取奖励弹窗
+const showModal3 = ref(false) // telegram弹窗
 
 
 const openModal = () => {
     showModal.value = true
+}
+
+const openSuccessModal = async (item: any) => {
+    await checkActivityHandler(item)
+    // showModal2.value = true
 }
 
 // 手动将完成到的步骤之前的icon都为check
@@ -317,12 +360,74 @@ const items = ref<StepperItem[]>([
 
 const confirmModal = () => {
     showModal.value = false
-    showModal2.value = true
+    // showModal2.value = true
+    if (currentTask.value.activity.activity_key === 'telegram' || currentTask.value.activity.activity_key === 'discord') {
+        showModal3.value = true
+    }
 }
 
 const confirmModal2 = () => {
     showModal2.value = false
 }
+
+
+// 任务映射
+const taskMapping = [
+    {
+        key: 'adddapp', title: t('reward.addDappTitle'), type: 1, steps: [
+            { index: 0, description: t('reward.addDappStep1') },
+            { index: 1, description: t('reward.addDappStep2') },
+            { index: 2, description: t('reward.addDappStep3') },
+            { index: 3, description: t('reward.addDappStep4') },
+            { index: 4, description: t('reward.addDappStep5') },
+        ]
+    },
+    {
+        key: 'telegram', title: t('reward.telegramTitle'), type: 2, steps: [
+            { index: 0, description: t('reward.telegramStep1') },
+            { index: 1, description: t('reward.telegramStep2') },
+            { index: 2, description: t('reward.telegramStep3') },
+            { index: 3, description: t('reward.telegramStep4') },
+        ]
+    },
+    {
+        key: 'discord', title: t('reward.discordTitle'), type: 3, steps: [
+            { index: 0, description: t('reward.discordStep1') },
+            { index: 1, description: t('reward.discordStep2') },
+            { index: 2, description: t('reward.discordStep3') },
+            { index: 3, description: t('reward.discordStep4') },
+        ]
+    },
+    {
+        key: 'bindemail', title: t('reward.bindemailTitle'), type: 4, steps: [
+            { index: 0, description: t('reward.bindemailStep1') },
+            { index: 1, description: t('reward.bindemailStep2') },
+            { index: 2, description: t('reward.bindemailStep3') },
+            { index: 3, description: t('reward.bindemailStep4') },
+        ]
+    },
+    {
+        key: 'playgame', title: t('reward.playgameTitle'), type: 5, steps: [
+            { index: 0, description: t('reward.playgameStep1') },
+            { index: 1, description: t('reward.playgameStep2') },
+            { index: 2, description: t('reward.playgameStep3') },
+            { index: 3, description: t('reward.playgameStep4') },
+        ]
+    },
+    {
+        key: 'inviteuser', title: t('reward.inviteuserTitle'), type: 6, steps: [
+            { index: 0, description: t('reward.inviteuserStep1') },
+            { index: 1, description: t('reward.inviteuserStep2') },
+            { index: 2, description: t('reward.inviteuserStep3') },
+            { index: 3, description: t('reward.inviteuserStep4') },
+        ]
+    }
+]
+
+
+// 当前弹窗显示步骤的任务内容
+const currentTask = ref({})
+const currentStep = ref(-1)
 
 const activityList = ref([
     {
@@ -381,6 +486,30 @@ const activityList = ref([
     }
 ])
 
+const checkActivityHandler = async (item: any) => {
+    try {
+        const res = await checkActivity({
+            actid: item.id,
+            activitykey: item.activity_key,
+            userid: globalStore.uid,
+            title: item.activity.title,
+        })
+        if (res.data.success) {
+            showModal2.value = true
+            rewardValue.value = item.reward_amount / 10000
+        } else {
+            toast.add({
+                title: res.msg || '操作失败',
+            })
+        }
+    } catch (error) {
+        console.error('Error checking activity:', error)
+        toast.add({
+            title: '操作失败，请稍后再试',
+        })
+    }
+}
+
 const toHistory = () => {
     // 跳转到活动记录页面
     navigateTo('/reward/history')
@@ -390,17 +519,77 @@ const toDoTask = async (item: any) => {
     // 跳转到任务详情页面
     try {
         const res = await goActivityDetail({
-            actid: item.activity.id,
-            activitykey: item.activity.activity_key,
+            actid: item.id,
+            activitykey: item.activity_key,
             userid: globalStore.uid,
-            title: item.activity.title,
+            title: item.title,
         })
+        let temp = taskMapping.find(task => task.key === item.activity_key) || {}
+        currentTask.value = {
+            ...temp, // 任务映射数据
+            activity: item, // 当前活动item
+            task: res.data // 当前活动joinurl、token数据
+        }
+        console.log(currentTask.value)
         openModal()
     } catch (error) {
         console.error('Error navigating to activity detail:', error)
     }
 
 }
+
+const toEmail = () => {
+    // 跳转到绑定邮箱页面
+    navigateTo('/me')
+}
+
+const joinTelegramCB = async (data: any) => {
+    showModal3.value = false
+    try {
+        await bindTelegram({
+            username: globalStore.userInfo.user_name,
+            userid: globalStore.uid,
+            act_id: currentTask.value.activity.id,
+            ...data
+        })
+        showModal3.value = false
+        reloadActivityList()
+        toast.add({
+            title: '已成功加入Telegram群组',
+        })
+    } catch (error) {
+        console.error('Error binding Telegram:', error)
+        toast.add({
+            title: '加入Telegram群组失败，请稍后再试',
+        })
+    }
+}
+
+const joinDiscordCB = async () => {
+    // 跳转到Discord加入页面
+    window.open(currentTask.value.task.joinurl, '_blank')
+    await reloadActivityList()
+    showModal3.value = false
+    toast.add({
+        title: '已成功加入Discord服务器',
+    })
+}
+
+const reloadActivityList = async () => {
+    setTimeout(async () => {
+        await getActivityListHandler()
+    }, 1000)
+}
+
+//{
+//	auth_date: 1646705584, first_name: "zzx",…}
+//	auth_date: 1646705584
+//	first_name: "zzx"
+//	hash: "9118f5e1c53d7cf3308c696565d26efc96f90d0fb59255b82bc39fd4636ddc50"
+//	id: 5021490450
+//	last_name: "fys"
+//	photo_url: "https://t.me/i/userpic/320/jvyC1v4qH7KrQqUBr5T0dK04wNm_Vr_Acl9WMynKMiuG-ToB9_E01-WCLJn8flUB.jpg"}
+//}
 </script>
 
 <style scoped>

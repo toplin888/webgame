@@ -28,15 +28,12 @@ export default eventHandler(async (event: H3Event) => {
     return res
   } catch (e: any) {
     console.error('Error fetching config statistics:', e)
-    // return {
-    //   code: 500,
-    //   message: '接口异常，已返回默认数据',
-    //   data: {
-    //     list: [],
-    //     total: 0
-    //   }
-    // }
-    return e
+    return {
+      code: 502,
+      message: '接口异常',
+      error: e?.message || e,
+      data: {}
+    }
 
     // throw createError({
     //   statusCode: 502,

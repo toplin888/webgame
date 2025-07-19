@@ -4,6 +4,33 @@
 
     <UApp :toaster="{ position: 'top-center' }" :locale="uiLocale">
       <!-- <UToaster position="bottom-left" :expand="true" :duration="2000" /> -->
+      <UModal v-model:open="modalState" :ui="{
+        content: 'bg-[linear-gradient(180deg,#1A1726_0%,#0C0B14_100%)] rounded-2xl w-[976px] max-w-[976px]',
+        overlay: 'bg-[rgba(0,0,0,0.8)]',
+      }">
+        <template #content>
+          <div class="p-[40px_45px] relative w-[976px] h-[600px] flex justify-between items-center">
+            <div>
+              <NuxtImg src="/images/inviteModal.png" width="450" height="549" class="mx-auto mb-6" />
+            </div>
+            <div>
+              <div class="mb-[16px] w-96 justify-center text-white text-2xl font-bold font-['Inter'] leading-loose">
+                <span class="text-white/50">{{ globalStore.userInfo.user_name }}</span>是新用户是否需要绑定上下级
+              </div>
+              <div class="mb-[16px]">
+                <UInput color="lucky" v-model="inviteCode" class="mt-4 w-96" placeholder="请输入您的邀请码" :ui="{
+                  root: 'p-[14px_20px] bg-[rgba(214,225,255,0.2)] rounded-lg',
+                  base: 'bg-[rgba(214,225,255,0.2)] text-white placeholder:text-white/50 ring-0 bg-transparent focus:ring-0 focus:border-transparent focus-visible:ring-0',
+                }" />
+              </div>
+              <div class="text-indigo-400 text-sm mb-[48px]"><span class="text-white/50">注：</span>后续不可更改</div>
+              <div>
+                <UButton class="justify-center w-full h-[50px]" color="lucky" @click="bindCode">确定</UButton>
+              </div>
+            </div>
+          </div>
+        </template>
+      </UModal>
       <NuxtLayout>
         <NuxtPage />
       </NuxtLayout>
@@ -13,7 +40,6 @@
 
 <script setup lang="ts">
 import * as locales from '@nuxt/ui/locale'
-import { UToaster } from '#components'
 import { useI18n } from 'vue-i18n'
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
 import { createAppKit } from '@reown/appkit/vue'
@@ -25,7 +51,9 @@ import type { AppKitNetwork } from '@reown/appkit/networks'
 import { useWalletLogin } from '~/composables/useWalletLogin'
 import { useReownAccountEffect } from '@/composables/useReownAccountEffect'
 import { useDisconnect } from "@reown/appkit/vue";
+import { UToast } from '#components'
 
+const toast = useToast()
 const { disconnect } = useDisconnect()
 const { locale } = useI18n()
 const uiLocale = computed(() => locales[locale.value] || locales.en)
@@ -37,6 +65,8 @@ const { isConnected } = useAccount()
 const globalStore = useGlobalStore()
 const walletLogin = useWalletLogin()
 
+const inviteCode = ref('')
+const modalState = computed(() => globalStore.inviteModal)
 // useWalletEvents()
 // if (import.meta.client) {
 const appkitNetworks = networks as [AppKitNetwork, ...AppKitNetwork[]]
@@ -77,6 +107,7 @@ useReownAccountEffect({
   onDisconnect: () => {
     console.log('❌ Disconnected')
     disconnect();
+    localStorage.clear()
     // 钱包断开时清除全局状态
     globalStore.logout()
   },
@@ -96,13 +127,51 @@ watch(isConnected, (val) => {
 
     // 如果连接了钱包但 store 还未设置，执行登录
     // walletLogin()
-  } else if (val && globalStore.isWalletConnected && globalStore.walletAddress) {
-    // 如果连接了钱包且 store 已设置，可能需要更新状态或执行其他操作
-    console.log('静默钱包登录:', globalStore.walletAddress)
+  }
+  //  else if (val && globalStore.isWalletConnected && globalStore.walletAddress) {
+  //   // 如果连接了钱包且 store 已设置，可能需要更新状态或执行其他操作
+  //   console.log('静默钱包登录:', globalStore.walletAddress)
+  //   globalStore.setLoginStatus(true)
+  // }
+}, { immediate: true })
+
+watch(() => globalStore.walletAddress, (val) => {
+  if (val && !globalStore.isWalletConnected) {
+    // 如果有钱包地址但未连接，执行登录
     globalStore.setLoginStatus(true)
   }
-
 }, { immediate: true })
+
+const bindCode = () => {
+  if (!inviteCode.value) {
+    toast.add({
+      title: '请输入邀请码',
+    })
+    return
+  }
+  bindPromote({
+    avatar: globalStore.userInfo?.user_avatar,
+    promocode: inviteCode.value,
+    userid: globalStore.userInfo?.user_id,
+    username: globalStore.userInfo?.user_name,
+  }).then((res) => {
+    if (res.code == 0) {
+      globalStore.setInviteModal(false)
+      globalStore.setUserInfo({
+        ...globalStore.userInfo,
+        isreg: true,
+      })
+      toast.add({
+        title: '邀请码绑定成功',
+      })
+    }
+  }).catch((err) => {
+    toast.add({
+      title: '绑定邀请码失败，请稍后再试',
+    })
+  })
+
+}
 // })
 </script>
 

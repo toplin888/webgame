@@ -28,7 +28,7 @@ export default eventHandler(async (event: H3Event) => {
     return res
   } catch (e: any) {
     return {
-      code: 500,
+      code: 502,
       message: '接口异常，已返回默认数据',
       data: {
         list: []

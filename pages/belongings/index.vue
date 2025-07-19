@@ -219,11 +219,22 @@ const typeList = [
     { label: '充值', value: 'deposit', id: 1 },
     { label: '提现', value: 'withdraw', id: 2 },
     { label: '游戏下注', value: 'bet', id: 3 },
-    { label: '游戏中奖', value: 'win', id: 4 },
-    { label: '活动奖励', value: 'reward', id: 5 }
+    { label: '游戏盈利', value: 'win', id: 4 },
+    { label: '游戏额外奖励', value: 'reward', id: 5 },
+    { label: '返水', value: 'reward', id: 6 },
+    { label: '活动奖励-活动标题', value: 'reward', id: 7 },
+    { label: '活动奖励-活动标题', value: 'reward', id: 8 },
+    { label: '团队下注返佣', value: 'reward', id: 9 },
+    { label: '直推奖励', value: 'reward', id: 10 },
+    { label: '新人注册', value: 'reward', id: 11 },
 ]
 
-
+const assetsType = [
+    { id: 0, label: 'USDT' },
+    { id: 1, label: 'LCX' },
+    { id: 2, label: 'USDC' },
+    { id: 3, label: 'SOL' },
+]
 
 const tableData = ref<TableRowType[]>([])
 const pagination = ref({ page: 1, pageSize: 10 })
@@ -276,8 +287,8 @@ function onTypeChange(value: number) {
 
 const columns: TableColumn<TableRowType>[] = [
     {
-        accessorFn: (row: TableRowType) => row.asset_type,
-        id: 'asset_type',
+        accessorFn: (row: TableRowType) => row.change_type,
+        id: 'change_type',
         header: () => h(UPopover, {
             open: popoverOpen.value,
             'onUpdate:open': (val: boolean) => (popoverOpen.value = val),
@@ -306,7 +317,7 @@ const columns: TableColumn<TableRowType>[] = [
             ])
         }),
         cell: ({ row }) => {
-            return h('div', { class: 'text-white text-sm font-normal font-Inter' }, typeList.find(k => k.id === row.getValue('asset_type'))?.label)
+            return h('div', { class: 'text-white text-sm font-normal font-Inter' }, typeList.find(k => k.id === row.getValue('change_type'))?.label)
         }
     },
     {
@@ -323,7 +334,7 @@ const columns: TableColumn<TableRowType>[] = [
                         class: 'w-[32px] h-[32px]'
                     }
                 ),
-                h('span', { class: 'text-white text-sm font-font-bold' }, (typeof value === 'string' || typeof value === 'number' ? value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '') + ' LCX')
+                h('span', { class: 'text-white text-sm font-font-bold' }, (typeof value === 'string' || typeof value === 'number' ? value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '') + ` ${assetsType.find(k => k.id === row.getValue('assetsType'))?.label}`)
             ])
         }
     },
