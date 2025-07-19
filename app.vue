@@ -1,8 +1,9 @@
 <template>
   <div class="app-container">
     <NuxtRouteAnnouncer />
-    <UApp :locale="uiLocale">
-      <UToast position="top-center" :expand="true" :duration="2000" />
+
+    <UApp :toaster="{ position: 'top-center' }" :locale="uiLocale">
+      <!-- <UToaster position="bottom-left" :expand="true" :duration="2000" /> -->
       <NuxtLayout>
         <NuxtPage />
       </NuxtLayout>
@@ -12,7 +13,7 @@
 
 <script setup lang="ts">
 import * as locales from '@nuxt/ui/locale'
-import { UToast } from '#components'
+import { UToaster } from '#components'
 import { useI18n } from 'vue-i18n'
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
 import { createAppKit } from '@reown/appkit/vue'
@@ -22,7 +23,10 @@ import { useGlobalStore } from '~/stores/global'
 import { useAccount } from '@wagmi/vue'
 import type { AppKitNetwork } from '@reown/appkit/networks'
 import { useWalletLogin } from '~/composables/useWalletLogin'
+import { useReownAccountEffect } from '@/composables/useReownAccountEffect'
+import { useDisconnect } from "@reown/appkit/vue";
 
+const { disconnect } = useDisconnect()
 const { locale } = useI18n()
 const uiLocale = computed(() => locales[locale.value] || locales.en)
 // import { isClient } from '#imports'
@@ -65,20 +69,33 @@ createAppKit({
 })
 // }
 
+useReownAccountEffect({
+  onConnect: (address) => {
+    console.log('✅ Connected:', address)
+    walletLogin()
+  },
+  onDisconnect: () => {
+    console.log('❌ Disconnected')
+    disconnect();
+    // 钱包断开时清除全局状态
+    globalStore.logout()
+  },
+  onChange: (addr) => {
+    console.log('🔁 Address changed:', addr)
+  },
+})
 // onMounted(() => {
 //   console.log('useWalletEvents onMounted')
 
 // 监听连接状态变化，未连接时清除 store
 watch(isConnected, (val) => {
-  console.log('useWalletEvents watch isConnected:', val)
 
   if (!val) {
     // globalStore.logout()
   } else if (val && !globalStore.isWalletConnected) {
-    console.log('点击钱包登录:')
 
     // 如果连接了钱包但 store 还未设置，执行登录
-    walletLogin()
+    // walletLogin()
   } else if (val && globalStore.isWalletConnected && globalStore.walletAddress) {
     // 如果连接了钱包且 store 已设置，可能需要更新状态或执行其他操作
     console.log('静默钱包登录:', globalStore.walletAddress)

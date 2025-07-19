@@ -56,6 +56,8 @@ const languageItems = computed(() => {
 })
 
 const changeLanguage = async (newLocale: LocaleCode) => {
+  console.log(newLocale)
   await navigateTo(switchLocalePath(newLocale))
+  window.location.reload()
 }
 </script>

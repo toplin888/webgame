@@ -21,9 +21,9 @@
                                         <div class="text-white text-base font-normal font-['Inter']">UID</div>
                                         <div
                                             class="flex gap-[20px] items-center text-white/50 text-sm font-normal font-['Inter']">
-                                            <div>{{ user.address }}</div>
+                                            <div>{{ globalStore.userInfo.user_id }}</div>
                                             <UIcon name="i-lucide-copy" class="text-white cursor-pointer copy-btn"
-                                                :data-clipboard-text="user.address" />
+                                                :data-clipboard-text="globalStore.userInfo.user_id" />
                                         </div>
                                     </div>
                                     <div class="flex items-center ml-1">
@@ -34,16 +34,16 @@
                                     <div class="mb-[10px]">钱包地址</div>
                                     <div
                                         class="flex gap-[20px] items-center justify-between text-white/50 text-sm font-normal font-['Inter']">
-                                        <div>{{ user.address }}</div>
+                                        <div>{{ globalStore.userInfo.address }}</div>
                                         <UIcon name="i-lucide-copy" class="text-white cursor-pointer copy-btn"
-                                            :data-clipboard-text="user.address" />
+                                            :data-clipboard-text="globalStore.userInfo.address" />
                                     </div>
                                 </div>
                                 <div class="pb-[22px] border-b-1 border-white/20 mb-6">
                                     <div class="mb-[10px]">昵称</div>
                                     <div
                                         class="flex gap-[20px] items-center justify-between text-white/50 text-sm font-normal font-['Inter']">
-                                        <div>JACK</div>
+                                        <div>{{ globalStore.userInfo.user_name || '--' }}</div>
                                         <div class="text-[#4B4DEF] text-sm cursor-pointer">Edit</div>
                                     </div>
                                 </div>
@@ -52,7 +52,7 @@
                                     <div class="text-white/50 text-sm font-normal font-['Inter']">
                                         <div
                                             class="flex gap-[20px] items-center justify-between text-white/50 text-sm font-normal font-['Inter']">
-                                            <div>0x8213sdslasd@163.com</div>
+                                            <div>{{ globalStore.userInfo.email || '--' }}</div>
                                             <div class="text-[#4B4DEF] text-sm cursor-pointer">Edit</div>
                                         </div>
                                     </div>
@@ -72,37 +72,42 @@
                                                 class="flex-1 py-[17px] relative after:absolute after:h-full after:w-[1px] after:bg-[rgba(255,255,255,0.1)] after:rounded-2xl after:-right-[60px] after:top-0">
                                                 <div class="flex items-center gap-[14px] mb-[30px]">
                                                     <div class="">
-                                                        <NuxtImg :src="user.avatar" class="w-[72px] h-[72px]" />
+                                                        <NuxtImg :src="globalStore.userInfo.avatar"
+                                                            class="w-[72px] h-[72px]" />
                                                     </div>
                                                     <div>
-                                                        <div class="mb-[12px]">0x32194</div>
+                                                        <div class="mb-[12px]">{{ globalStore.userInfo.uid }}</div>
                                                         <!-- 等级 -->
                                                         <div
                                                             class="flex justify-center items-center p-[2.5px_3.5px] rounded-xl bg-[linear-gradient(to_bottom,rgba(238,217,165,1)_0%,rgba(212,174,143,1)_100%)]">
-                                                            <NuxtImg :src="`/images/user/svip${user.level}.svg`"
+                                                            <NuxtImg
+                                                                :src="`/images/user/svip${globalStore.userInfo.promo_level}.svg`"
                                                                 class="w-[39px] h-[15px]" />
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="mb-[21px]">
                                                     <div class="w-24 justify-start"><span
-                                                            class="text-white text-xl font-normal font-['DIN_Next_LT_Pro']">3000</span><span
+                                                            class="text-white text-xl font-normal font-['DIN_Next_LT_Pro']">{{
+                                                                currentLevelData.value / 10000 }}</span><span
                                                             class="text-white text-sm font-normal font-['DIN_Next_LT_Pro']">/</span><span
-                                                            class="text-white/50 text-base font-normal font-['DIN_Next_LT_Pro']">30000</span>
+                                                            class="text-white/50 text-base font-normal font-['DIN_Next_LT_Pro']">{{
+                                                                currentLevelData.maxNumber / 10000 }}</span>
                                                     </div>
                                                 </div>
                                                 <div>
                                                     <div class="mb-[14px]">
-                                                        <UProgress v-model="user.progress" :max="6000" :ui="{
-                                                            root: 'bg-transparent h-[6px]',
-                                                            base: 'bg-[rgba(80,70,64,1)]',
-                                                            indicator: 'bg-[rgba(242,202,171,1)]',
-                                                        }" />
+                                                        <UProgress v-model="currentLevelData.progress"
+                                                            :max="currentLevelData.maxNumber / 10000" :ui="{
+                                                                root: 'bg-transparent h-[6px]',
+                                                                base: 'bg-[rgba(80,70,64,1)]',
+                                                                indicator: 'bg-[rgba(242,202,171,1)]',
+                                                            }" />
                                                     </div>
                                                     <div
                                                         class="flex justify-between text-white text-sm font-bold font-['DIN_Next_LT_Pro'] leading-none">
-                                                        <div>SVIP1</div>
-                                                        <div>SVIP2</div>
+                                                        <div>SVIP{{ globalStore.userInfo.promo_level }}</div>
+                                                        <div>SVIP{{ globalStore.userInfo.promo_level + 1 }}</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -190,7 +195,8 @@
                                                 <div>
                                                     <div
                                                         class="justify-center text-white text-2xl font-bold font-['DIN_Alternate']">
-                                                        145/243</div>
+                                                        {{ formatLcx(detail?.valid_invite_count || 0) }}/{{
+                                                            formatLcx(detail?.pending_invite_count || 0) }}</div>
                                                 </div>
                                             </div>
                                             <div
@@ -205,11 +211,13 @@
                                                 </div>
                                                 <div>
                                                     <div class="justify-center "><span
-                                                            class="text-white text-2xl font-bold font-['DIN_Alternate']">5,243
+                                                            class="text-white text-2xl font-bold font-['DIN_Alternate']">{{
+                                                                0 }}
                                                         </span><span
                                                             class="text-white text-lg font-['DIN_Alternate']">USDT
                                                             / </span><span
-                                                            class="text-white/50 text-lg font-['DIN_Alternate']">8243
+                                                            class="text-white/50 text-lg font-['DIN_Alternate']">{{
+                                                                formatLcx(detail.team_bet_amount) }}
                                                             LCX</span>
                                                     </div>
                                                 </div>
@@ -221,12 +229,13 @@
                                                         <NuxtImg src="/images/user/userCard1.png"
                                                             class="w-[40px] h-[40px]" />
                                                     </div>
-                                                    <div class="text-white text-base font-thin font-['Inter']">有效邀请/待激活
+                                                    <div class="text-white text-base font-thin font-['Inter']">直推奖励
                                                     </div>
                                                 </div>
                                                 <div>
                                                     <div class="w-56 h-9 justify-center"><span
-                                                            class="text-white text-2xl font-bold font-['DIN_Alternate']">3,243
+                                                            class="text-white text-2xl font-bold font-['DIN_Alternate']">{{
+                                                                formatLcx(detail.direct_invite_reward) }}
                                                         </span><span
                                                             class="text-white text-lg font-['DIN_Alternate']">LCX</span>
                                                     </div>
@@ -239,16 +248,18 @@
                                                         <NuxtImg src="/images/user/userCard1.png"
                                                             class="w-[40px] h-[40px]" />
                                                     </div>
-                                                    <div class="text-white text-base font-thin font-['Inter']">有效邀请/待激活
+                                                    <div class="text-white text-base font-thin font-['Inter']">下注奖励
                                                     </div>
                                                 </div>
                                                 <div>
                                                     <div class="justify-center "><span
-                                                            class="text-white text-2xl font-bold font-['DIN_Alternate']">5,243
+                                                            class="text-white text-2xl font-bold font-['DIN_Alternate']">{{
+                                                                0 }}
                                                         </span><span
                                                             class="text-white text-lg font-['DIN_Alternate']">USDT
                                                             / </span><span
-                                                            class="text-white/50 text-lg font-['DIN_Alternate']">8243
+                                                            class="text-white/50 text-lg font-['DIN_Alternate']">{{
+                                                                formatLcx(detail.bet_reward) }}
                                                             LCX</span>
                                                     </div>
                                                 </div>
@@ -257,7 +268,11 @@
                                         <div class="pt-[40px]">
                                             <div class="text-white text-xl font-medium mb-[22px]">邀请统计</div>
                                             <div>
-                                                <PaginatedTable :columns="columns" :data="tableData" class="w-full" />
+                                                <PaginatedTable ref="tableRef" :columnVisibility="{}" :data="tableData"
+                                                    :columns="columns" :page="pagination.page"
+                                                    :pageSize="pagination.pageSize" :total="total"
+                                                    @update:page="onPageChange" @update:pageSize="onPageSizeChange"
+                                                    class="w-full" />
                                             </div>
                                         </div>
                                     </div>
@@ -266,31 +281,41 @@
                                 <div class="w-[376px] h-full basis-[376px] flex-shrink-0">
                                     <div class="">
                                         <div class="bg-linear-default ring-default rounded-2xl flex justify-center">
-                                            <Step />
+                                            <Step :steps="stepList" :currentStep="globalStore.userInfo.promo_level"
+                                                :halfProgress="halfProgress" />
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="py-[40px]" v-if="activeTab === 2">
+                            <!-- 游戏记录 -->
                             <div class="ring-default bg-linear-default rounded-2xl p-[40px]">
-                                <PaginatedTable :columns="columns3" :data="tableData3" class="w-full" />
+                                <PaginatedTable ref="gameTableRef" :data="gameTableData" :columns="gameColumns"
+                                    :page="gamePagination.page" :pageSize="gamePagination.pageSize" :total="gameTotal"
+                                    :columnVisibility="{}" @update:page="onGamePageChange"
+                                    @update:pageSize="onGamePageSizeChange" class="w-full" />
+
                             </div>
                         </div>
                         <div class="py-[40px]" v-if="activeTab === 3">
                             <div class="">
-                                <div class="grid grid-cols-7 gap-6">
-                                    <div v-for="(game, idx) in gamesData" :key="idx" class="flex flex-col items-center">
-                                        <NuxtImg :src="game.icon"
+                                <div class="grid grid-cols-7 gap-6" v-if="favoriteGame?.length > 0">
+                                    <div v-for="(game, idx) in favoriteGame" :key="idx"
+                                        class="flex flex-col items-center">
+                                        <NuxtImg :src="game.thumbnail"
                                             class="w-[210px] h-[240px] rounded-xl object-cover mb-3" />
                                         <div class="text-white text-base font-semibold truncate w-full mb-2">
                                             {{ game.name }}</div>
                                         <div class="flex justify-start gap-2 mb-1 w-full">
-                                            <span v-for="(type, tIdx) in game.types" :key="tIdx"
+                                            <!-- <span v-for="(type, tIdx) in game.types" :key="tIdx"
                                                 class="bg-[#23232B] text-gray-600 text-sm px-3 py-1 rounded-lg">{{ type
-                                                }}</span>
+                                                }}</span> -->
                                         </div>
                                     </div>
+                                </div>
+                                <div v-else>
+                                    <NotData />
                                 </div>
                             </div>
                         </div>
@@ -315,8 +340,14 @@ const UDropdownMenu = resolveComponent('UDropdownMenu')
 const UButton = resolveComponent('UButton')
 import { useDisconnect } from '@wagmi/vue'
 import { useGlobalStore } from '#imports'
+import { getMyRomoteList, getMyRomoteDetail } from '~/composables/apiServices'
+
 const { disconnectAsync } = useDisconnect()
 const globalStore = useGlobalStore()
+
+// const uid = 100032
+const uid = null
+
 
 const user = ref({
     address: '0x8213sdslasdasdasdsadsadasfkewopriopewrewr',
@@ -352,7 +383,15 @@ const selectTab = (index: number) => {
     lastTab.value = activeTab.value
     activeTab.value = index
     // 这里可以添加切换标签页的逻辑
-
+    if (index === 2) {
+        fetchTableData()
+    }
+    else if (index === 3) {
+        getGameHistoryHandle()
+    }
+    else if (index === 4) {
+        getFavoriteGameHandle()
+    }
 }
 
 let clipboard: ClipboardJS | null = null
@@ -364,7 +403,6 @@ function initClipboard() {
     }
     clipboard = new ClipboardJS('.copy-btn')
     clipboard.on('success', (e) => {
-        console.log('Address copied to clipboard:', e.text)
     })
 }
 
@@ -372,24 +410,116 @@ onMounted(() => {
     initClipboard()
 })
 
-const total = 10
+const detail = ref<TableRowType | null>(null)
+const currentLevelData = ref({
+    level: 1,
+    maxNumber: 0,
+    minNumber: 0,
+    value: 0,
+    progress: 0,
+    preMaxNumber: 0
+})
 
-const tableData: TableRowType[] = Array.from({ length: total }, (_, i) => ({
-    id: `B1008${100 + i}`,
-    // type有6种情况
-    type: '直推一代', // 随机生成1-6之间的数字
-    amount: 100000000,
-    start: '2021/10/12 18:11:15',
-    // status true or false 
-    status: Math.random() > 0.5, // 随机生成true或false
-    invitee: `0XMSSHJUYI${i + 1}`,
-    inviteeAddress: `0XINVITE${i + 1}${Math.floor(Math.random() * 1000)}`,
-    count: Math.floor(Math.random() * 100) + 1,
-    downCount: Math.floor(Math.random() * 10000) + 1000,
-    usdt: (Math.floor(Math.random() * 100000) + 10000).toString(),
-    lcx: (Math.floor(Math.random() * 100000) + 10000).toString(),
-    remark: `备注信息 ${i + 1}`
-}))
+const halfProgress = computed(() => {
+    const res = (currentLevelData.value.value * 100 / 10000) / (currentLevelData.value.maxNumber / 10000)
+    return res
+})
+
+
+const stepList = computed(() => {
+    if (detail.value?.list && detail.value?.list?.length > 0) {
+        return detail.value.list.map((item: any) => ({
+            level: item.level,
+            range: `${item.upgrade_min / 10000} - ${item.upgrade_max / 10000}`,
+            rebate: item.bet_rebate_self / 10000,
+            direct: item.register_reward / 10000,
+            reward: item.bet_rebate_sub / 10000,
+        }))
+    }
+    return []
+})
+
+const getMyRomoteDetailHandle = async () => {
+    try {
+        const res = await getMyRomoteDetail({
+            userid: uid || globalStore.uid,
+        })
+        detail.value = res.data ?? null
+        if (res.data.list && res.data.list.length > 0) {
+            let curIndex = res.data?.list?.findIndex((item: any) => item.level === globalStore.userInfo.promo_level)
+            // 获取当前项和上一个项
+            let curData = null
+            let prevData = null
+            if (curIndex !== undefined && curIndex > -1) {
+                curData = res.data.list[curIndex]
+                prevData = curIndex > 0 ? res.data.list[curIndex - 1] : null
+            }
+            currentLevelData.value = {
+                level: (curData as { level: number }).level,
+                maxNumber: curData.upgrade_max,
+                minNumber: curData.upgrade_min,
+                value: res.data.team_bet_amount,
+                progress: res.data.team_bet_amount / 10000,
+                preMaxNumber: prevData ? prevData.upgrade_max : 0
+            }
+
+            console.log('currentLevelData', currentLevelData.value)
+        }
+        console.log('getMyRomoteDetailHandle', res)
+        // tableData.value = res.data.list ?? []
+        // total.value = res.data.total ?? 0
+    } catch (err) {
+        detail.value = null
+        currentLevelData.value = {
+            level: 1,
+            maxNumber: 0,
+            minNumber: 0,
+            value: 0,
+            progress: 0,
+            preMaxNumber: 0
+        }
+        console.error('获取推广详情失败:', err)
+    }
+
+}
+await getMyRomoteDetailHandle()
+
+const pagination = ref({ page: 1, pageSize: 1 })
+const total = ref(0)
+const tableData = ref<TableRowType[]>([])
+const fetchTableData = async () => {
+    try {
+        const res = await getMyRomoteList({
+            page: pagination.value.page,
+            limit: pagination.value.pageSize,
+            userid: uid || globalStore.uid,
+            // type: selectedType.value
+        })
+        tableData.value = res.data.list.map((item: { promo: TableRowType }) => {
+            return { ...item.promo, user_name: item.user_name, self_bet_amount: item.self_bet_amount }
+        })
+        console.log('fetchTableData', tableData.value)
+        total.value = res.data.total ?? 0
+    } catch (err) {
+        tableData.value = []
+        total.value = 0
+    }
+
+}
+await fetchTableData()
+
+const onPageSizeChange = (newPageSize: number) => {
+    pagination.value.pageSize = newPageSize
+    // 这里可以添加分页大小变化的逻辑
+    fetchTableData()
+}
+
+const onPageChange = (newPage: number) => {
+    pagination.value.page = newPage // 调整为从0开始
+    // 这里可以添加页码变化的逻辑
+    fetchTableData()
+}
+
 type TableRowType = {
     type: String,
     amount: Number
@@ -402,6 +532,15 @@ type TableRowType = {
     usdt?: string
     lcx?: string
     remark?: string
+    list?: any[] // Add this line to allow 'list' property
+    created_at?: string // Add this line to fix the error
+    register_parent_amount?: number // Add this line to fix the error
+    bet_rebate_amount?: number // Add this line to fix the error
+    self_bet_amount?: number
+    user_id?: number
+    activate: boolean
+    valid_invite_count?: number // Add this line to fix the error
+    pending_invite_count?: number // Add this line to fix the error
 }
 
 const statusList = [
@@ -425,11 +564,11 @@ function onTypeChange(value: number) {
 
 const columns: TableColumn<TableRowType>[] = [
     {
-        accessorFn: (row: TableRowType) => row.invitee,
-        id: 'invitee',
+        accessorFn: (row: TableRowType) => row.user_id,
+        id: 'user_id',
         header: ({ column }) => getHeader(column, '受邀人UID', popoverInviteeOpen),
         cell: ({ row }) => {
-            return h('div', { class: 'text-white text-sm font-normal font-Inter' }, row.getValue('invitee'))
+            return h('div', { class: 'text-white text-sm font-normal font-Inter' }, row.getValue('user_id') || '--')
         }
     },
     {
@@ -437,13 +576,16 @@ const columns: TableColumn<TableRowType>[] = [
         id: 'inviteeAddress',
         header: ({ column }) => getHeader(column, '受邀人地址', popoverInviteeAddressOpen),
         cell: ({ row }) => {
-            return h('div', { class: 'text-white text-sm font-normal font-Inter' }, row.getValue('inviteeAddress'))
+            return h('div', { class: 'text-white text-sm font-normal font-Inter' }, row.original.user_id || '--')
         }
     },
     {
         accessorFn: (row: TableRowType) => row.type,
         id: 'type',
         header: '推广代数',
+        cell: ({ row }) => {
+            return h('div', { class: 'text-white text-sm font-normal font-Inter' }, '直推一代')
+        }
     },
     {
         accessorFn: (row: TableRowType) => row.downCount,
@@ -452,10 +594,10 @@ const columns: TableColumn<TableRowType>[] = [
         // 每个数据除以10000
         cell: ({ row }) => {
             const usdt = row.original.usdt ?? 0
-            const lcx = row.original.lcx ?? 0
+            const lcx = row.original.self_bet_amount ?? 0
             // 千分位格式化
             const format = (v: number | string) => v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-            return h('div', { class: 'text-white text-sm flex items-center' }, [
+            return h('div', { class: 'text-white justify-center text-sm flex items-center' }, [
                 h('span', { class: 'text-white' }, format(usdt)),
                 h('span', { class: 'text-white/50 text-sm mx-1' }, 'USDT/'),
                 h('span', { class: 'text-white text-sm' }, format(lcx)),
@@ -468,35 +610,39 @@ const columns: TableColumn<TableRowType>[] = [
         // 每个数据除以10000
         cell: ({ row }) => {
             const usdt = row.original.usdt ?? 0
-            const lcx = row.original.lcx ?? 0
+            const lcx = row.original.bet_rebate_amount ?? 0
             // 千分位格式化
             const format = (v: number | string) => v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-            return h('div', { class: 'text-white text-sm flex items-center' }, [
-                h('span', { class: 'text-white' }, format(usdt)),
+            return h('div', { class: 'text-white justify-center text-sm flex items-center' }, [
+                h('span', { class: 'text-white' }, formatLcx(Number(usdt))),
                 h('span', { class: 'text-white/50 text-sm mx-1' }, 'USDT/'),
-                h('span', { class: 'text-white text-sm' }, format(lcx)),
+                h('span', { class: 'text-white text-sm' }, formatLcx(lcx)),
                 h('span', { class: 'text-white/50 text-sm mx-1' }, 'LCX'),
             ])
         }
     },
-
     {
-        accessorFn: (row: TableRowType) => row.amount,
-        id: 'amount',
+        accessorFn: (row: TableRowType) => row.register_parent_amount,
+        id: 'register_parent_amount',
         header: '直推奖励',
         cell: ({ row }) => {
-            const value = row.getValue('amount')
+            const value = row.getValue('register_parent_amount') || 0
             return h('div', { class: 'flex gap-[10px] items-center justify-center' }, value + ' LCX')
         }
     },
     {
-        accessorFn: (row: TableRowType) => row.start,
-        id: 'start',
-        header: '邀请时间(UTC)'
+        accessorFn: (row: TableRowType) => row.created_at,
+        id: 'created_at',
+        header: '邀请时间(UTC)',
+        cell: ({ row }) => {
+            const value = row.getValue('created_at')
+            console.log(value)
+            return h('div', { class: 'text-white text-sm font-normal font-Inter' }, formatTime(value as string))
+        }
     },
     {
-        accessorFn: (row: TableRowType) => row.status,
-        id: 'status',
+        accessorFn: (row: TableRowType) => row.activate,
+        id: 'activate',
         header: () => h(UPopover, {
             open: popoverOpen.value,
             'onUpdate:open': (val: boolean) => (popoverOpen.value = val),
@@ -526,7 +672,7 @@ const columns: TableColumn<TableRowType>[] = [
         }),
         cell: ({ row }) => {
             const value = row.getValue('status')
-            return h('span', { class: `justify-start text-sm font-normal font-Inter ${value ? 'text-[rgba(123,255,209,1)]' : 'text-[rgba(255,55,55,1)]'}` }, value ? 'Success' : 'Failed')
+            return h('span', { class: `justify-start text-sm font-normal font-Inter ${value ? 'text-white' : 'text-[rgba(255,55,55,1)]'}` }, value ? '有效' : '待激活')
         }
     },
     {
@@ -572,8 +718,8 @@ const columns: TableColumn<TableRowType>[] = [
                                 color: 'primary',
                                 onClick: () => {
                                     // 保存逻辑
-                                    row.original.remark = remark.value
-                                    showRemark.value = false
+                                    // row.original.remark = remark.value
+                                    // showRemark.value = false
                                 }
                             }, '保存')
                         ])
@@ -640,6 +786,115 @@ function getHeader(column: any, label: string, popoverOpen: Ref<boolean>) {
     )
 }
 
+const gameTableData = ref<GameRecordRowType[]>([])
+const gameTotal = ref(0)
+const gamePagination = ref({ page: 1, pageSize: 10 })
+const onGamePageSizeChange = (newPageSize: number) => {
+    gamePagination.value.pageSize = newPageSize
+    // 这里可以添加分页大小变化的逻辑
+    getGameHistoryHandle()
+}
+const onGamePageChange = (newPage: number) => {
+    gamePagination.value.page = newPage // 调整为从0开始
+    // 这里可以添加页码变化的逻辑
+    getGameHistoryHandle()
+}
+
+const getGameHistoryHandle = async () => {
+    try {
+        const res = await getGameHistory({
+            page: pagination.value.page,
+            limit: pagination.value.pageSize,
+            userid: globalStore.uid
+        })
+        gameTableData.value = res.data.list ?? []
+        gameTotal.value = res.data.total ?? 0
+    } catch (err) {
+        gameTableData.value = []
+        gameTotal.value = 0
+    }
+}
+
+const gameColumns: TableColumn<TableRowType>[] = [
+    {
+        accessorFn: (row: TableRowType) => row.user_id,
+        id: 'user_id',
+        header: ({ column }) => getHeader(column, 'Play ID', popoverInviteeOpen),
+        cell: ({ row }) => {
+            return h('div', { class: 'text-white text-sm font-normal font-Inter' }, row.getValue('user_id') || '--')
+        }
+    },
+    {
+        id: 'game_name',
+        accessorKey: 'game_name',
+        header: 'Name'
+    },
+    {
+        accessorKey: 'valid_bet',
+        header: '下注量',
+        cell: ({ row }) => {
+            const value = row.getValue('valid_bet')
+            return h('div', { class: 'flex gap-[10px] items-center justify-center' }, [
+                h(
+                    NuxtImg,
+                    {
+                        src: '/images/lcx.png',
+                        class: 'w-[32px] h-[32px]'
+                    }
+                ),
+                h('span', { class: 'text-white text-sm font-font-bold' }, (typeof value === 'string' || typeof value === 'number' ? formatLcx(Number(value)) : '') + ' LCX')
+            ])
+        }
+    },
+    {
+        accessorKey: 'total_point',
+        header: '倍数',
+        cell: ({ row }) => {
+            const value = row.getValue('total_point')
+            return h('span', { class: 'bg-indigo-400 rounded-3xl text-white text-sm text-white/90 text-sm font-normal font-Inter capitalize leading-[10px] p-[7px_10px]' }, 'x' + formatLcx(Number(value)))
+        }
+    },
+    {
+        accessorKey: 'change_gb',
+        header: '下注奖励',
+        cell: ({ row }) => {
+            const value = row.getValue('change_gb')
+            return h('div', { class: 'flex gap-[10px] items-center justify-center' }, [
+                h(
+                    NuxtImg,
+                    {
+                        src: '/images/lcx.png',
+                        class: 'w-[32px] h-[32px]'
+                    }
+                ),
+                h('span', { class: 'text-white text-sm font-font-bold' }, (value as number > 0 ? value : '0') + ' LCX')
+            ])
+        }
+    },
+    {
+        accessorKey: 'random_nums',
+        header: '随机数',
+        cell: ({ row }) => {
+            const value = row.getValue('random_nums')
+            return row.getValue('random_nums') ? (row.getValue('random_nums') || '--') : '--'
+        }
+    },
+    {
+        accessorKey: 'created_date',
+        header: '开始时间(UTC)',
+        cell: ({ row }) => {
+            return row.getValue('created_date') ? formatTimeToHMS(row.getValue('created_date') || '--') : '--'
+        }
+    },
+    {
+        accessorKey: 'end_date',
+        header: '结束时间(UTC)',
+        cell: ({ row }) => {
+            return formatTimeToHMS(row.getValue('end_date'))
+        }
+    }
+]
+
 // 游戏记录表格类型
 type GameRecordRowType = {
     id: string
@@ -655,122 +910,36 @@ type GameRecordRowType = {
 }
 
 
-const gamesData = [
-    {
-        name: "YUCATAN'S MYSTERY",
-        types: ["Sports", "Leisure"],
-        icon: "/images/home/games/agame1.png"
-    },
-    {
-        name: "Buffalo 50",
-        types: ["Sports", "Leisure"],
-        icon: "/images/home/games/agame2.png"
-    },
-    {
-        name: "ALMIGHTY SPARTA",
-        types: ["Sports", "Leisure"],
-        icon: "/images/home/games/agame3.png"
-    },
-    {
-        name: "Hammer of Vulcan",
-        types: ["Sports", "Leisure"],
-        icon: "/images/home/games/agame4.png"
-    },
-    {
-        name: "Hammer of Vulcan",
-        types: ["Sports", "Leisure"],
-        icon: "/images/home/games/agame5.png"
-    },
-    {
-        name: "Hammer of Vulcan",
-        types: ["Sports", "Leisure"],
-        icon: "/images/home/games/agame6.png"
-    },
-    {
-        name: "TOMB OF MIRRORS",
-        types: ["Sports", "Leisure"],
-        icon: "/images/home/games/agame7.png"
-    },
-    {
-        name: "BOOK OF TIRES",
-        types: ["Sports", "Leisure"],
-        icon: "/images/home/games/agame8.png"
-    },
-    {
-        name: "ALMIGHTY SPARTA",
-        types: ["Sports", "Leisure"],
-        icon: "/images/home/games/agame1.png"
-    },
-    {
-        name: "SCARAB TEMPLE",
-        types: ["Sports", "Leisure"],
-        icon: "/images/home/games/agame2.png"
-    },
-    {
-        name: "Hammer of Vulcan",
-        types: ["Sports", "Leisure"],
-        icon: "/images/home/games/agame3.png"
-    },
-    {
-        name: "TOMB OF MIRRORS",
-        types: ["Sports", "Leisure"],
-        icon: "/images/home/games/agame4.png"
-    },
-    {
-        name: "Hammer of Vulcan",
-        types: ["Sports", "Leisure"],
-        icon: "/images/home/games/agame5.png"
-    },
-    {
-        name: "Hammer of Vulcan",
-        types: ["Sports", "Leisure"],
-        icon: "/images/home/games/agame6.png"
-    },
-    {
-        name: "YUCATAN'S MYSTERY",
-        types: ["Sports", "Leisure"],
-        icon: "/images/home/games/agame7.png"
-    },
-    {
-        name: "Buffalo 50",
-        types: ["Sports", "Leisure"],
-        icon: "/images/home/games/agame8.png"
-    },
-    {
-        name: "ALMIGHTY SPARTA",
-        types: ["Sports", "Leisure"],
-        icon: "/images/home/games/agame1.png"
-    },
-    {
-        name: "Hammer of Vulcan",
-        types: ["Sports", "Leisure"],
-        icon: "/images/home/games/agame2.png"
-    },
-    {
-        name: "TEARS OF TIME",
-        types: ["Sports", "Leisure"],
-        icon: "/images/home/games/agame3.png"
-    },
-    {
-        name: "TOMB OF MIRRORS",
-        types: ["Sports", "Leisure"],
-        icon: "/images/home/games/agame4.png"
+
+const favoriteGame = ref([])
+const getFavoriteGameHandle = async () => {
+    try {
+        const res = await getFavoriteGames({
+            page: pagination.value.page,
+            limit: pagination.value.pageSize,
+            userid: globalStore.uid
+        })
+        gameTableData.value = res.data.list ?? []
+        gameTotal.value = res.data.total ?? 0
+    } catch (err) {
+        gameTableData.value = []
+        gameTotal.value = 0
     }
-]
+}
 
 // 添加 tableData3 示例数据
-const tableData3: GameRecordRowType[] = Array.from({ length: 10 }, (_, i) => ({
-    id: `P${1000 + i}`,
-    gameName: gamesData[i % gamesData.length].name,
-    betAmount: (Math.floor(Math.random() * 10000) + 1000).toString(),
-    betIcon: '/images/lcx.png',
-    multiplier: `${(Math.random() * 10).toFixed(2)}x`,
-    reward: (Math.floor(Math.random() * 5000) + 500).toString(),
-    rewardIcon: 'i-lucide-gift',
-    random: (Math.random() * 100000).toFixed(0),
-    start: '2024/06/01 12:00:00',
-    end: '2024/06/01 12:05:00'
-}))
+// const tableData3: GameRecordRowType[] = Array.from({ length: 10 }, (_, i) => ({
+//     id: `P${1000 + i}`,
+//     gameName: gamesData[i % gamesData.length].name,
+//     betAmount: (Math.floor(Math.random() * 10000) + 1000).toString(),
+//     betIcon: '/images/lcx.png',
+//     multiplier: `${(Math.random() * 10).toFixed(2)}x`,
+//     reward: (Math.floor(Math.random() * 5000) + 500).toString(),
+//     rewardIcon: 'i-lucide-gift',
+//     random: (Math.random() * 100000).toFixed(0),
+//     start: '2024/06/01 12:00:00',
+//     end: '2024/06/01 12:05:00'
+// }))
 
 const columns3: TableColumn<GameRecordRowType>[] = [
     {

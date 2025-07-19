@@ -32,13 +32,15 @@ export default eventHandler(async (event: H3Event) => {
     //   statusCode: 502,
     //   statusMessage: 'Bad Gateway: ' + (e.message || 'Failed to fetch metrics')
     // })
-    return {
-      code: 500,
-      message: '接口异常，已返回默认数据',
-      data: {
-        list: []
+    // return {
+    //   code: 500,
+    //   message: '接口异常，已返回默认数据',
+    //   data: {
+    //     list: []
 
-      }
-    }
+    //   }
+    // }
+    return e
+
   }
 })

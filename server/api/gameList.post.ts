@@ -10,13 +10,12 @@ export default eventHandler(async (event: H3Event) => {
   // 一定是 config.apiBase，而不是 config.public.apiBase
   const targetUrl = `${config.public.apiBase}/api/game/list`
 
-  console.log('Requesting game list with body:', body, 'to URL:', targetUrl)
   // const { sign, timestamp } = useSign('UserLogin'+address)
   const { sign, timestamp } = useSignByParams({
     ...body
   })
-  console.log('Requesting game list for address:', 'with sign:', sign, 'and timestamp:', timestamp, 'to URL:', targetUrl)
   try {
+    console.log('Requesting game list with body:', body, 'to URL:', targetUrl)
     const res = await $fetch(targetUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -34,7 +33,9 @@ export default eventHandler(async (event: H3Event) => {
       data: {
         list: []
 
-      }
+      },
+      error: e
     }
+    // return e
   }
 })

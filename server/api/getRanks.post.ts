@@ -28,14 +28,16 @@ export default eventHandler(async (event: H3Event) => {
     return res
   } catch (e: any) {
     console.error('Error fetching config statistics:', e)
-    return {
-      code: 500,
-      message: '接口异常，已返回默认数据',
-      data: {
-        list: [],
-        total: 0
-      }
-    }
+    // return {
+    //   code: 500,
+    //   message: '接口异常，已返回默认数据',
+    //   data: {
+    //     list: [],
+    //     total: 0
+    //   }
+    // }
+    return e
+
     // throw createError({
     //   statusCode: 502,
     //   statusMessage: 'Bad Gateway: ' + (e.message || 'Failed to fetch metrics')

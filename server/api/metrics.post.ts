@@ -24,9 +24,11 @@ export default eventHandler(async (event: H3Event) => {
     })
     return res
   } catch (e: any) {
-    throw createError({
-      statusCode: 502,
-      statusMessage: 'Bad Gateway: ' + (e.message || 'Failed to fetch metrics')
-    })
+    // throw createError({
+    //   statusCode: 502,
+    //   statusMessage: 'Bad Gateway: ' + (e.message || 'Failed to fetch metrics')
+    // })
+    return e
+
   }
 })

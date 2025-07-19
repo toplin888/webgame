@@ -8,7 +8,7 @@ export default eventHandler(async (event: H3Event) => {
   const body = await readBody(event) as Record<string, any>
   const config = useRuntimeConfig()
   // 一定是 config.apiBase，而不是 config.public.apiBase
-  const targetUrl = `${config.public.apiBase}/api/activity/signin`
+  const targetUrl = `${config.public.apiBase}/api/user/mypromotelist`
 
   console.log('Requesting game list with body:', body, 'to URL:', targetUrl)
   // const { sign, timestamp } = useSign('UserLogin'+address)
@@ -26,21 +26,8 @@ export default eventHandler(async (event: H3Event) => {
         ...body
       }
     })
-    console.log('Response from game list:', res)
     return res
   } catch (e: any) {
-    console.log(e)
-    //  if(e.) {}
-    // return {
-    //   code: 500,
-    //   message: '接口异常，已返回默认数据',
-    //   data: {
-    //     list: [],
-    //     day: 1,
-    //     issign: false
-    //   },
-    //   e
-    // }
     return e
 
   }

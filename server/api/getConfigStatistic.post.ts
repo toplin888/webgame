@@ -14,7 +14,6 @@ export default eventHandler(async (event: H3Event) => {
   const { sign, timestamp } = useSignByParams({
 
   })
-  console.log('Requesting game list for address:', 'with sign:', sign, 'and timestamp:', timestamp, 'to URL:', targetUrl)
   try {
     const res = await $fetch(targetUrl, {
       method: 'POST',
@@ -28,11 +27,13 @@ export default eventHandler(async (event: H3Event) => {
     return res
   } catch (e: any) {
     console.error('Error fetching config statistics:', e)
-    return {
-      data: {
-        total_lcx: 0,
-      }
-    }
+    // return {
+    //   data: {
+    //     total_lcx: 0,
+    //   }
+    // }
+    return e
+
     // throw createError({
     //   statusCode: 502,
     //   statusMessage: 'Bad Gateway: ' + (e.message || 'Failed to fetch metrics')

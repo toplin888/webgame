@@ -27,3 +27,16 @@ export function formatTimeToHMS(timestamp: string | number): string {
     const s = String(date.getSeconds()).padStart(2, '0')
     return `${h}:${m}:${s}`
 }
+
+// 将时间格式化为美式时间在进行本地化 
+export function formatTime(timestamp: string | number): string {
+    const date = new Date(timestamp)
+    console.log('formatTime', date, timestamp)
+    const y = date.getFullYear()
+    const m = String(date.getMonth() + 1).padStart(2, '0')
+    const d = String(date.getDate()).padStart(2, '0')
+    const h = String(date.getHours()).padStart(2, '0')
+    const min = String(date.getMinutes()).padStart(2, '0')
+    const s = String(date.getSeconds()).padStart(2, '0')
+    return `${y}/${m}/${d} ${h}:${min}:${s}`
+}

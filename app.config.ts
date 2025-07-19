@@ -18,14 +18,11 @@ export default defineAppConfig({
             slots: {
                 base: 'font-normal',
             }
+        },
+        app: {
+            toaster: false
         }
     },
-    toast: {
-        position: 'top-right' as const,
-        expand: true,
-        duration: 2000
-    },
-    // 应用程序配置
     app: {
         name: 'LuckyX Frontend',
         version: '1.0.0',

@@ -18,9 +18,9 @@
                 <div>
                     <div class="mb-[10px] text-neutral-200 text-xl font-normal font-['Microsoft_YaHei']">每日签到</div>
                     <div class="text-neutral-400 text-sm font-normal font-['Microsoft_YaHei']">已连续签到<span
-                            class="text-indigo-400">{{ signDay }}</span>天</div>
+                            class="text-indigo-400">{{ signStatus ? signDay : signDay ? signDay - 1 : 0 }}</span>天</div>
                 </div>
-                <div @click="toHistory">
+                <div @click="toHistory" class="cursor-pointer">
                     <NuxtImg src="/images/reward/history.svg" class="w-[20px] h-[20px]" />
                 </div>
             </div>
@@ -79,9 +79,9 @@
                                     <NuxtImg src="/images/reward/avtar1.svg" class="w-[46px] h-[46px]" />
                                 </div>
                                 <div class="">
-                                    <div class="text-white/50 text-xl font-normal font-['Inter'] mb-[5px]">{{
+                                    <div class="text-white text-xl font-normal font-['Inter'] mb-[5px]">{{
                                         item.activity.title
-                                    }}
+                                        }}
                                     </div>
                                     <div class="text-white/50 text-sm font-normal font-['Inter']">{{
                                         item.activity.content }}
@@ -202,29 +202,27 @@
 <script setup lang="ts">
 import { UButton } from '#components';
 import type { StepperItem } from '@nuxt/ui'
-import { getActivityList, getSignList, signin } from '~/composables/apiServices'
+import { getActivityList, getSignList, signin, goActivityDetail } from '~/composables/apiServices'
 import { formatLcx } from '~/utils';
 const toast = useToast()
 const globalStore = useGlobalStore()
 const signDay = ref(0)
 const signStatus = ref(false)
-const signList = ref([
-    { day: 1, status: true, name: 'Day 1', value: '50', lock: false },
-    { day: 2, status: false, name: 'Day 2', value: '50', lock: false },
-    { day: 3, status: false, name: 'Day 3', value: '50', lock: true },
-    { day: 4, status: false, name: 'Day 4', value: '50', lock: true },
-    { day: 5, status: false, name: 'Day 5', value: '50', lock: true },
-    { day: 6, status: false, name: 'Day 6', value: '50', lock: true },
-    { day: 7, status: false, name: 'Day 7', value: '大奖', lock: true }
-])
+const signList = ref([])
 
 const getSignListHandler = async () => {
-    let params = { userid: globalStore.uid, language: globalStore.locale }
-    const res = await getSignList(params)
-    signList.value = res.data.list
-    signDay.value = res.data.day
-    signStatus.value = res.data.issign
-    console.log('活动列表:', res.data)
+    try {
+        if (!globalStore.uid) {
+            return
+        }
+        let params = { userid: globalStore.uid, language: globalStore.locale }
+        const res = await getSignList(params)
+        signList.value = res.data.list
+        signDay.value = res.data.day
+        signStatus.value = res.data.issign
+    } catch (err) {
+        console.error(err)
+    }
 }
 
 await getSignListHandler()
@@ -243,7 +241,6 @@ const activeTab = ref(0)
 const selectTab = (index: number) => {
     activeTab.value = index
     // 这里可以添加切换标签页的逻辑
-    console.log('Selected tab:', tabList[index].label)
 }
 
 const taskList = ref([
@@ -256,17 +253,19 @@ const taskList = ref([
 ])
 
 const getActivityListHandler = async () => {
-    let params = { userid: globalStore.uid, language: globalStore.locale }
-    const res = await getActivityList(params)
-    taskList.value = res.data
-    console.log('活动列表:', res.data)
+    try {
+        let params = { userid: globalStore.uid, language: globalStore.locale }
+        const res = await getActivityList(params)
+        taskList.value = res.data
+    } catch (err) {
+        taskList.value = []
+    }
 }
 
 await getActivityListHandler()
 
 const rewardValue = ref(0)
 const signHandler = (item: any) => {
-    console.log(item)
     signin({
         userid: globalStore.uid,
         id: signDay.value,
@@ -291,7 +290,7 @@ const showModal = ref(false)
 const showModal2 = ref(false)
 
 
-const openModal = (item: any) => {
+const openModal = () => {
     showModal.value = true
 }
 
@@ -319,12 +318,10 @@ const items = ref<StepperItem[]>([
 const confirmModal = () => {
     showModal.value = false
     showModal2.value = true
-    console.log('确认操作')
 }
 
 const confirmModal2 = () => {
     showModal2.value = false
-    console.log('确认操作')
 }
 
 const activityList = ref([
@@ -389,9 +386,19 @@ const toHistory = () => {
     navigateTo('/reward/history')
 }
 
-const toDoTask = (item: any) => {
+const toDoTask = async (item: any) => {
     // 跳转到任务详情页面
-
+    try {
+        const res = await goActivityDetail({
+            actid: item.activity.id,
+            activitykey: item.activity.activity_key,
+            userid: globalStore.uid,
+            title: item.activity.title,
+        })
+        openModal()
+    } catch (error) {
+        console.error('Error navigating to activity detail:', error)
+    }
 
 }
 </script>

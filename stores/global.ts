@@ -52,7 +52,6 @@ export const useGlobalStore = defineStore('global', {
             this.locale = lang;
         },
         logout() {
-            console.log('Logging out...');
             useCookie('token').value = null;
             this.token = null;
             this.loginStatus = false; // 清除登录状态
@@ -77,7 +76,7 @@ export const useGlobalStore = defineStore('global', {
     },
     persist: {
         // 推荐只持久化非敏感字段到 localStorage
-        pick: ['userInfo', 'status', 'uid'],
+        pick: ['userInfo', 'status', 'uid', 'loginStatus'],
         // SSR 推荐使用 localStorage，避免 cookie 冲突
         storage: piniaPluginPersistedstate.localStorage()
     }

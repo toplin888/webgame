@@ -121,7 +121,6 @@ const handleGetStarted = () => {
 
 // 组件挂载后执行
 onMounted(() => {
-  console.log('Plan1 组件已挂载')
 })
 </script>
 

@@ -18,7 +18,6 @@ export function userLogin(address: string) {
   })
 }
 
-
 export function getGameList<T extends Record<string, any> = Record<string, any>>(data: T) {
   const { $request } = useNuxtApp() as unknown as { $request: RequestFn }
   return $request('/api/gameList', {
@@ -72,7 +71,8 @@ export function getGameDetail<T extends Record<string, any> = Record<string, any
     method: 'POST',
     body: {
       ...data
-    }
+    },
+    auth: true // 需要登录
   })
 }
 
@@ -146,7 +146,106 @@ export function signin<T extends Record<string, any> = Record<string, any>>(data
   })
 }
 
+export function goActivityDetail<T extends Record<string, any> = Record<string, any>>(data: T) {
+  const { $request } = useNuxtApp() as unknown as { $request: RequestFn }
+  return $request('/api/goActivityDetail', {
+    method: 'POST',
+    body: {
+      ...data
+    }
+  })
+}
 
+export function getActivityHistory<T extends Record<string, any> = Record<string, any>>(data: T) {
+  const { $request } = useNuxtApp() as unknown as { $request: RequestFn }
+  return $request('/api/getActivityHistory', {
+    method: 'POST',
+    body: {
+      ...data
+    }
+  })
+}
+
+export function getSignMessage<T extends Record<string, any> = Record<string, any>>(data: T) {
+  const { $request } = useNuxtApp() as unknown as { $request: RequestFn }
+  return $request('/api/getSignMessage', {
+    method: 'POST',
+    body: {
+      ...data
+    }
+  })
+}
+
+export function getNoticeList<T extends Record<string, any> = Record<string, any>>(data: T) {
+  const { $request } = useNuxtApp() as unknown as { $request: RequestFn }
+  return $request('/api/getNoticeList', {
+    method: 'POST',
+    body: {
+      ...data
+    }
+  })
+}
+
+export function getMyNoticeList<T extends Record<string, any> = Record<string, any>>(data: T) {
+  const { $request } = useNuxtApp() as unknown as { $request: RequestFn }
+  return $request('/api/getMyNoticeList', {
+    method: 'POST',
+    body: {
+      ...data
+    }
+  })
+}
+
+export function getMyRomoteList<T extends Record<string, any> = Record<string, any>>(data: T) {
+  const { $request } = useNuxtApp() as unknown as { $request: RequestFn }
+  return $request('/api/getMyRomoteList', {
+    method: 'POST',
+    body: {
+      ...data
+    }
+  })
+}
+
+export function getMyRomoteDetail<T extends Record<string, any> = Record<string, any>>(data: T) {
+  const { $request } = useNuxtApp() as unknown as { $request: RequestFn }
+  return $request('/api/getMyRomoteDetail', {
+    method: 'POST',
+    body: {
+      ...data
+    }
+  })
+}
+
+export function getFavoriteGames<T extends Record<string, any> = Record<string, any>>(data: T) {
+  const { $request } = useNuxtApp() as unknown as { $request: RequestFn }
+  return $request('/api/getFavoriteGames', {
+    method: 'POST',
+    body: {
+      ...data
+    }
+  })
+}
+
+export function getBelonging<T extends Record<string, any> = Record<string, any>>(data: T) {
+  const { $request } = useNuxtApp() as unknown as { $request: RequestFn }
+  return $request('/api/getBelonging', {
+    method: 'POST',
+    body: {
+      ...data
+    }
+  })
+}
+
+
+export function getBelongingList<T extends Record<string, any> = Record<string, any>>(data: T) {
+  const { $request } = useNuxtApp() as unknown as { $request: RequestFn }
+  return $request('/api/getBelongingList', {
+    method: 'POST',
+    body: {
+      ...data
+    }
+  })
+}
 
 export function getConfigStatistic2() {
   return useFetch('/api/getConfigStatistic', {

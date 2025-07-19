@@ -14,6 +14,7 @@
 </template>
 
 <script setup lang="ts">
+
 const mobileMenuOpen = ref(false)
 
 // 监听路由变化，关闭移动端菜单

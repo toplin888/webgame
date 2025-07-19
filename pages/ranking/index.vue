@@ -26,7 +26,7 @@
                 <div class="flex-1 relative" v-if="ranks.length" v-for="(item, index) in [ranks[1], ranks[0], ranks[2]]"
                     :key="item?.user_id || index" :class="index === 1 ? '-mt-[72px]' : ''">
                     <div class="flex flex-col items-center justify-center mb-[22px]">
-                        <div class="mb-[20px]">
+                        <div class="mb-[20px] h-[130px] w-[130px]">
                             <NuxtImg v-if="item?.avatar" :src="item?.avatar"
                                 class="max-w-[180px] max-h-[180px] w-[130px] object-cover" style="" />
                         </div>
@@ -34,7 +34,7 @@
                             '--' }}
                         </div>
                     </div>
-                    <div class="relative">
+                    <div class="relative bottom-0 w-full">
                         <NuxtImg src="/images/ranking/table.png" class="w-full object-cover"
                             style="aspect-ratio: 1.74;" />
                         <div
@@ -170,7 +170,6 @@ const ranks = ref<RankItem[]>([])
 ranks.value = rankRes.data.list?.length
     ? rankRes.data.list
     : notDataList
-console.log(ranks.value)
 
 const mydata = ref({
     mydata: 0,
@@ -193,13 +192,21 @@ const changeTab = (index: number | string) => {
 }
 
 const getRankListHandler = async () => {
-    let params = { userid: globalStore.uid, ranktype: activeTab.value, datatype: currentTime.value }
+    try {
+        let params = { userid: globalStore.uid, ranktype: activeTab.value, datatype: currentTime.value }
 
-    const res = await getRankList(params)
-    ranks.value = res.data.list || notDataList
-    mydata.value = {
-        mydata: res.data.mydata,
-        myrank: res.data.myrank
+        const res = await getRankList(params)
+        ranks.value = res.data.list || notDataList
+        mydata.value = {
+            mydata: res.data.mydata,
+            myrank: res.data.myrank
+        }
+    } catch (err) {
+        ranks.value = notDataList
+        mydata.value = {
+            mydata: 0,
+            myrank: 0
+        }
     }
 }
 </script>

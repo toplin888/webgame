@@ -149,10 +149,10 @@ definePageMeta({
 
 // 设置页面 SEO
 useSeoMeta({
-  title: 'Home',
-  ogTitle: 'Home',
-  description: 'Welcome to our multilingual website',
-  ogDescription: 'Welcome to our multilingual website'
+  title: 'LuckyX',
+  ogTitle: 'LuckyX',
+  description: 'Welcome to LuckyX website',
+  ogDescription: 'Welcome to LuckyX website'
 })
 // 获取当前语言信息
 const { locale, locales } = useI18n()

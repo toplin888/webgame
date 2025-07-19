@@ -1,26 +1,24 @@
 import { onMounted, onUnmounted } from 'vue'
 import { useAccount, useAccountEffect } from '@wagmi/vue'
+import { useAppKitAccount } from "@reown/appkit/vue";
 import { useGlobalStore } from '~/stores/global'
 import { useDisconnect } from "@reown/appkit/vue";
 // import { useAppKit } from '@reown/appkit/vue';
 export function useWalletEvents() {
     const { disconnect } = useDisconnect();
-    console.log('useWalletEvents initialized')
     const globalStore = useGlobalStore()
-    const { isConnected } = useAccount()
+    const accountData = useAppKitAccount()
     useAccountEffect({
         onConnect(data) {
-            console.log('Connected!', data)
+            // console.log('Connected!', data)
             // useWalletLogin()
         },
         onDisconnect() {
-            console.log('onDisconnect!')
-            disconnect();
-            // 钱包断开时清除全局状态
-            globalStore.logout()
-            // const { close } = useAppKit();
+            // console.log('onDisconnect!')
+            // disconnect();
+            // // 钱包断开时清除全局状态
+            // globalStore.logout()
 
-            // close()
         },
     })
 

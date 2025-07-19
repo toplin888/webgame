@@ -1,7 +1,7 @@
 import { useRuntimeConfig } from '#imports'
 import CryptoJS from 'crypto-js'
 
-export function useSignByParams(params: Record<string, any>): { sign: string; timestamp: string } {
+export function useSignByParamsClient(params: Record<string, any>): { sign: string; timestamp: string } {
   const config = useRuntimeConfig()
   const secretKey = config.public.apiSecretKey as string
   const timestamp = Math.floor(Date.now() / 1000).toString()

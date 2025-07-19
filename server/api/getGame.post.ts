@@ -1,4 +1,3 @@
-// server/api/metrics.post.ts
 import type { H3Event } from 'h3'
 import { createError, eventHandler, readBody } from 'h3'
 import { useRuntimeConfig } from '#imports'
@@ -10,13 +9,12 @@ export default eventHandler(async (event: H3Event) => {
   // 一定是 config.apiBase，而不是 config.public.apiBase
   const targetUrl = `${config.public.apiBase}/api/game/login`
 
-  console.log('Requesting game list with body:', body, 'to URL:', targetUrl)
   // const { sign, timestamp } = useSign('UserLogin'+address)
   const { sign, timestamp } = useSignByParams({
     ...body
   })
-  console.log('Requesting game list for address:', 'with sign:', sign, 'and timestamp:', timestamp, 'to URL:', targetUrl)
   try {
+    console.log('Requesting game login with body:', body, 'to URL:', targetUrl)
     const res = await $fetch(targetUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -33,11 +31,11 @@ export default eventHandler(async (event: H3Event) => {
       code: 500,
       message: '接口异常，已返回默认数据',
       data: {
-        isreg: false,
-        money: 0,
-        user: {}
-      }
+
+      },
+      error: e
     }
+
     // throw createError({
     //   statusCode: 502,
     //   statusMessage: 'Bad Gateway: ' + (e.message || 'Failed to fetch metrics')

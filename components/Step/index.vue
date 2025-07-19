@@ -6,7 +6,7 @@
                 <!-- SVIP圆角标签 -->
                 <div :class="[
                     'w-[64px] h-[32px] flex items-center justify-center rounded-[18px] mb-[8px] text-base font-bold',
-                    idx === currentStep
+                    idx === currentStep - 1
                         ? 'bg-gradient-to-b from-[rgba(238,217,165,1)] to-[rgba(238,217,165,1)] text-[rgba(93,68,38,1)]'
                         : 'bg-[rgba(38,38,61,1)] text-white/70'
                 ]">
@@ -16,9 +16,9 @@
                 <div v-if="idx < steps.length - 1" class="w-[4px] h-[120px] rounded-full overflow-hidden relative">
                     <div :style="{
                         height: progressHeight(idx),
-                        background: idx < currentStep
+                        background: idx < currentStep - 1
                             ? 'rgba(225,195,154,1)'
-                            : idx === currentStep
+                            : idx === currentStep - 1
                                 ? `linear-gradient(to bottom, rgba(225,195,154,1) 0%, rgba(225,195,154,1) ${halfProgress}%, rgba(38,38,61,1) ${halfProgress}%, rgba(38,38,61,1) 100%)`
                                 : 'rgba(38,38,61,1)'
                     }" class="absolute left-0 top-0 w-full h-full transition-all"></div>
@@ -49,46 +49,25 @@
 </template>
 
 <script setup lang="ts">
-const steps = [
-    {
-        level: 1,
-        range: '0~10,000',
-        rebate: '0.2%',
-        direct: '50LCX',
-        reward: '0.6%'
-    },
-    {
-        level: 2,
-        range: '0~10,000',
-        rebate: '0.2%',
-        direct: '50LCX',
-        reward: '0.6%'
-    },
-    {
-        level: 3,
-        range: '0~10,000',
-        rebate: '0.2%',
-        direct: '50LCX',
-        reward: '0.6%'
-    },
-    {
-        level: 4,
-        range: '0~10,000',
-        rebate: '0.2%',
-        direct: '50LCX',
-        reward: '0.6%'
-    }
-]
+interface StepItem {
+    level: number
+    range: string
+    rebate: number | string
+    direct: number | string
+    reward: number | string
+}
+
+const props = defineProps<{
+    steps: StepItem[]
+    currentStep: number
+    halfProgress?: number
+}>()
 
 // 当前进度（高亮到第几个步骤，0为第一个，1为第二个...）
-const currentStep = 0 // 可动态设置
-
-// 步骤条高亮一半的百分比
-const halfProgress = 50
 
 function progressHeight(idx: number) {
-    if (idx < currentStep) return '100%';
-    if (idx === currentStep) return '100%';
+    if (idx < props.currentStep - 1) return '100%';
+    if (idx === props.currentStep - 1) return '100%';
     return '100%';
 }
 </script>

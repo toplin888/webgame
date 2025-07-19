@@ -11,10 +11,13 @@
       </div>
     </transition>
     <div class="flex-1 p-[60px_0]">
-      <div class="banner ring-1 ring-[rgba(255, 255, 255, 0.1)] rounded-2xl">
-        <div class="relative min-h-[500px]">
-          <iframe v-if="gameIframeData?.game_url" class="w-full aspect-[70/39] rounded-2xl "
+      <div class="banner ring-1 ring-[rgba(255,255,255,0.1)]  rounded-2xl">
+        <div class="relative max-w-[1400px] aspect-[70/39]">
+          <iframe v-if="gameIframeData?.game_url" class="w-full max-w-[1400px] aspect-[70/39] rounded-2xl"
             :src="gameIframeData?.game_url" frameborder="0" :key="iframeKey"></iframe>
+          <div v-else class="w-full flex justify-center items-center h-full">
+            <ErrorData :msg="`加载错误200002，请联系管理员`" />
+          </div>
         </div>
         <div class="flex justify-between p-[30px] box-border">
           <div class="flex items-center gap-[10px]">
@@ -307,7 +310,7 @@ import type { TableColumn, TableRow } from '@nuxt/ui'
 import { getGameDetail, getGameLogin, getOtherRewards, getGameHistory, getConfigStatistic, favoriteGame } from '~/composables/apiServices'
 import type { GameData, TableRowType } from '~/types/game'
 import { formatTimeToHMS } from '~/utils'
-import { useSignByParams } from '~/utils/cryptoSign'
+import { useSignByParamsClient } from '~/utils/cryptoSign'
 
 const UCheckbox = resolveComponent('UCheckbox')
 // 页面元数据
@@ -318,7 +321,6 @@ const gameid = Number(route.params.id)
 
 // 获取全局 store
 const globalStore = useGlobalStore()
-console.log(globalStore.locale)
 // const { data: gameRes } = await useAsyncData('games', () => getGameDetail({ gameid, language: globalStore.locale }))
 // const gameData = computed(() => gameRes.value?.data ?? {})
 
@@ -326,8 +328,7 @@ const gameData = ref<GameData>({
   game: {},
   game_translation: {}
 })
-const gameIframeData = ref({})
-console.log('globalStore.uid', globalStore.uid)
+const gameIframeData = ref<{ game_url?: string }>({})
 const isFavorite = ref(false)
 try {
   const gameRes = await getGameDetail({ gameid, language: globalStore.locale })
@@ -345,7 +346,6 @@ const otherRewardsData = ref([])
 try {
   const otherRewardsRes = await getOtherRewards({ limit: 20, page: 1, userid: globalStore.uid })
   otherRewardsData.value = otherRewardsRes.data.list ?? []
-  console.log('otherRewardsRes', otherRewardsData.value)
 } catch (error) {
   console.error('Error fetching game login data:', error)
 }
@@ -353,12 +353,17 @@ try {
 
 const totalLcx = ref('0.00')
 
-try {
-  const lcxRes = await getConfigStatistic()
-  totalLcx.value = formatLcx(lcxRes?.data?.total_lcx)
-} catch (err) {
-  console.error(err)
+const getLCXBalance = async () => {
+  try {
+    const lcxRes = await getConfigStatistic()
+    totalLcx.value = formatLcx(lcxRes?.data?.total_lcx)
+  } catch (err) {
+    console.error(err)
+  }
 }
+
+await getLCXBalance()
+
 
 // try {
 
@@ -408,18 +413,15 @@ const showMultipleHandle = () => {
 
 const confirmMultipleHandle = () => {
   // 确认批量操作
-  console.log('Confirm multiple handle')
   // showMultiple.value = false
 }
 
 const toShare = () => {
   // 处理分享逻辑
-  console.log('Share clicked')
 }
 
 const toCollect = () => {
   // 处理收藏逻辑
-  console.log('Collect clicked')
   toggleFavoriteGame()
 }
 
@@ -427,19 +429,17 @@ const iframeKey = ref(0)
 const iframeSrc = ref('https://getrichweb3.com/?agentId=1&channelId=1&currencyRate=1&from=lucky&gameId=62300&method=userLogin&sign=74ae51e1fc6df89411f3e1ea23bfae76&time=1752197154&token=O4UFDqyqjVx91JztawHxC_VVgE9IixJqWS3fQwIQobZN7_Wx5LCT8oaTDQCkXHigMVRx_Z9_33kT6BF8IM_Ut18x2N_ezmNVp9gntk04n89yhSzGIPVB-ZWi7ZA55sqhbp4XdXHk_TYZZWweD_Dzf8nRw-riYVxBPxQ3gJcXSsM&userName=LV454ZtPmXWElmtpQPNgnA==&userPwd=e170662cc49b76d934ab06dc873780f6')
 const toReload = () => {
   // 处理刷新逻辑
-  console.log('Reload clicked')
   iframeKey.value += 1 // 通过改变 key 强制重新加载 iframe
 }
 
 const toEnlarge = () => {
   // 处理放大逻辑
-  console.log('Enlarge clicked')
   toggleEnlarge()
 }
 
 //  table?.tableApi?.getColumn(column.id)?.toggleVisibility(!!checked)
 
-const showDetail = ref(true)
+const showDetail = ref(false)
 const toggleDetail = () => { showDetail.value = !showDetail.value }
 
 // 表格
@@ -615,33 +615,6 @@ const columns: TableColumn<TableRowType>[] = ref([
   }
 ])
 
-const selectColumn: TableColumn<TableRowType> = {
-  id: 'select',
-  header: ({ table }) =>
-    h(UCheckbox, {
-      color: 'lucky',
-      modelValue: table.getIsSomePageRowsSelected()
-        ? 'indeterminate'
-        : table.getIsAllPageRowsSelected(),
-      'onUpdate:modelValue': (value: boolean | 'indeterminate') =>
-        table.toggleAllPageRowsSelected(!!value),
-      'aria-label': 'Select all'
-    }),
-  cell: ({ row }) =>
-    h(UCheckbox, {
-      color: 'lucky',
-      modelValue: row.getIsSelected(),
-      'onUpdate:modelValue': (value: boolean | 'indeterminate') => row.toggleSelected(!!value),
-      'aria-label': 'Select row'
-    })
-}
-// const columns = computed(() =>
-//   showMultiple.value
-//     ? [selectColumn, ...baseColumns]
-//     : baseColumns
-// )
-
-
 const rowSelection = ref<Record<string, boolean>>({})
 
 function onSelect(row: TableRow<TableRowType>, e?: Event) {
@@ -717,51 +690,48 @@ const activeTab = ref(0)
 const selectTab = (index: number) => {
   activeTab.value = index
   // 这里可以添加切换标签页的逻辑
-  console.log('Selected tab:', tabList[index].label)
 }
 
 const createSSE = () => {
-  const config = useRuntimeConfig()
-  const apiBase = config.public.apiBase
-  const { sign, timestamp } = useSignByParams({
-    userid: globalStore.uid,
-  })
-  const params = new URLSearchParams({
-    userid: String(globalStore.uid),
-    sign: String(sign),
-    timestamp: String(timestamp)
-  }).toString()
-  console.log('SSE params:', params)
-  const source = new EventSource(`${apiBase}/sse?${params}`);
+  try {
+    const config = useRuntimeConfig()
+    const apiBase = config.public.apiBase
+    const { sign, timestamp } = useSignByParamsClient({
+      userid: globalStore.uid,
+    })
+    const params = new URLSearchParams({
+      userid: String(globalStore.uid),
+      sign: String(sign),
+      timestamp: String(timestamp)
+    }).toString()
+    const source = new EventSource(`${apiBase}/sse?${params}`);
 
-  // 监听消息事件
-  source.onmessage = function (event) {
-    const data = JSON.parse(event.data)
-    console.log('收到消息:', data)
-    // 第一次连接成功会有一条信息返回type，message
-    if (!data?.type) {
-      console.log('SSE 连接成功，初始消息插入:', data?.type)
-      console.log('SSE 连接成功，初始消息插入:', data)
-      tableData.value.pop()
-      const newRow = data
-      tableData.value.unshift(newRow)
-      total.value += 1 // 更新总数
-    }
-  };
+    // 监听消息事件
+    source.onmessage = function (event) {
+      const data = JSON.parse(event.data)
+      // 第一次连接成功会有一条信息返回type，message
+      if (!data?.type) {
+        tableData.value.pop()
+        const newRow = data
+        tableData.value.unshift(newRow)
+        total.value += 1 // 更新总数
+        // getLCXBalance()
+      }
+    };
 
-  // 监听连接打开
-  source.onopen = function () {
-    console.log('SSE 连接已建立');
-  };
+    // 监听连接打开
+    source.onopen = function () {
+    };
 
-  // 监听错误
-  source.onerror = function (error) {
-    console.error('SSE 发生错误', error);
-  };
+    // 监听错误
+    source.onerror = function (error) {
+    };
+  } catch (err) {
+    console.log(err)
+  }
 }
 onMounted(() => {
   // 访问子组件暴露的 table
-  console.log('tableRef:', tableRef.value?.table)
   createSSE()
   // 也可以调用子组件暴露的方法
   // tableRef.value?.someMethod()
@@ -772,14 +742,18 @@ const pagination = ref({ page: 1, pageSize: 1 })
 const total = ref(0)
 const tableData = ref<TableRowType[]>([])
 const fetchTableData = async () => {
-  console.log('Fetching table data with pagination:', pagination.value)
-  const res = await getGameHistory({
-    page: pagination.value.page,
-    limit: pagination.value.pageSize,
-    userid: globalStore.uid
-  })
-  tableData.value = res.data.list ?? []
-  total.value = res.data.total ?? 0
+  try {
+    const res = await getGameHistory({
+      page: pagination.value.page,
+      limit: pagination.value.pageSize,
+      userid: globalStore.uid
+    })
+    tableData.value = res.data.list ?? []
+    total.value = res.data.total ?? 0
+  } catch (err) {
+    tableData.value = []
+    total.value = 0
+  }
 }
 await fetchTableData()
 // watch(pagination, fetchTableData, { immediate: true, deep: true })
@@ -797,21 +771,18 @@ await fetchTableData()
 const onPageSizeChange = (newPageSize: number) => {
   pagination.value.pageSize = newPageSize
   // 这里可以添加分页大小变化的逻辑
-  console.log('Page size changed:', newPageSize)
   fetchTableData()
 }
 
 const onPageChange = (newPage: number) => {
   pagination.value.page = newPage // 调整为从0开始
   // 这里可以添加页码变化的逻辑
-  console.log('Page changed:', newPage)
   fetchTableData()
 }
 
 const toggleFavoriteGame = () => {
   favoriteGame({ gameid: gameData?.value?.game?.game_id, userid: globalStore.uid })
     .then((res) => {
-      console.log('Game favorited successfully', res)
       isFavorite.value = !isFavorite.value // 切换收藏状态
     })
     .catch((error) => {

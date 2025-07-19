@@ -8,14 +8,12 @@ export default eventHandler(async (event: H3Event) => {
   const body = await readBody(event) as Record<string, any>
   const config = useRuntimeConfig()
   // 一定是 config.apiBase，而不是 config.public.apiBase
-  const targetUrl = `${config.public.apiBase}/api/activity/signin`
+  const targetUrl = `${config.public.apiBase}/api/activity/log`
 
-  console.log('Requesting game list with body:', body, 'to URL:', targetUrl)
   // const { sign, timestamp } = useSign('UserLogin'+address)
   const { sign, timestamp } = useSignByParams({
     ...body
   })
-  console.log('Requesting game list for address:', 'with sign:', sign, 'and timestamp:', timestamp, 'to URL:', targetUrl)
   try {
     const res = await $fetch(targetUrl, {
       method: 'POST',
@@ -26,22 +24,22 @@ export default eventHandler(async (event: H3Event) => {
         ...body
       }
     })
-    console.log('Response from game list:', res)
     return res
   } catch (e: any) {
-    console.log(e)
-    //  if(e.) {}
+    console.error('Error fetching config statistics:', e)
     // return {
     //   code: 500,
     //   message: '接口异常，已返回默认数据',
     //   data: {
     //     list: [],
-    //     day: 1,
-    //     issign: false
-    //   },
-    //   e
+    //     total: 0
+    //   }
     // }
     return e
 
+    // throw createError({
+    //   statusCode: 502,
+    //   statusMessage: 'Bad Gateway: ' + (e.message || 'Failed to fetch metrics')
+    // })
   }
 })

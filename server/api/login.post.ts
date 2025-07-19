@@ -6,13 +6,12 @@ import { useSignByParams } from '~/composables/useSign'
 
 export default eventHandler(async (event: H3Event) => {
   // const body = await readBody(event) as Record<string, any>
-  const { address, addtype } = await readBody(event) as { address: string, promocode: string, gameid: number, addtype: number }
+  const body = await readBody(event) as Record<string, any>
   const config = useRuntimeConfig()
   const targetUrl = `${config.public.apiBase}/api/user/login`
-  console.log('Api登錄地址==========', config.public.apiBase)
 
   // const { sign, timestamp } = useSign('UserLogin'+address)
-  const { sign, timestamp } = useSignByParams({ address: address, addtype })
+  const { sign, timestamp } = useSignByParams({ ...body })
 
   try {
     const res = await $fetch(targetUrl, {
@@ -21,13 +20,14 @@ export default eventHandler(async (event: H3Event) => {
       body: {
         sign,
         timestamp,
-        address,
-        addtype
+        ...body
       }
     })
     return res
   } catch (e: any) {
     console.log(e)
+    return e
+
     // throw createError({
     //   statusCode: 502,
     //   statusMessage: 'Bad Gateway: ' + (e.message || 'Failed to fetch metrics')

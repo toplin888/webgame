@@ -8,7 +8,8 @@
                         总资产估值 (USDT)
                     </div>
                     <div class="flex justify-between mb-[34px]">
-                        <div class="text-white text-5xl font-bold font-['DIN_Next_LT_Pro']">$10,000.00</div>
+                        <div class="text-white text-5xl font-bold font-['DIN_Next_LT_Pro']">${{
+                            formatLcx(tokenDetail.all_money) }}</div>
                         <div class="flex gap-4">
                             <UButton color="lucky" class="w-32 h-10 justify-center rounded-xl">添加资金</UButton>
                             <UButton color="transparent"
@@ -25,7 +26,8 @@
                                 <div class="text-white text-base font-thin font-['Inter']">可用金额</div>
                             </div>
                             <div class="text-white text-3xl font-medium font-['DIN_Next_LT_Pro']">
-                                200 USD <span class="text-white/50 text-xl font-medium">≈$10.00</span>
+                                ${{ formatLcx(tokenDetail.usable_money) }} USD <span
+                                    class="text-white/50 text-xl font-medium">≈$10.00</span>
                             </div>
                         </div>
                         <div class="w-80 h-40 bg-white/5 rounded-2xl p-[25px_30px]">
@@ -36,7 +38,8 @@
                                 <div class="text-white text-base font-thin font-['Inter']">锁仓金额</div>
                             </div>
                             <div class="text-white text-3xl font-medium font-['DIN_Next_LT_Pro']">
-                                200 USD <span class="text-white/50 text-xl font-medium">≈$10.00</span>
+                                ${{ formatLcx(tokenDetail.freeze_money) }} USD <span
+                                    class="text-white/50 text-xl font-medium">≈$10.00</span>
                             </div>
                         </div>
                     </div>
@@ -62,7 +65,7 @@
                                                 <div class="">
                                                     <NuxtImg :src="item.icon" class="w-[46px] h-[46px]" />
                                                 </div>
-                                                <div class="text-white/50 text-xl font-normal font-['Inter']">
+                                                <div class="text-white text-sm font-normal font-['Inter']">
                                                     {{
                                                         item.name
                                                     }}
@@ -70,14 +73,15 @@
                                             </div>
                                             <div class="flex-1">
                                                 <div class="text-white text-lg font-normal font-['DIN_Next_LT_Pro']">{{
-                                                    item.value }}</div>
+                                                    formatLcx(item.wallet_amount) }}</div>
                                                 <div class="text-white/50 text-sm font-normal font-['DIN_Next_LT_Pro']">
-                                                    {{
-                                                        item.valueTxt }}</div>
+                                                    {{ `$${item.wallet_amount_sync ? formatLcx(item.wallet_amount_sync)
+                                                        :
+                                                        '--'}` }}</div>
                                             </div>
                                             <div class="flex-1">
                                                 <div class="text-white text-lg font-normal font-['DIN_Next_LT_Pro']">{{
-                                                    item.address || '--' }}</div>
+                                                    item.user_id || '--' }}</div>
                                             </div>
                                             <div class="flex-1 flex gap-[15px]">
                                                 <div v-if="item.status === 1"
@@ -161,7 +165,9 @@
                 class="bg-[linear-gradient(180deg,rgba(26,23,38,1)_0%,rgba(26,23,38,0.3)_100%)] rounded-2xl ring-1 ring-white/20 p-[50px] w-full">
                 <div class="text-white text-xl font-medium font-['Inter'] mb-[24px]">资金记录</div>
                 <div class="flex justify-center ">
-                    <PaginatedTable :columns="columns" :data="tableData" class="w-full" />
+                    <PaginatedTable ref="tableRef" :data="tableData" :columns="columns" :page="pagination.page"
+                        :pageSize="pagination.pageSize" :total="total" :columnVisibility="{}"
+                        @update:page="onPageChange" @update:pageSize="onPageSizeChange" class="w-full" />
                 </div>
             </div>
         </div>
@@ -173,25 +179,40 @@ import type { TableColumn, TableRow } from '@nuxt/ui'
 import { NuxtImg } from '#components'
 const UIcon = resolveComponent('UIcon')
 const UPopover = resolveComponent('UPopover')
+import { getBelonging, getBelongingList } from '~/composables/apiServices'
+import { form } from 'viem/chains'
 
-const total = 10
+const globalStore = useGlobalStore()
 
-const tableData: TableRowType[] = Array.from({ length: total }, (_, i) => ({
-    id: `B1008${100 + i}`,
-    // type有6种情况
-    type: Math.floor(Math.random() * 5) + 1, // 随机生成1-6之间的数字
-    amount: 100000000,
-    start: '2021/10/12 18:11:15',
-    // status true or false 
-    status: Math.random() > 0.5 // 随机生成true或false
-}))
-type TableRowType = {
-    id: string
-    type: Number,
-    amount: Number
-    status: Boolean
-    start: string
+type TokenItem = {
+    name: string
+    icon: string
+    wallet_amount: number
+    wallet_amount_sync?: number
+    user_id?: string
+    status?: number
+    [key: string]: any
 }
+
+const tokenList = ref<TokenItem[]>([])
+const tokenDetail = ref<Record<string, any>>({})
+const getBelongingHandler = async () => {
+    try {
+        let params = { userid: globalStore.uid }
+        const res = await getBelonging(params)
+        tokenList.value = res.data.list.map((item: any) => ({
+            ...item,
+            name: 'LCX',
+            icon: item.icon || '/images/lcx.png', // 默认图标
+        }))
+        tokenDetail.value = res.data
+    } catch (err) {
+        tokenList.value = []
+        tokenDetail.value = {}
+    }
+}
+
+await getBelongingHandler()
 
 const typeList = [
     { label: '全部', value: 'all', id: 0 },
@@ -202,6 +223,42 @@ const typeList = [
     { label: '活动奖励', value: 'reward', id: 5 }
 ]
 
+
+
+const tableData = ref<TableRowType[]>([])
+const pagination = ref({ page: 1, pageSize: 10 })
+const total = ref(0)
+type TableRowType = {
+    id: string
+    type: Number,
+    amount: Number
+    status: Boolean
+    start: string
+}
+const getBelongingListHandler = async () => {
+    try {
+        let params = { userid: globalStore.uid, page: pagination.value.page, limit: pagination.value.pageSize }
+        const res = await getBelongingList(params)
+        tableData.value = res.data.list
+    } catch (err) {
+        tableData.value = []
+    }
+}
+
+await getBelongingListHandler()
+
+const onPageSizeChange = (newPageSize: number) => {
+    pagination.value.pageSize = newPageSize
+    // 这里可以添加分页大小变化的逻辑
+    getBelongingListHandler()
+
+}
+
+const onPageChange = (newPage: number) => {
+    pagination.value.page = newPage // 调整为从0开始
+    // 这里可以添加页码变化的逻辑
+    getBelongingListHandler()
+}
 
 const selectedType = ref(1)
 
@@ -219,8 +276,8 @@ function onTypeChange(value: number) {
 
 const columns: TableColumn<TableRowType>[] = [
     {
-        accessorFn: (row: TableRowType) => row.type,
-        id: 'type',
+        accessorFn: (row: TableRowType) => row.asset_type,
+        id: 'asset_type',
         header: () => h(UPopover, {
             open: popoverOpen.value,
             'onUpdate:open': (val: boolean) => (popoverOpen.value = val),
@@ -231,15 +288,6 @@ const columns: TableColumn<TableRowType>[] = [
             }
         }, {
             trigger: () => h('div', { class: 'flex bg-red-500 items-center gap-2 cursor-pointer' },
-                // h(typeList.map(item =>
-                //     h('div', {
-                //         class: [
-                //             'px-8 py-4 text-white text-base font-normal cursor-pointer',
-                //             selectedType.value === item.id ? 'bg-[#3A3A46]' : 'hover:bg-[#23232B]'
-                //         ],
-                //         onClick: () => onTypeChange(item.id)
-                //     }, item.label)
-                // ))
             ),
             content: () => h('div', { class: 'text-xs bg-[#2B2B36] flex flex-col' }, typeList.map(item =>
                 h('div', {
@@ -253,20 +301,20 @@ const columns: TableColumn<TableRowType>[] = [
             default: () => h('div', {
                 class: 'flex rounded-2xl w-[180px] items-center gap-2 cursor-pointer justify-center mx-auto'
             }, [
-                h('span', 'Type'),
+                h('span', '类型'),
                 h(UIcon, { name: 'i-lucide-filter', class: '' })
             ])
         }),
         cell: ({ row }) => {
-            return h('div', { class: 'text-white text-sm font-normal font-Inter' }, typeList.find(k => k.id === row.getValue('type'))?.label)
+            return h('div', { class: 'text-white text-sm font-normal font-Inter' }, typeList.find(k => k.id === row.getValue('asset_type'))?.label)
         }
     },
     {
         accessorFn: (row: TableRowType) => row.amount,
-        id: 'amount',
-        header: 'Amount',
+        id: 'change_amount',
+        header: 'Token',
         cell: ({ row }) => {
-            const value = row.getValue('amount')
+            const value = row.getValue('change_amount')
             return h('div', { class: 'flex gap-[10px] items-center justify-center' }, [
                 h(
                     NuxtImg,
@@ -289,18 +337,12 @@ const columns: TableColumn<TableRowType>[] = [
         }
     },
     {
-        accessorFn: (row: TableRowType) => row.start,
-        id: 'start',
-        header: 'Start',
-        // cell: ({ row }) => {
-        //   return new Date(row.getValue('start')).toLocaleString('en-US', {
-        //     day: 'numeric',
-        //     month: 'short',
-        //     hour: '2-digit',
-        //     minute: '2-digit',
-        //     hour12: false
-        //   })
-        // }
+        accessorFn: (row: TableRowType) => row.created_at,
+        id: 'created_at',
+        header: 'Date(UTC)',
+        cell: ({ row }) => {
+            return formatTime(row.getValue('created_at'))
+        }
     }
 ]
 
@@ -321,32 +363,6 @@ const selectTab = (index: number) => {
     console.log('Selected tab:', tabList[index].label)
 }
 
-const tokenList = ref([
-    {
-        name: 'LCX',
-        value: 3000.214,
-        valueTxt: '--',
-        address: '--',
-        status: 1,
-        icon: '/images/lcx.png',
-    },
-    {
-        name: 'LUCKYX',
-        value: 3000.214,
-        valueTxt: '3000.214',
-        address: 'ASDDSASDADHPUMP',
-        status: 2,
-        icon: '/images/luckyX.svg',
-    },
-    {
-        name: 'USDT',
-        value: 3000.214,
-        valueTxt: '3000.214',
-        address: 'ASDDSASDADHPUMP',
-        status: 2,
-        icon: '/images/nav/usdt.svg',
-    }
-])
 
 const nftList = ref([
     {

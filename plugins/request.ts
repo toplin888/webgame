@@ -4,8 +4,16 @@ export default defineNuxtPlugin(nuxtApp => {
     // 全局请求方法
     nuxtApp.provide('request', async <T = any>(
         url: string,
-        options?: RequestInit & { params?: Record<string, any> }
+        options?: RequestInit & { params?: Record<string, any>; auth?: boolean }
     ): Promise<T> => {
+        if (options?.auth) {
+            const globalStore = useGlobalStore()
+            if (!globalStore.uid) {
+                // 可直接抛错或返回自定义内容
+                throw new Error('请先登录')
+                // 或 return Promise.reject('请先登录')
+            }
+        }
         const config = useRuntimeConfig()
         const baseURL = config.public.apiBase || '/api'
         // 默认配置，可扩展 headers、超时等
@@ -51,9 +59,7 @@ export default defineNuxtPlugin(nuxtApp => {
         defaultOptions.signal = controller.signal
 
         try {
-            console.log('Request URL:', finalUrl, 'Options:', defaultOptions)
             const result = await $fetch<T>(finalUrl, defaultOptions)
-            console.log('Request result:', result)
 
             clearTimeout(timer)
             return result

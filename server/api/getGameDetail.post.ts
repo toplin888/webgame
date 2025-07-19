@@ -10,12 +10,10 @@ export default eventHandler(async (event: H3Event) => {
   // 一定是 config.apiBase，而不是 config.public.apiBase
   const targetUrl = `${config.public.apiBase}/api/game/detail`
 
-  console.log('Requesting game list with body:', body, 'to URL:', targetUrl)
   // const { sign, timestamp } = useSign('UserLogin'+address)
   const { sign, timestamp } = useSignByParams({
     ...body
   })
-  console.log('Requesting game list for address:', 'with sign:', sign, 'and timestamp:', timestamp, 'to URL:', targetUrl)
   try {
     const res = await $fetch(targetUrl, {
       method: 'POST',
@@ -28,10 +26,12 @@ export default eventHandler(async (event: H3Event) => {
     })
     return res
   } catch (e: any) {
-    return {
-      code: 500,
-      message: '接口异常，已返回默认数据',
-      data: {}
-    }
+    // return {
+    //   code: 500,
+    //   message: '接口异常，已返回默认数据',
+    //   data: {}
+    // }
+    return e
+
   }
 })

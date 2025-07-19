@@ -10,17 +10,6 @@
                 separator: 'bg-transparent',
             }" @select="onSelect" />
         <div class="flex justify-end gap-4 items-center pt-4">
-            <!-- :page="page" :total="total" @update:page="p => emit('update:page', p)" -->
-            <!-- <UPagination v-model:page="pagination.page" :total="props.total ?? props.data.length" @update:page="p => emit('update:page', p)" :ui="{
-                list: 'border-0 ring-0 text-whitebg-transparent hover:text-white disabled:bg-transparent',
-                item: 'text-white bg-transparent hover:bg-indigo-400 rounded-full hover:text-white ring-0 disabled:bg-transparent',
-                prev: 'text-white bg-transparent hover:bg-indigo-400 rounded-full hover:text-white ring-0 disabled:bg-transparent',
-                next: 'text-white bg-transparent hover:bg-indigo-400 rounded-full hover:text-white ring-0 disabled:bg-transparent',
-                last: 'text-white bg-transparent hover:bg-indigo-400 rounded-full hover:text-white ring-0 disabled:bg-transparent',
-                first: 'text-white bg-transparent hover:bg-indigo-400 rounded-full hover:text-white ring-0 disabled:bg-transparent',
-                root: ' bg-transparent hover:text-white border-0 ring-0 rounded-full disabled:bg-transparent',
-                label: 'text-white/50 text-sm font-normal font-Inter ring-0 disabled:bg-transparent',
-            }" /> -->
             <UPagination :page="props.page" :items-per-page="props.pageSize" :total="props.total ?? props.data.length"
                 @update:page="p => emit('update:page', p)" :ui="{
                     list: 'border-0 ring-0 text-whitebg-transparent hover:text-white disabled:bg-transparent',
@@ -34,13 +23,14 @@
                 }" />
             <div>共{{ props.total ?? props.data.length }}条</div>
             <div>
-                <USelect v-model="pagination.pageSize" class="w-[100px]" :items="pageSizeList" :ui="{
-                    base: 'bg-[rgba(27,27,28,1)] text-[rgba(255,255,255,0.5)] ring-0',
-                    content: 'bg-[rgba(27,27,28,1)] text-[rgba(255,255,255,0.5)] ring-0',
-                    label: 'text-[rgba(255,255,255,0.5)]',
-                    group: 'text-[rgba(255,255,255,0.5)]',
-                    item: 'text-[rgba(255,255,255,0.5)]'
-                }" />
+                <USelect v-model="pagination.pageSize" class="w-[100px]" :items="pageSizeList"
+                    @update:modelValue="val => emit('update:pageSize', val)" :ui="{
+                        base: 'bg-[rgba(27,27,28,1)] text-[rgba(255,255,255,0.5)] ring-0',
+                        content: 'bg-[rgba(27,27,28,1)] text-[rgba(255,255,255,0.5)] ring-0',
+                        label: 'text-[rgba(255,255,255,0.5)]',
+                        group: 'text-[rgba(255,255,255,0.5)]',
+                        item: 'text-[rgba(255,255,255,0.5)]'
+                    }" />
             </div>
         </div>
     </div>
@@ -96,12 +86,12 @@ const showMultipleHandle = () => {
 const rowSelection = ref<Record<string, boolean>>({})
 
 // 分页
-const pagination = ref(props.pagination ?? { page: 0, pageSize: 10 })
+const pagination = ref({ page: props.page, pageSize: props.pageSize })
 const pageSizeList = ref([
     { label: '10条/页', value: 10 },
     { label: '20条/页', value: 20 },
-    { label: '30条/页', value: 30 },
-    { label: '50条/页', value: 50 }
+    { label: '50条/页', value: 50 },
+    { label: '100条/页', value: 100 }
 ])
 
 function onSelect(row: TableRow<any>, e?: Event) {
